@@ -10,9 +10,9 @@ import collection.mutable.ListBuffer
 trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
   type Configure = (S) => Unit
 
-  /** ビルダの設定に基づいて[[ValueObject]]の新しいインスタンスを生成する。
+  /** ビルダの設定に基づいて値オブジェクトの新しいインスタンスを生成する。
    *
-   *  @return [[ValueObject]]の新しいインスタンス
+   *  @return 値オブジェクトの新しいインスタンス
    */
   def build: T = {
     configurators.foreach(_(getThis))
@@ -25,10 +25,10 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
    */
   protected def getThis: S
 
-  /** ビルダの設定に基づき、引数の[[ValueObject]]の内容を変更した新しいインスタンスを生成する。
+  /** ビルダの設定に基づき、引数の値オブジェクトの内容を変更した新しいインスタンスを生成する。
    *
-   *  @param vo 状態を引用する[[ValueObject]]
-   *  @return voの内容に対して、このビルダの設定を上書きした[[ValueObject]]の新しいインスタンス
+   *  @param vo 状態を引用する値オブジェクト
+   *  @return voの内容に対して、このビルダの設定を上書きした値オブジェクトの新しいインスタンス
    */
   def build(vo: T): T = {
     val builder = newInstance
@@ -39,7 +39,7 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
 
   /** ビルダを設定する関数を追加する。
    *
-   *  @param configurator [[Configure]]
+   *  @param configurator [[org.sisioh.dddbase.core.ValueObjectBuilder.Configure]]
    */
   protected def addConfigurator(configure: Configure): Unit = {
     configurators += configure
@@ -51,20 +51,20 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
    */
   protected def newInstance: S
 
-  /** 引数のビルダに対して、引数の[[ValueObject]]の内容を適用する。
+  /** 引数のビルダに対して、引数の値オブジェクトの内容を適用する。
    *
-   *  @param vo 状態を引用する[[ValueObject]]
+   *  @param vo 状態を引用する値オブジェクト
    *  @param builder ビルダ
    */
   protected def apply(vo: T, builder: S): Unit
 
-  /** ビルダの設定に基づいて[[ValueObject]]の新しいインスタンスを生成する。
+  /** ビルダの設定に基づいて値オブジェクトの新しいインスタンスを生成する。
    *
-   *  <p>[[ValueObjectBuilder]]のbuild内でこのビルダに追加された[[Configure]]を全て実行した後に、このメソッドが呼ばれる。<br>
-   *  その為、このビルダに対する変更を行うロジックはこのメソッド内に記述せず、目的となる[[ValueObject]]を生成し
+   *  <p>`build`内でこのビルダに追加された[[org.sisioh.dddbase.core.ValueObjectBuilder.Configure]]を全て実行した後に、このメソッドが呼ばれる。<br>
+   *  その為、このビルダに対する変更を行うロジックはこのメソッド内に記述せず、目的となる値オブジェクトを生成し
    *  返すロジックを記述することが望まれる。</p>
    *
-   *  @return [[ValueObject]]の新しいインスタンス
+   *  @return 値オブジェクトの新しいインスタンス
    */
   protected def createValueObject: T
 

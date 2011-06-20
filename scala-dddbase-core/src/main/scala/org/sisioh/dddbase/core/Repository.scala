@@ -15,7 +15,8 @@
  */
 package org.sisioh.dddbase.core
 
-/** [[Identifier]]を用いて、[[Entity]]を検索する責務を表すインターフェイス。
+/** [[java.lang.Identifier]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+ * を検索する責務を表すインターフェイス。
  *
  *  @author j5ik2o
  */

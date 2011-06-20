@@ -9,8 +9,7 @@ import java.io.{ ObjectOutputStream, IOException, ObjectInputStream }
  *
  *  @author j5ik2o
  */
-@serializable
-trait AggregateRoot {
+trait AggregateRoot extends Serializable {
   this: Entity =>
 
   @transient
@@ -20,7 +19,7 @@ trait AggregateRoot {
   private var lastCommitted: Long = _
 
   /** イベントを登録する。
-   *  @param evnt [[DomainEvent]]
+   *  @param evnt [[org.sisioh.dddbase.core.DomainEvent]]
    */
   protected def registerEvent(event: DomainEvent): Unit = eventBuilder += event
 
@@ -36,8 +35,8 @@ trait AggregateRoot {
     eventBuilder.clear
   }
 
-  /** コミットされていないイベントのストリームを返す。
-   *  @return Stream[DomainEvent]
+  /** コミットされていないイベントの[[org.sisioh.dddbase.core.event.DomainEventIterator]]を返す。
+   *  @return [[org.sisioh.dddbase.core.event.DomainEventIterator]]
    */
   def uncommittedEvents = eventBuilder.result.iterator
 

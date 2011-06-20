@@ -32,6 +32,17 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<jvmArgs>
+						<jvmArg>-Xss2m</jvmArg>
+						<jvmArg>-Xmx512m</jvmArg>
+					</jvmArgs>
+					<arg>
+						<arg>-deprecation</arg>
+					</arg>
+					<scalaVersion>${scala.version}</scalaVersion>
+					<recompileMode>modified-only</recompileMode>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>

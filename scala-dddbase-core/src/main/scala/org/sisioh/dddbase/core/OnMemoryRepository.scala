@@ -13,7 +13,7 @@ class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
   private[core] var entities = collection.mutable.Map.empty[Identifier, T]
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryRepository[T] => this.entities == that.entities
+    case that: OnMemoryRepository[_] => this.entities == that.entities
     case _ => false
   }
 

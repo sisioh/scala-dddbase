@@ -7,11 +7,10 @@ import org.sisioh.dddbase.core.Identifier
 import org.sisioh.dddbase.core.DomainEvent
 import org.sisioh.dddbase.core.UUIDIdentifier
 
-/** [[DomainEvent]]を格納するコンテナ。
+/** [[org.sisioh.dddbase.core.DomainEvent]]を格納するコンテナ。
  *
  *  @author j5ik2o
  */
-@serializable
 class DomainEventSeq private[event] (val aggregateId: Identifier,
   val lastSequenceNumber: Long,
   private val source: Seq[DomainEvent])
@@ -33,7 +32,7 @@ class DomainEventSeq private[event] (val aggregateId: Identifier,
 
 }
 
-/** [[DomainEventSeq]]のためのビルダー。
+/** [[org.sisioh.dddbase.core.event.DomainEventSeq]]のためのビルダー。
  *
  *  @author j5ik2o
  */
@@ -81,7 +80,7 @@ class DomainEventSeqBuilder(val aggregateId: Identifier = UUIDIdentifier(),
   def clear = builder.clear
 }
 
-/** [[DomainEventContainer]]のコンパニオンオブジェクト。
+/** コンパニオンオブジェクト。
  *
  *  @author j5ik2o
  */
