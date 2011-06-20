@@ -17,23 +17,34 @@ package org.sisioh.dddbase.core
 
 import java.util.UUID
 
-trait Identifier {
+/**
+ * 識別子を表すトレイト。
+ *
+ * @author j5ik2o
+ */
+trait Identifier extends Serializable {
+  /**文字列表現としての識別子を取得する。
+   * @return 文字列表現としての識別子
+   */
   def asString: String
 }
 
-@serializable
+/**[[java.lang.String]]を使った[[org.sisioh.dddbase.core.Identifier]]の実装クラス。
+ *
+ * @author j5ik2o
+ * @param value [[java.lang.String]]
+ */
 class StringIdentifier(val value: String) extends Identifier {
-  
-	def asString = value.toString
+
+  def asString = value.toString
 
 }
 
-/** エンティティの識別子を表すバリューオブジェクト。
+/**[[java.util.UUID]]を使った[[org.sisioh.dddbase.core.Identifier]]の実装クラス。
  *
- *  @author j5ik2o
- *  @param value [[UUID]]
+ * @author j5ik2o
+ * @param value [[java.util.UUID]]
  */
-@serializable
 class UUIDIdentifier(val value: UUID) extends Identifier {
 
   override def equals(that: Any): Boolean = that match {
@@ -49,43 +60,44 @@ class UUIDIdentifier(val value: UUID) extends Identifier {
 
 }
 
-/** [[UUIDIdentifier]]のためのコンパニオンオブジェクト。
+/**
+ * コンパニオンオブジェクト。
  *
- *  @author j5ik2o
+ * @author j5ik2o
  */
 object UUIDIdentifier {
 
-  /** [[UUID]]を基に、新しい[[Identifier]]のインスタンスを生成する。
+  /**[[java.util.UUID]]を基に、新しいインスタンスを生成する。
    *
-   *  @param value [[UUID]]
-   *  @return 新しい[[UUIDIdentifier]]のインスタンス
+   * @param value [[java.util.UUID]]
+   * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def apply(value: UUID): UUIDIdentifier = new UUIDIdentifier(value)
 
-  /** 文字列形式のUUIDを新しい[[Identifier]]のインスタンスを生成する。
+  /**文字列形式のUUIDを新しいインスタンスを生成する。
    *
-   *  @param value [[UUID]]
-   *  @return 新しい[[Identifier]]のインスタンス
+   * @param value [[java.util.UUID]]
+   * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def apply(value: String): UUIDIdentifier = apply(UUID.fromString(value))
 
-  /** 文字列を基に、新しい[[UUIDIdentifier]]のインスタンスを生成する。
+  /**文字列を基に、新しいインスタンスを生成する。
    *
-   *  @param value [[UUID]]
-   *  @return 新しい[[UUIDIdentifier]]のインスタンス
+   * @param value [[java.util.UUID]]
+   * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def from(value: String): UUIDIdentifier = apply(UUID.nameUUIDFromBytes(value.getBytes))
 
-  /** [[UUID]]を自動生成し、新しい[[Identifier]]のインスタンスを生成する。
+  /**[[java.util.UUID]]を自動生成し、新しいインスタンスを生成する。
    *
-   *  @return 新しい[[UUIDIdentifier]]のインスタンス
+   * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def apply(): UUIDIdentifier = new UUIDIdentifier(UUID.randomUUID)
 
-  /** [[UUIDIdentifier]]のための抽出子。
+  /**[[org.sisioh.dddbase.core.UUIDIdentifier]]のための抽出子メソッド。
    *
-   *  @param entityIdentifier [[UUIDIdentifier]]
-   *  @return [[UUIDIdentifier]]のvalue
+   * @param entityIdentifier [[org.sisioh.dddbase.core.UUIDIdentifier]]
+   * @return [[org.sisioh.dddbase.core.UUIDIdentifier]]のvalue
    */
   def unapply(entityIdentifier: UUIDIdentifier) = Some(entityIdentifier.value)
 }
