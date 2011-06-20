@@ -17,8 +17,7 @@ package org.sisioh.dddbase.core
 
 import java.util.UUID
 
-/**
- * 識別子を表すトレイト。
+/**識別子を表すトレイト。
  *
  * @author j5ik2o
  */
@@ -34,9 +33,39 @@ trait Identifier extends Serializable {
  * @author j5ik2o
  * @param value [[java.lang.String]]
  */
-class StringIdentifier(val value: String) extends Identifier {
+class StringIdentifier(value: String) extends Identifier {
+
+  override def equals(that: Any): Boolean = that match {
+    case other: StringIdentifier => value == other.asString
+    case _ => false
+  }
+
+  override def hashCode = value.hashCode
 
   def asString = value.toString
+
+  override def toString = "StringIdentifier(%s)".format(value)
+
+}
+
+/**`StringIdentifier`クラスのための、コンパニオンオブジェクト。
+ *
+ * @author j5ik2o
+ */
+object StringIdentifier {
+  /**文字列を基に、新しいインスタンスを生成する。
+   *
+   * @param value [[java.util.String]]
+   * @return 新しい[[org.sisioh.dddbase.core.StringIdentifier]]のインスタンス
+   */
+  def apply(value: String) = new StringIdentifier(value)
+
+  /**[[org.sisioh.dddbase.core.StringIdentifier]]のための抽出子メソッド。
+   *
+   * @param entityIdentifier [[org.sisioh.dddbase.core.StringIdentifier]]
+   * @return [[org.sisioh.dddbase.core.StringIdentifier]]のvalue
+   */
+  def unapply(identifier: StringIdentifier) = Some(identifier.asString)
 
 }
 
@@ -54,14 +83,13 @@ class UUIDIdentifier(val value: UUID) extends Identifier {
 
   override def hashCode = value.hashCode
 
-  override def toString = "Identifier(%s)".format(value)
+  override def toString = "UUIDIdentifier(%s)".format(value)
 
   def asString = value.toString
 
 }
 
-/**
- * コンパニオンオブジェクト。
+/**`UUIDIdentifier`クラスのための、コンパニオンオブジェクト。
  *
  * @author j5ik2o
  */
