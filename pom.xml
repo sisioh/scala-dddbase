@@ -37,9 +37,9 @@
 						<jvmArg>-Xss2m</jvmArg>
 						<jvmArg>-Xmx512m</jvmArg>
 					</jvmArgs>
-					<arg>
+					<args>
 						<arg>-deprecation</arg>
-					</arg>
+					</args>
 					<scalaVersion>${scala.version}</scalaVersion>
 					<recompileMode>modified-only</recompileMode>
 				</configuration>
