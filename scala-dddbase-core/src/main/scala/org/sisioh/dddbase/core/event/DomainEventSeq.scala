@@ -1,3 +1,19 @@
+/*
+ * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.sisioh.dddbase.core.event
 
 import scala.collection._
@@ -7,7 +23,8 @@ import org.sisioh.dddbase.core.Identifier
 import org.sisioh.dddbase.core.DomainEvent
 import org.sisioh.dddbase.core.UUIDIdentifier
 
-/** [[org.sisioh.dddbase.core.DomainEvent]]を格納するコンテナ。
+/**
+ * [[org.sisioh.dddbase.core.DomainEvent]]を格納するコンテナ。
  *
  *  @author j5ik2o
  */
@@ -32,7 +49,8 @@ class DomainEventSeq private[event] (val aggregateId: Identifier,
 
 }
 
-/** [[org.sisioh.dddbase.core.event.DomainEventSeq]]のためのビルダー。
+/**
+ * [[org.sisioh.dddbase.core.event.DomainEventSeq]]のためのビルダー。
  *
  *  @author j5ik2o
  */
@@ -80,7 +98,8 @@ class DomainEventSeqBuilder(val aggregateId: Identifier = UUIDIdentifier(),
   def clear = builder.clear
 }
 
-/** コンパニオンオブジェクト。
+/**
+ * コンパニオンオブジェクト。
  *
  *  @author j5ik2o
  */
@@ -126,13 +145,15 @@ object DomainEventSeq {
 
     }
 
-  /** 新しいビルダーを生成する。
+  /**
+   * 新しいビルダーを生成する。
    *
    *  @return 新しいビルダー
    */
   def newBuilder: DomainEventSeqBuilder = new DomainEventSeqBuilder
 
-  /** 新しいビルダーを生成する。
+  /**
+   * 新しいビルダーを生成する。
    *
    *  @param aggregateId 集約の識別子
    *  @return 新しいビルダー

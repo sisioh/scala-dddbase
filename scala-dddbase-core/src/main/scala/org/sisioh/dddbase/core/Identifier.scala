@@ -1,5 +1,6 @@
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +18,55 @@ package org.sisioh.dddbase.core
 
 import java.util.UUID
 
-/**識別子を表すトレイト。
+/**
+ * 識別子を表すトレイト。
  *
  * @author j5ik2o
  */
 trait Identifier extends Serializable {
-  /**文字列表現としての識別子を取得する。
+  /**
+   * 文字列表現としての識別子を取得する。
    * @return 文字列表現としての識別子
    */
   def asString: String
 }
 
-/**[[java.lang.String]]を使った[[org.sisioh.dddbase.core.Identifier]]の実装クラス。
+class GenericIdentifier[T](val value: T) extends Identifier {
+
+  override def equals(that: Any): Boolean = that match {
+    case other: GenericIdentifier[_] => value == other.asString
+    case _ => false
+  }
+
+  override def hashCode = value.hashCode
+
+  def asString = value.toString
+
+  override def toString = "GenericIdentifier(%s)".format(value)
+
+}
+
+object GenericIdentifier {
+  /**
+   * 文字列を基に、新しいインスタンスを生成する。
+   *
+   * @param value T型
+   * @return 新しい[[org.sisioh.dddbase.core.GenericIdentifier]]のインスタンス
+   */
+  def apply[T](value: T) = new GenericIdentifier[T](value)
+
+  /**
+   * [[org.sisioh.dddbase.core.StringIdentifier]]のための抽出子メソッド。
+   *
+   * @param entityIdentifier [[org.sisioh.dddbase.core.GenericIdentifier]]
+   * @return [[org.sisioh.dddbase.core.GenericIdentifier]]のvalue
+   */
+  def unapply(identifier: GenericIdentifier[_]) = Some(identifier.asString)
+
+}
+
+/**
+ * [[java.lang.String]]を使った[[org.sisioh.dddbase.core.Identifier]]の実装クラス。
  *
  * @author j5ik2o
  * @param value [[java.lang.String]]
@@ -48,19 +86,22 @@ class StringIdentifier(value: String) extends Identifier {
 
 }
 
-/**`StringIdentifier`クラスのための、コンパニオンオブジェクト。
+/**
+ * `StringIdentifier`クラスのための、コンパニオンオブジェクト。
  *
  * @author j5ik2o
  */
 object StringIdentifier {
-  /**文字列を基に、新しいインスタンスを生成する。
+  /**
+   * 文字列を基に、新しいインスタンスを生成する。
    *
    * @param value [[java.util.String]]
    * @return 新しい[[org.sisioh.dddbase.core.StringIdentifier]]のインスタンス
    */
   def apply(value: String) = new StringIdentifier(value)
 
-  /**[[org.sisioh.dddbase.core.StringIdentifier]]のための抽出子メソッド。
+  /**
+   * [[org.sisioh.dddbase.core.StringIdentifier]]のための抽出子メソッド。
    *
    * @param entityIdentifier [[org.sisioh.dddbase.core.StringIdentifier]]
    * @return [[org.sisioh.dddbase.core.StringIdentifier]]のvalue
@@ -69,7 +110,8 @@ object StringIdentifier {
 
 }
 
-/**[[java.util.UUID]]を使った[[org.sisioh.dddbase.core.Identifier]]の実装クラス。
+/**
+ * [[java.util.UUID]]を使った[[org.sisioh.dddbase.core.Identifier]]の実装クラス。
  *
  * @author j5ik2o
  * @param value [[java.util.UUID]]
@@ -89,40 +131,46 @@ class UUIDIdentifier(val value: UUID) extends Identifier {
 
 }
 
-/**`UUIDIdentifier`クラスのための、コンパニオンオブジェクト。
+/**
+ * `UUIDIdentifier`クラスのための、コンパニオンオブジェクト。
  *
  * @author j5ik2o
  */
 object UUIDIdentifier {
 
-  /**[[java.util.UUID]]を基に、新しいインスタンスを生成する。
+  /**
+   * [[java.util.UUID]]を基に、新しいインスタンスを生成する。
    *
    * @param value [[java.util.UUID]]
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def apply(value: UUID): UUIDIdentifier = new UUIDIdentifier(value)
 
-  /**文字列形式のUUIDを新しいインスタンスを生成する。
+  /**
+   * 文字列形式のUUIDを新しいインスタンスを生成する。
    *
    * @param value [[java.util.UUID]]
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def apply(value: String): UUIDIdentifier = apply(UUID.fromString(value))
 
-  /**文字列を基に、新しいインスタンスを生成する。
+  /**
+   * 文字列を基に、新しいインスタンスを生成する。
    *
    * @param value [[java.util.UUID]]
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def from(value: String): UUIDIdentifier = apply(UUID.nameUUIDFromBytes(value.getBytes))
 
-  /**[[java.util.UUID]]を自動生成し、新しいインスタンスを生成する。
+  /**
+   * [[java.util.UUID]]を自動生成し、新しいインスタンスを生成する。
    *
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
   def apply(): UUIDIdentifier = new UUIDIdentifier(UUID.randomUUID)
 
-  /**[[org.sisioh.dddbase.core.UUIDIdentifier]]のための抽出子メソッド。
+  /**
+   * [[org.sisioh.dddbase.core.UUIDIdentifier]]のための抽出子メソッド。
    *
    * @param entityIdentifier [[org.sisioh.dddbase.core.UUIDIdentifier]]
    * @return [[org.sisioh.dddbase.core.UUIDIdentifier]]のvalue

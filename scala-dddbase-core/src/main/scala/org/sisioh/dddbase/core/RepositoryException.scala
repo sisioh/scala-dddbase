@@ -1,5 +1,6 @@
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +16,14 @@
  */
 package org.sisioh.dddbase.core
 
-/** リポジトリにアクセスできなかった場合の例外。
+/**
+ * リポジトリにアクセスできなかった場合の例外。
  *
  *  @author j5ik2o
  */
 case class RepositoryException(cause: Option[Throwable]) extends Exception {
-  /** インスタンスを生成する。
+  /**
+   * インスタンスを生成する。
    */
   def this() = this(None)
 }
