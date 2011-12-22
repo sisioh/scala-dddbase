@@ -18,8 +18,8 @@ class SpecificationTest extends AssertionsForJUnit {
     val spec = new Specification[Unit] {
       def isSatisfiedBy(t: Unit): Boolean = false
     }
-    assert(spec.and(spec).isInstanceOf[AndSpecification[Unit]])
-    assert(spec.or(spec).isInstanceOf[OrSpecification[Unit]])
-    assert(spec.not.isInstanceOf[NotSpecification[Unit]])
+    assert(spec.and(spec).isInstanceOf[AndSpecification[_]])
+    assert(spec.or(spec).isInstanceOf[OrSpecification[_]])
+    assert(spec.not.isInstanceOf[NotSpecification[_]])
   }
 }
