@@ -1,5 +1,6 @@
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +16,16 @@
  */
 package org.sisioh.dddbase.core
 
-/** [[java.lang.Identifier]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+/**
+ * [[java.lang.Identifier]]を用いて、[[org.sisioh.dddbase.core.Entity]]
  * を検索する責務を表すインターフェイス。
  *
  *  @author j5ik2o
  */
 trait EntityResolver[T <: Entity] extends Iterable[T] {
 
-  /** 識別子に該当するエンティティを取得する。
+  /**
+   * 識別子に該当するエンティティを取得する。
    *
    *  @param identifier 識別子
    *  @return エンティティ
@@ -35,7 +38,8 @@ trait EntityResolver[T <: Entity] extends Iterable[T] {
 
   def apply(identifier: Identifier) = resolve(identifier)
 
-  /** 指定した識別子のエンティティが存在するかを返す。
+  /**
+   * 指定した識別子のエンティティが存在するかを返す。
    *
    *  @param identifier 識別子
    *  @return 存在する場合はtrue
@@ -43,7 +47,8 @@ trait EntityResolver[T <: Entity] extends Iterable[T] {
    */
   def contains(identifier: Identifier): Boolean = exists(_.identifier == identifier)
 
-  /** 指定したのエンティティが存在するかを返す。
+  /**
+   * 指定したのエンティティが存在するかを返す。
    *
    *  @param entity エンティティ
    *  @return 存在する場合はtrue
@@ -53,7 +58,8 @@ trait EntityResolver[T <: Entity] extends Iterable[T] {
 
 }
 
-/** 基本的なリポジトリのトレイト。
+/**
+ * 基本的なリポジトリのトレイト。
  *  リポジトリとして、基本的に必要な機能を定義するトレイト。
  *
  *  @tparam T エンティティの型
@@ -63,7 +69,8 @@ trait EntityResolver[T <: Entity] extends Iterable[T] {
  */
 trait Repository[T <: Entity] extends EntityResolver[T] {
 
-  /** エンティティを保存する。
+  /**
+   * エンティティを保存する。
    *
    *  @param entity 保存する対象のエンティティ
    *  @throws RepositoryException リポジトリにアクセスできない場合
@@ -72,7 +79,8 @@ trait Repository[T <: Entity] extends EntityResolver[T] {
 
   def update(identifier: Identifier, entity: T) = store(entity)
 
-  /** 指定した識別子のエンティティを削除する。
+  /**
+   * 指定した識別子のエンティティを削除する。
    *
    *  @param identity 識別子
    *  @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
@@ -80,7 +88,8 @@ trait Repository[T <: Entity] extends EntityResolver[T] {
    */
   def delete(identity: Identifier)
 
-  /** 指定したエンティティを削除する。
+  /**
+   * 指定したエンティティを削除する。
    *
    *  @param entity エンティティ
    *  @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
@@ -90,20 +99,23 @@ trait Repository[T <: Entity] extends EntityResolver[T] {
 
 }
 
-/** ページングによる検索を行うためのトレイト。
+/**
+ * ページングによる検索を行うためのトレイト。
  *
  *  @author j5ik2o
  */
 trait PagingFindForRepository[T <: Entity] {
   this: Repository[T] =>
 
-  /** ページを表すクラス。
+  /**
+   * ページを表すクラス。
    *
    *  @author j5ik2o
    */
   case class Page(size: Int, entities: List[T])
 
-  /** エンティティをページ単位で検索する。
+  /**
+   * エンティティをページ単位で検索する。
    *
    *  @param pageSize 1ページの件数
    *  @param index 検索するページのインデックス
