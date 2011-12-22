@@ -24,89 +24,42 @@ import java.util.UUID
  * @author j5ik2o
  */
 trait Identifier extends Serializable {
-  /**
-   * 文字列表現としての識別子を取得する。
-   * @return 文字列表現としての識別子
-   */
-  def asString: String
-}
+  type IdType
 
-class GenericIdentifier[T](val value: T) extends Identifier {
+  val kind: String
+
+  val value: IdType
 
   override def equals(that: Any): Boolean = that match {
-    case other: GenericIdentifier[_] => value == other.asString
+    case other: Identifier => kind == other.kind && value == other.value
     case _ => false
   }
 
   override def hashCode = value.hashCode
 
-  def asString = value.toString
-
-  override def toString = "GenericIdentifier(%s)".format(value)
+  override def toString = "Identifier(%s,%s)".format(kind, value)
 
 }
 
-object GenericIdentifier {
-  /**
-   * 文字列を基に、新しいインスタンスを生成する。
-   *
-   * @param value T型
-   * @return 新しい[[org.sisioh.dddbase.core.GenericIdentifier]]のインスタンス
-   */
-  def apply[T](value: T) = new GenericIdentifier[T](value)
+object Identifier {
 
-  /**
-   * [[org.sisioh.dddbase.core.StringIdentifier]]のための抽出子メソッド。
-   *
-   * @param entityIdentifier [[org.sisioh.dddbase.core.GenericIdentifier]]
-   * @return [[org.sisioh.dddbase.core.GenericIdentifier]]のvalue
-   */
-  def unapply(identifier: GenericIdentifier[_]) = Some(identifier.asString)
-
-}
-
-/**
- * [[java.lang.String]]を使った[[org.sisioh.dddbase.core.Identifier]]の実装クラス。
- *
- * @author j5ik2o
- * @param value [[java.lang.String]]
- */
-class StringIdentifier(value: String) extends Identifier {
-
-  override def equals(that: Any): Boolean = that match {
-    case other: StringIdentifier => value == other.asString
-    case _ => false
+  def assignName(klass: Class[_], name: String) = new Identifier {
+    type IdType = String
+    val kind = klass.getName()
+    val value = name
   }
 
-  override def hashCode = value.hashCode
+  def assignId(klass: Class[_], id: Long) = new Identifier {
+    type IdType = Long
+    val kind = klass.getName()
+    val value = id
+  }
 
-  def asString = value.toString
+  def alocateId(klass: Class[_])(implicit idGenerator: () => Long) = assignId(klass, idGenerator())
 
-  override def toString = "StringIdentifier(%s)".format(value)
+  def alocateUUID(klass: Class[_], uuid: UUID) = UUIDIdentifier(klass, uuid)
 
-}
-
-/**
- * `StringIdentifier`クラスのための、コンパニオンオブジェクト。
- *
- * @author j5ik2o
- */
-object StringIdentifier {
-  /**
-   * 文字列を基に、新しいインスタンスを生成する。
-   *
-   * @param value [[java.util.String]]
-   * @return 新しい[[org.sisioh.dddbase.core.StringIdentifier]]のインスタンス
-   */
-  def apply(value: String) = new StringIdentifier(value)
-
-  /**
-   * [[org.sisioh.dddbase.core.StringIdentifier]]のための抽出子メソッド。
-   *
-   * @param entityIdentifier [[org.sisioh.dddbase.core.StringIdentifier]]
-   * @return [[org.sisioh.dddbase.core.StringIdentifier]]のvalue
-   */
-  def unapply(identifier: StringIdentifier) = Some(identifier.asString)
+  def alocateUUID(klass: Class[_]) = UUIDIdentifier(klass)
 
 }
 
@@ -116,19 +69,9 @@ object StringIdentifier {
  * @author j5ik2o
  * @param value [[java.util.UUID]]
  */
-class UUIDIdentifier(val value: UUID) extends Identifier {
-
-  override def equals(that: Any): Boolean = that match {
-    case other: UUIDIdentifier => value == other.value
-    case _ => false
-  }
-
-  override def hashCode = value.hashCode
-
+class UUIDIdentifier(val kind: String, val value: UUID) extends Identifier {
+  type IdType = UUID
   override def toString = "UUIDIdentifier(%s)".format(value)
-
-  def asString = value.toString
-
 }
 
 /**
@@ -144,7 +87,7 @@ object UUIDIdentifier {
    * @param value [[java.util.UUID]]
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
-  def apply(value: UUID): UUIDIdentifier = new UUIDIdentifier(value)
+  def apply(kind: Class[_], value: UUID): UUIDIdentifier = new UUIDIdentifier(kind.getName, value)
 
   /**
    * 文字列形式のUUIDを新しいインスタンスを生成する。
@@ -152,7 +95,7 @@ object UUIDIdentifier {
    * @param value [[java.util.UUID]]
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
-  def apply(value: String): UUIDIdentifier = apply(UUID.fromString(value))
+  def apply(kind: Class[_], value: String): UUIDIdentifier = apply(kind, UUID.fromString(value))
 
   /**
    * 文字列を基に、新しいインスタンスを生成する。
@@ -160,14 +103,14 @@ object UUIDIdentifier {
    * @param value [[java.util.UUID]]
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
-  def from(value: String): UUIDIdentifier = apply(UUID.nameUUIDFromBytes(value.getBytes))
+  def from(kind: Class[_], value: String): UUIDIdentifier = apply(kind, UUID.nameUUIDFromBytes(value.getBytes))
 
   /**
    * [[java.util.UUID]]を自動生成し、新しいインスタンスを生成する。
    *
    * @return 新しい[[org.sisioh.dddbase.core.UUIDIdentifier]]のインスタンス
    */
-  def apply(): UUIDIdentifier = new UUIDIdentifier(UUID.randomUUID)
+  def apply(kind: Class[_]): UUIDIdentifier = apply(kind, UUID.randomUUID)
 
   /**
    * [[org.sisioh.dddbase.core.UUIDIdentifier]]のための抽出子メソッド。
@@ -175,6 +118,6 @@ object UUIDIdentifier {
    * @param entityIdentifier [[org.sisioh.dddbase.core.UUIDIdentifier]]
    * @return [[org.sisioh.dddbase.core.UUIDIdentifier]]のvalue
    */
-  def unapply(entityIdentifier: UUIDIdentifier) = Some(entityIdentifier.value)
+  def unapply(entityIdentifier: UUIDIdentifier): Option[(String, UUID)] = Some(entityIdentifier.kind, entityIdentifier.value)
 }
 

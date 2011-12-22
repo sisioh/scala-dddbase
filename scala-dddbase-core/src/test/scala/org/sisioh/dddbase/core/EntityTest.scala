@@ -26,7 +26,7 @@ import org.scalatest.mock.MockitoSugar
  */
 class EntityTest extends AssertionsForJUnit with MockitoSugar {
 
-  private val id = UUIDIdentifier()
+  private val id = UUIDIdentifier(classOf[EntityTest])
 
   class TestEntity(val identifier: Identifier) extends Entity
 
@@ -59,7 +59,7 @@ class EntityTest extends AssertionsForJUnit with MockitoSugar {
 
 class EntityCloneableTest extends AssertionsForJUnit {
 
-  private val id = UUIDIdentifier()
+  private val id = UUIDIdentifier(classOf[EntityCloneableTest])
 
   @Test
   def test_cloneしたインスタンスが等価であること {

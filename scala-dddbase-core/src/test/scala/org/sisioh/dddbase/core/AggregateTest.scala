@@ -21,7 +21,7 @@ class AggregateTest extends AssertionsForJUnit {
     def apply(identifier: Identifier, name: String, dept: Department) =
       new Employee(identifier, name, dept)
 
-    def apply(name: String, dept: Department): Employee = apply(UUIDIdentifier(), name, dept)
+    def apply(name: String, dept: Department): Employee = apply(UUIDIdentifier(classOf[Employee]), name, dept)
 
     def unapply(employee: Employee) = Some(employee.identifier, employee.name, employee.dept)
   }
@@ -46,7 +46,7 @@ class AggregateTest extends AssertionsForJUnit {
   class Tire(val identifier: Identifier) extends Entity with EntityCloneable[Tire]
   object Tire {
     def apply(identifier: Identifier) = new Tire(identifier)
-    def apply(): Tire = apply(UUIDIdentifier())
+    def apply(): Tire = apply(UUIDIdentifier(classOf[Tire]))
   }
 
   class Car
@@ -66,7 +66,7 @@ class AggregateTest extends AssertionsForJUnit {
     def apply(identifier: Identifier, tires: Map[Position.Value, Tire]) =
       new Car(identifier, tires)
 
-    def apply(tires: Map[Position.Value, Tire]): Car = apply(UUIDIdentifier(), tires)
+    def apply(tires: Map[Position.Value, Tire]): Car = apply(UUIDIdentifier(classOf[Car]), tires)
   }
 
   @Test
