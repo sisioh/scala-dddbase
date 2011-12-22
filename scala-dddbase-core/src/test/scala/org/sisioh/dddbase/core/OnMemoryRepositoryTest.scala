@@ -35,7 +35,7 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
 
   import org.mockito.Mockito._
 
-  val id = UUIDIdentifier()
+  val id = UUIDIdentifier(classOf[OnMemoryRepositoryTest])
 
   @Test
   def storeText {

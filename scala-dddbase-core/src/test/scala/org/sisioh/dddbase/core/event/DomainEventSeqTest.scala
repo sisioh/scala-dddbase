@@ -14,7 +14,7 @@ class DomainEventSeqTest extends AssertionsForJUnit {
   (val identifier: Identifier, val aggregateId: Identifier)
     extends DomainEvent {
 
-    def this(aggregateId: Identifier) = this (UUIDIdentifier(), aggregateId)
+    def this(aggregateId: Identifier) = this (UUIDIdentifier(classOf[StubDomainEvent]), aggregateId)
 
     val timestamp = System.currentTimeMillis
   }
@@ -35,7 +35,7 @@ class DomainEventSeqTest extends AssertionsForJUnit {
   @Test
   def testAddEvent_IdAndSequenceNumberInitialized_2 {
 
-    val identifier = UUIDIdentifier()
+    val identifier = UUIDIdentifier(classOf[StubDomainEvent])
     val domainEvent = new StubDomainEvent(identifier)
 
     val builder = DomainEventSeq.newBuilder(identifier)
@@ -51,8 +51,8 @@ class DomainEventSeqTest extends AssertionsForJUnit {
 
   @Test
   def testAddEvent_IdAndSequenceNumberInitialized_3 {
-    val aggregateId = UUIDIdentifier()
-    val domainEvent = new StubDomainEvent(UUIDIdentifier(), aggregateId)
+    val aggregateId = UUIDIdentifier(classOf[StubDomainEvent])
+    val domainEvent = new StubDomainEvent(UUIDIdentifier(classOf[StubDomainEvent]), aggregateId)
 
     val builder = DomainEventSeq.newBuilder(aggregateId)
     builder.initializeSequenceNumber(11L)
@@ -61,7 +61,7 @@ class DomainEventSeqTest extends AssertionsForJUnit {
     expect(Some(12L))(domainEvent.sequenceNumberOption)
 
     val des = builder.result
-    val domainEvent2 = new StubDomainEvent(UUIDIdentifier(), aggregateId)
+    val domainEvent2 = new StubDomainEvent(UUIDIdentifier(classOf[StubDomainEvent]), aggregateId)
     val des2 = des :+ domainEvent2
 
     expect(1)(des.size)

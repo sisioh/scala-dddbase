@@ -54,7 +54,7 @@ class DomainEventSeq private[event] (val aggregateId: Identifier,
  *
  *  @author j5ik2o
  */
-class DomainEventSeqBuilder(val aggregateId: Identifier = UUIDIdentifier(),
+class DomainEventSeqBuilder(val aggregateId: Identifier = UUIDIdentifier(classOf[DomainEventSeqBuilder]),
   private var firstSequenceNumber: Long = 0)
   extends Builder[DomainEvent, DomainEventSeq] {
 
