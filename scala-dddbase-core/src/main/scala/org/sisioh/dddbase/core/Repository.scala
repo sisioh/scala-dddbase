@@ -20,7 +20,7 @@ package org.sisioh.dddbase.core
  * [[java.lang.Identifier]]を用いて、[[org.sisioh.dddbase.core.Entity]]
  * を検索する責務を表すインターフェイス。
  *
- *  @author j5ik2o
+ * @author j5ik2o
  */
 trait EntityResolver[T <: Entity] extends Iterable[T] {
 

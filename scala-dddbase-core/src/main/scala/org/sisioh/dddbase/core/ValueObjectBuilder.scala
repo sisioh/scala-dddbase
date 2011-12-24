@@ -21,8 +21,9 @@ import collection.mutable.ListBuffer
 /**
  * 値オブジェクトのインスタンスを生成するビルダーのトレイト。
  *
- *  @tparam T ビルド対象のインスタンスの型
- *  @tparam S このビルダークラスの型
+ * @tparam T ビルド対象のインスタンスの型
+ * @tparam S このビルダークラスの型
+ * @author j5ik2o
  */
 trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
   type Configure = (S) => Unit

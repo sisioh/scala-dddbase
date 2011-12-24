@@ -22,9 +22,9 @@ import java.io.{ ObjectOutputStream, IOException, ObjectInputStream }
 /**
  * DDDの集約パターンの集約ルートを表すトレイト。
  *
- *  "集約ルートは通常はエンティティだが、複雑な内部構造を持つ値オブジェクトのこともあれば列挙された値のこともある。"
+ * "集約ルートは通常はエンティティだが、複雑な内部構造を持つ値オブジェクトのこともあれば列挙された値のこともある。"
  *
- *  @author j5ik2o
+ * @author j5ik2o
  */
 trait AggregateRoot extends Serializable {
   this: Entity =>

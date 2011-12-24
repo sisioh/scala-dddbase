@@ -21,7 +21,7 @@ import collection.Iterator
 /**
  * オンメモリで動作するリポジトリの実装。
  *
- *  @author j5ik2o
+ * @author j5ik2o
  */
 @cloneable
 class OnMemoryRepository[T <: Entity with EntityCloneable[T]]

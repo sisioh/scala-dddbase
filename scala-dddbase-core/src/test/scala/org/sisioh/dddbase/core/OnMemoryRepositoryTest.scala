@@ -1,5 +1,6 @@
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +16,10 @@
  */
 package org.sisioh.dddbase.core
 
-
 import org.junit.runner.RunWith
 
-
-
-import org.scalatest.{AbstractSuite, FunSuite}
-import org.scalatest.junit.{AssertionsForJUnit, JUnitRunner}
+import org.scalatest.{ AbstractSuite, FunSuite }
+import org.scalatest.junit.{ AssertionsForJUnit, JUnitRunner }
 import org.junit.Test
 
 /**
@@ -42,7 +40,7 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
     val e = spy(new EntityImpl(id))
     val repository = new OnMemoryRepository[EntityImpl]()
     repository.store(e)
-    verify(e,atLeast(1)).identifier
+    verify(e, atLeast(1)).identifier
     assert(repository.contains(e))
   }
 
@@ -71,12 +69,11 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
 
     assert(repository.contains(id) == false)
     repository.store(e)
-    verify(e,atLeast(1)).identifier
+    verify(e, atLeast(1)).identifier
 
     repository.delete(e)
-    verify(e,atLeast(1)).identifier
+    verify(e, atLeast(1)).identifier
   }
-
 
   @Test
   def cloneTest {

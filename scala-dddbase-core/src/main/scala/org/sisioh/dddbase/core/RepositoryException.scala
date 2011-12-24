@@ -19,7 +19,7 @@ package org.sisioh.dddbase.core
 /**
  * リポジトリにアクセスできなかった場合の例外。
  *
- *  @author j5ik2o
+ * @author j5ik2o
  */
 case class RepositoryException(cause: Option[Throwable]) extends Exception {
   /**
