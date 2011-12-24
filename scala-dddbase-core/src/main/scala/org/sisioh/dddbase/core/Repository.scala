@@ -17,12 +17,12 @@
 package org.sisioh.dddbase.core
 
 /**
- * [[java.lang.Identifier]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+ * [[org.sisioh.dddbase.core.Identifier]]を用いて、[[org.sisioh.dddbase.core.Entity]]
  * を検索する責務を表すインターフェイス。
  *
  * @author j5ik2o
  */
-trait EntityResolver[T <: Entity] extends Iterable[T] {
+trait EntityResolver[T <: Entity] {
 
   /**
    * 識別子に該当するエンティティを取得する。
@@ -45,7 +45,7 @@ trait EntityResolver[T <: Entity] extends Iterable[T] {
    *  @return 存在する場合はtrue
    *  @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def contains(identifier: Identifier): Boolean = exists(_.identifier == identifier)
+  def contains(identifier: Identifier): Boolean
 
   /**
    * 指定したのエンティティが存在するかを返す。
@@ -54,6 +54,15 @@ trait EntityResolver[T <: Entity] extends Iterable[T] {
    *  @return 存在する場合はtrue
    *  @throws RepositoryException リポジトリにアクセスできない場合
    */
+  def contains(entity: T): Boolean
+
+}
+
+trait EntityIterableResolver[T <: Entity] extends Iterable[T] {
+  this: EntityResolver[T] =>
+
+  def contains(identifier: Identifier): Boolean = exists(_.identifier == identifier)
+
   def contains(entity: T): Boolean = exists(_ == entity)
 
 }
@@ -62,64 +71,70 @@ trait EntityResolver[T <: Entity] extends Iterable[T] {
  * 基本的なリポジトリのトレイト。
  *  リポジトリとして、基本的に必要な機能を定義するトレイト。
  *
- *  @tparam T エンティティの型
- *  @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ * @tparam ID エンティティの識別子の型
  *
- *  @author j5ik2o
+ * @author j5ik2o
  */
 trait Repository[T <: Entity] extends EntityResolver[T] {
 
   /**
    * エンティティを保存する。
    *
-   *  @param entity 保存する対象のエンティティ
-   *  @throws RepositoryException リポジトリにアクセスできない場合
+   * @param entity 保存する対象のエンティティ
+   * @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def store(entity: T)
+  def store(entity: T): Unit
 
   def update(identifier: Identifier, entity: T) = store(entity)
 
   /**
    * 指定した識別子のエンティティを削除する。
    *
-   *  @param identity 識別子
-   *  @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
-   *  @throws RepositoryException リポジトリにアクセスできない場合
+   * @param identity 識別子
+   * @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
+   * @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def delete(identity: Identifier)
+  def delete(identity: Identifier): Unit
 
   /**
    * 指定したエンティティを削除する。
    *
-   *  @param entity エンティティ
-   *  @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
-   *  @throws RepositoryException リポジトリにアクセスできない場合
+   * @param entity エンティティ
+   * @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
+   * @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def delete(entity: T)
+  def delete(entity: T): Unit
 
+}
+
+trait CallbackEntityResolver[T <: Entity] {
+  this: EntityResolver[T] =>
+
+  def resolve[R](callbak: T => R): R
 }
 
 /**
  * ページングによる検索を行うためのトレイト。
  *
- *  @author j5ik2o
+ * @author j5ik2o
  */
-trait PagingFindForRepository[T <: Entity] {
-  this: Repository[T] =>
+trait PagingEntityResolver[T <: Entity] {
+  this: EntityResolver[T] =>
 
   /**
    * ページを表すクラス。
    *
-   *  @author j5ik2o
+   * @author j5ik2o
    */
   case class Page(size: Int, entities: List[T])
 
   /**
    * エンティティをページ単位で検索する。
    *
-   *  @param pageSize 1ページの件数
-   *  @param index 検索するページのインデックス
-   *  @return ページ
+   * @param pageSize 1ページの件数
+   * @param index 検索するページのインデックス
+   * @return ページ
    */
-  def findPage(pageSize: Int, index: Int): Page
+  def resolvePage(pageSize: Int, index: Int): Page
 }
