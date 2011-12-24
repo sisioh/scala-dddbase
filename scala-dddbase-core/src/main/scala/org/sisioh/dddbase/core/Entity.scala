@@ -16,22 +16,25 @@
  */
 package org.sisioh.dddbase.core
 
-/**エンティティを表すトレイト。
+/**
+ * エンティティを表すトレイト。
  *
  * @author j5ik2o
  */
 trait Entity {
 
-  /**エンティティの識別子。*/
+  /** エンティティの識別子。*/
   val identifier: Identifier
 
-  /**ハッシュコードを返す。
+  /**
+   * ハッシュコードを返す。
    *
    * @return ハッシュコード
    */
   override final def hashCode: Int = identifier.hashCode
 
-  /**指定されたオブジェクトと等価であるかを判定する。
+  /**
+   * 指定されたオブジェクトと等価であるかを判定する。
    *
    * @param that オブジェクト
    * @return 等価である場合はtrue

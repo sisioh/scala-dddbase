@@ -11,17 +11,19 @@ object DDDBaseBuild extends Build {
    lazy val commonSettings = Defaults.defaultSettings ++ Seq(
       organization := "org.sisioh",
       scalaVersion := "2.9.1",
+      sbtVersion := "0.11.2",
       libraryDependencies ++= Seq(junit,mockito,scalaTest),
       scalacOptions ++= Seq("-unchecked", "-deprecation"),
       shellPrompt := { "sbt (%s)> " format projectId(_) },
+      credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
       publish
       )
   val publish = publishTo <<= (version) { version: String =>
     if (version.trim.endsWith("SNAPSHOT")) {
-      Some(Resolver.ssh("sisioh-repo-snapshot", 
+      Some(Resolver.ssh("sisioh-repo", 
 	    "maven.sisioh.org", "/var/www/maven.sisioh.org/snapshot"))
     }else{
-      Some(Resolver.ssh("sisioh-repo-release", 
+      Some(Resolver.ssh("sisioh-repo", 
             "maven.sisioh.org", "/var/www/maven.sisioh.org/release"))
     }
   }
