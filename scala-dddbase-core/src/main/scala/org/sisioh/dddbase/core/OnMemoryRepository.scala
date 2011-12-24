@@ -25,7 +25,7 @@ import collection.Iterator
  */
 @cloneable
 class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
-  extends Repository[T] {
+  extends Repository[T] with EntityIterableResolver[T] {
 
   private[core] var entities = collection.mutable.Map.empty[Identifier, T]
 
@@ -38,9 +38,7 @@ class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
 
   override def clone: OnMemoryRepository[T] = {
     val result = super.clone.asInstanceOf[OnMemoryRepository[T]]
-    val _entities = collection.mutable.Map.empty[Identifier, T]
-    result.entities.foreach(e => _entities += (e._1 -> e._2.clone))
-    result.entities = _entities
+    result.entities = result.entities.map(e =>(e._1 -> e._2.clone))
     result
   }
 
