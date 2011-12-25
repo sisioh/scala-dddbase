@@ -38,7 +38,7 @@ class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
 
   override def clone: OnMemoryRepository[T] = {
     val result = super.clone.asInstanceOf[OnMemoryRepository[T]]
-    result.entities = result.entities.map(e =>(e._1 -> e._2.clone))
+    result.entities = result.entities.map(e => (e._1 -> e._2.clone))
     result
   }
 
@@ -48,6 +48,14 @@ class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
       throw new EntityNotFoundException()
     }
     entities(identifier).clone
+  }
+
+  def resolveOption(identifier: Identifier) = {
+    require(identifier != null)
+    if (contains(identifier) == false)
+      None
+    else
+      Some(entities(identifier).clone)
   }
 
   def store(entity: T) =
