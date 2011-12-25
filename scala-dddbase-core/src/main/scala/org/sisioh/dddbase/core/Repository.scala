@@ -35,6 +35,8 @@ trait EntityResolver[T <: Entity] {
    *  @throws RepositoryException リポジトリにアクセスできない場合
    */
   def resolve(identifier: Identifier): T
+  
+  def resolveOption(identifier: Identifier): Option[T]
 
   def apply(identifier: Identifier) = resolve(identifier)
 

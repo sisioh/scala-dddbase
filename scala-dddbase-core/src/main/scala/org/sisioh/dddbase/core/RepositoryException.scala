@@ -21,10 +21,5 @@ package org.sisioh.dddbase.core
  *
  * @author j5ik2o
  */
-case class RepositoryException(cause: Option[Throwable]) extends Exception {
-  /**
-   * インスタンスを生成する。
-   */
-  def this() = this(None)
-}
-
+case class RepositoryException(message: Option[String] = None, cause: Option[Throwable] = None)
+  extends Exception(message.getOrElse(null), cause.getOrElse(null))
