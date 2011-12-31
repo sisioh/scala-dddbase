@@ -16,11 +16,12 @@
  */
 package org.sisioh.dddbase.core.event
 
-import org.sisioh.dddbase.core.Identifier
+import scalaz.Identity
+import java.util.UUID
 
 trait Event {
 
-  val identifier: Identifier
+  val identifier: Identity[UUID]
 
   val timestamp: Long
 

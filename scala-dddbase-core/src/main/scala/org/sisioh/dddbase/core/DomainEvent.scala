@@ -17,19 +17,21 @@
 package org.sisioh.dddbase.core
 
 import org.sisioh.dddbase.core.event.Event
+import java.util.UUID
+import scalaz.Identity
 
 /**
  * ドメインイベントを表すトレイト。
  *
  * @author j5ik2o
  */
-trait DomainEvent extends Event with Entity {
+trait DomainEvent extends Event with Entity[UUID] {
 
   /** イベントの識別子。 */
-  override val identifier: Identifier
+  override val identifier: Identity[UUID]
 
   /** 集約ルートの識別子。 */
-  val aggregateId: Identifier
+  val aggregateId: Identity[UUID]
 
   /** 順序。 */
   var sequenceNumberOption: Option[Long] = None
