@@ -8,12 +8,18 @@ object DDDBaseBuild extends Build {
    val junit = "junit" % "junit" % "4.8.1" % "test" 
    val mockito = "org.mockito" % "mockito-core" % "1.8.5" % "test"
 
+   ///val = "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots/"
+
+  // NOTE: New Group ID from Scalaz 6.x and onwards
+   val scalaz = "org.scalaz" %% "scalaz-core" % "6.0.3"
+
+
    lazy val commonSettings = Defaults.defaultSettings ++ Seq(
       organization := "org.sisioh",
       version := "0.1", 
       scalaVersion := "2.9.1",
       sbtVersion := "0.11.2",
-      libraryDependencies ++= Seq(junit,mockito,scalaTest),
+      libraryDependencies ++= Seq(junit,mockito,scalaTest,scalaz),
       scalacOptions ++= Seq("-unchecked", "-deprecation"),
       shellPrompt := { "sbt (%s)> " format projectId(_) },
       credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),

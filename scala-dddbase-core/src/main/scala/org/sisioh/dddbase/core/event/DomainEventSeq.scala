@@ -19,16 +19,16 @@ package org.sisioh.dddbase.core.event
 import scala.collection._
 import generic.CanBuildFrom
 import mutable.{ Builder, ListBuffer }
-import org.sisioh.dddbase.core.Identifier
 import org.sisioh.dddbase.core.DomainEvent
-import org.sisioh.dddbase.core.UUIDIdentifier
+import scalaz.Identity
+import java.util.UUID
 
 /**
  * [[org.sisioh.dddbase.core.DomainEvent]]を格納するコンテナ。
  *
  *  @author j5ik2o
  */
-class DomainEventSeq private[event] (val aggregateId: Identifier,
+class DomainEventSeq private[event] (val aggregateId: Identity[UUID],
   val lastSequenceNumber: Long,
   private val source: Seq[DomainEvent])
   extends Seq[DomainEvent] with SeqLike[DomainEvent, DomainEventSeq] {
@@ -54,7 +54,7 @@ class DomainEventSeq private[event] (val aggregateId: Identifier,
  *
  *  @author j5ik2o
  */
-class DomainEventSeqBuilder(val aggregateId: Identifier = UUIDIdentifier(classOf[DomainEventSeqBuilder]),
+class DomainEventSeqBuilder(val aggregateId: Identity[UUID] = Identity(UUID.randomUUID),
   private var firstSequenceNumber: Long = 0)
   extends Builder[DomainEvent, DomainEventSeq] {
 
@@ -109,7 +109,7 @@ object DomainEventSeq {
   type Elem = DomainEvent
   type To = DomainEventSeq
 
-  def apply(aggregateId: Identifier, source: Seq[DomainEvent]): DomainEventSeq = {
+  def apply(aggregateId: Identity[UUID], source: Seq[DomainEvent]): DomainEventSeq = {
     val builder = newBuilder(aggregateId)
     builder ++= source
     builder.result
@@ -121,7 +121,7 @@ object DomainEventSeq {
     builder.result
   }
 
-  def apply(aggregateId: Identifier): DomainEventSeq = {
+  def apply(aggregateId: Identity[UUID]): DomainEventSeq = {
     val builder = newBuilder(aggregateId)
     builder.result
   }
@@ -148,20 +148,20 @@ object DomainEventSeq {
   /**
    * 新しいビルダーを生成する。
    *
-   *  @return 新しいビルダー
+   * @return 新しいビルダー
    */
   def newBuilder: DomainEventSeqBuilder = new DomainEventSeqBuilder
 
   /**
    * 新しいビルダーを生成する。
    *
-   *  @param aggregateId 集約の識別子
-   *  @return 新しいビルダー
+   * @param aggregateId 集約の識別子
+   * @return 新しいビルダー
    */
-  def newBuilder(aggregateId: Identifier): DomainEventSeqBuilder =
+  def newBuilder(aggregateId: Identity[UUID]): DomainEventSeqBuilder =
     new DomainEventSeqBuilder(aggregateId)
 
-  def newBuilder(aggregateId: Identifier, firstSequenceNumber: Long): DomainEventSeqBuilder =
+  def newBuilder(aggregateId: Identity[UUID], firstSequenceNumber: Long): DomainEventSeqBuilder =
     new DomainEventSeqBuilder(aggregateId, firstSequenceNumber)
 
 }

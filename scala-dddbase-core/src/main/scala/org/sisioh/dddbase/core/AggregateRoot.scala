@@ -18,6 +18,7 @@ package org.sisioh.dddbase.core
 
 import event.DomainEventSeq
 import java.io.{ ObjectOutputStream, IOException, ObjectInputStream }
+import java.util.UUID
 
 /**
  * DDDの集約パターンの集約ルートを表すトレイト。
@@ -26,11 +27,11 @@ import java.io.{ ObjectOutputStream, IOException, ObjectInputStream }
  *
  * @author j5ik2o
  */
-trait AggregateRoot extends Serializable {
-  this: Entity =>
+trait AggregateRoot[ID <: UUID] extends Serializable {
+  this: Entity[UUID] =>
 
   @transient
-  private var eventBuilder = DomainEventSeq.newBuilder(identifier)
+  private var eventBuilder = DomainEventSeq.newBuilder(this.identifier)
 
   @transient
   private var lastCommitted: Long = _

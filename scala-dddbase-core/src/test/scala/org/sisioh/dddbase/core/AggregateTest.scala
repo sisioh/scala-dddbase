@@ -18,6 +18,8 @@ package org.sisioh.dddbase.core
 
 import org.scalatest.junit.AssertionsForJUnit
 import org.junit.Test
+import scalaz.Identity
+import java.util.UUID
 
 
 class AggregateTest extends AssertionsForJUnit {
@@ -25,19 +27,19 @@ class AggregateTest extends AssertionsForJUnit {
   case class Department(name: String)
 
   class Employee
-  (val identifier: Identifier,
+  (val identifier: Identity[UUID],
    var name: String,
    var dept: Department)
-    extends Entity with EntityCloneable[Employee]{
+    extends Entity[UUID] with EntityCloneable[Employee,UUID]{
     override def toString = "Employee(%s, %s, %s)".format(identifier, name, dept)
   }
 
   object Employee {
 
-    def apply(identifier: Identifier, name: String, dept: Department) =
+    def apply(identifier: Identity[UUID], name: String, dept: Department) =
       new Employee(identifier, name, dept)
 
-    def apply(name: String, dept: Department): Employee = apply(UUIDIdentifier(classOf[Employee]), name, dept)
+    def apply(name: String, dept: Department): Employee = apply(Identity(UUID.randomUUID), name, dept)
 
     def unapply(employee: Employee) = Some(employee.identifier, employee.name, employee.dept)
   }
@@ -59,16 +61,16 @@ class AggregateTest extends AssertionsForJUnit {
     val FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT = Value
   }
 
-  class Tire(val identifier: Identifier) extends Entity with EntityCloneable[Tire]
+  class Tire(val identifier: Identity[UUID]) extends Entity[UUID] with EntityCloneable[Tire,UUID]
   object Tire {
-    def apply(identifier: Identifier) = new Tire(identifier)
-    def apply(): Tire = apply(UUIDIdentifier(classOf[Tire]))
+    def apply(identifier: Identity[UUID]) = new Tire(identifier)
+    def apply(): Tire = apply(Identity(UUID.randomUUID()))
   }
 
   class Car
-  (val identifier: Identifier,
+  (val identifier: Identity[UUID],
    var tires: Map[Position.Value, Tire])
-    extends Entity with EntityCloneable[Car]{
+    extends Entity[UUID] with EntityCloneable[Car,UUID]{
 
     override def clone: Car = {
       val result = super.clone.asInstanceOf[Car]
@@ -79,10 +81,10 @@ class AggregateTest extends AssertionsForJUnit {
   }
 
   object Car {
-    def apply(identifier: Identifier, tires: Map[Position.Value, Tire]) =
+    def apply(identifier: Identity[UUID], tires: Map[Position.Value, Tire]) =
       new Car(identifier, tires)
 
-    def apply(tires: Map[Position.Value, Tire]): Car = apply(UUIDIdentifier(classOf[Car]), tires)
+    def apply(tires: Map[Position.Value, Tire]): Car = apply(Identity(UUID.randomUUID()), tires)
   }
 
   @Test
