@@ -16,18 +16,20 @@
  */
 package org.sisioh.dddbase.core
 
+import scalaz.Identity
+
 /**
  * [[org.sisioh.dddbase.core.EntityMeta]]のデフォルト実装。
  *
  * @tparam T 参照対象オブジェクトの型
- * @param identifier [[org.sisioh.dddbase.core.Identifier]]
+ * @param identifier [[scalaz.Identity]]
  * @author j5ik2o
  */
-case class DefaultEntityMeta[T <: Entity](identifier: Identifier) extends EntityMeta[T] {
+case class DefaultEntityMeta[T <: Entity[ID], ID <: java.io.Serializable](identifier: Identity[ID]) extends EntityMeta[T, ID] {
 
   def this(referent: T) = this(referent.identifier)
 
-  def isReferenceOf(target: Entity) =
+  def isReferenceOf(target: Entity[ID]) =
     identifier == target.identifier
 
 }

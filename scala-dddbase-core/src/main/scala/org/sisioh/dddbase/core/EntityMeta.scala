@@ -16,30 +16,34 @@
  */
 package org.sisioh.dddbase.core
 
+import scalaz.Identity
+
+
 /**
  * [[org.sisioh.dddbase.core.Entity]]を説明するメタデータ。
  *
  * <p>イミュータブルでなければならない(must)。</p>
  *
  * @tparam T 実体のモデル型
+ * @tparam ID 識別子の型
  * @author j5ik2o
  */
-trait EntityMeta[T <: Entity] {
+trait EntityMeta[T <: Entity[ID], ID <: java.io.Serializable] {
 
   /**
    * 参照先要素の同一性を調べる。
    *
    * @param obj 比較対象
-   * @return 同じIDの要素を参照している場合は{@code true}、そうでない場合は{@code false}
+   * @return 同じIDの要素を参照している場合は{ @code true}、そうでない場合は{ @code false}
    */
   def equals(obj: Any): Boolean
 
   /**
-   * 実体を特定する識別子として[[org.sisioh.dddbase.core.Identifier]]を取得する。
+   * 実体を特定する識別子として[[scalaz.Identity]]を取得する。
    *
-   * @return [[org.sisioh.dddbase.core.Identifier]]
+   * @return [[scalaz.Identity]]
    */
-  val identifier: Identifier
+  val identifier: Identity[ID]
 
   /**
    * この参照オブジェクトが引数{@code target}の参照かどうか調べる。
@@ -53,9 +57,9 @@ trait EntityMeta[T <: Entity] {
    * その後の処理で`ClassCastException`が発生する可能性があるが、
    * [[java.util.UUID]] の衝突率は無視できるほど小さい。</p>
    *
-   * @param target 対象{@link Entity}
-   * @return この参照オブジェクトが引数{@code target}の参照の場合は{@code true}、そうでない場合は{@code false}
+   * @param target 対象{ @link Entity}
+   * @return この参照オブジェクトが引数{ @code target}の参照の場合は{ @code true}、そうでない場合は{ @code false}
    */
-  def isReferenceOf(target: Entity): Boolean
+  def isReferenceOf(target: Entity[ID]): Boolean
 
 }

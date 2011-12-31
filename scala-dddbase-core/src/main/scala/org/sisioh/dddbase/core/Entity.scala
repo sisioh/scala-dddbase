@@ -16,15 +16,19 @@
  */
 package org.sisioh.dddbase.core
 
+import scalaz._
+import Scalaz._
+
 /**
  * エンティティを表すトレイト。
  *
  * @author j5ik2o
  */
-trait Entity {
+trait Entity[ID <: java.io.Serializable] {
 
-  /** エンティティの識別子。*/
-  val identifier: Identifier
+
+  /**エンティティの識別子。*/
+  val identifier: Identity[ID]
 
   /**
    * ハッシュコードを返す。
@@ -40,7 +44,7 @@ trait Entity {
    * @return 等価である場合はtrue
    */
   override final def equals(that: Any): Boolean = that match {
-    case that: Entity => identifier == that.identifier
+    case that: Entity[_] => identifier == that.identifier
     case _ => false
   }
 
@@ -53,4 +57,32 @@ trait Entity {
   //  def commitEvents
 
 }
+
+/**
+ * クローンに対応したエンティティを実装するためのトレイト。
+ *
+ * @author j5ik2o
+ */
+@cloneable
+trait EntityCloneable[T <: Entity[ID], ID <: java.io.Serializable] {
+  this: Entity[ID] =>
+
+  /**
+   * クローンを生成する。
+   *
+   * @return クローンしたインスタンス
+   */
+  override def clone: T =
+    super.clone.asInstanceOf[T]
+}
+//
+//object Implictits {
+//
+//  implicit def equalEntity[ID <: java.io.Serializable]: Equal[Entity[ID]] = equalA
+//
+//  implicit def showsEntity[E <: Entity[ID], ID <: java.io.Serializable]: Show[E] = shows(_.toString)
+//
+//}
+
+
 

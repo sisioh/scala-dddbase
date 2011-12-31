@@ -16,13 +16,15 @@
  */
 package org.sisioh.dddbase.core
 
+import scalaz.Identity
+
 /**
- * [[org.sisioh.dddbase.core.Identifier]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+ * [[scalaz.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
  * を検索する責務を表すインターフェイス。
  *
  * @author j5ik2o
  */
-trait EntityResolver[T <: Entity] {
+trait EntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
 
   /**
    * 識別子に該当するエンティティを取得する。
@@ -34,11 +36,11 @@ trait EntityResolver[T <: Entity] {
    *  @throws EntityNotFoundException エンティティが見つからなかった場合
    *  @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def resolve(identifier: Identifier): T
+  def resolve(identifier: Identity[ID]): T
   
-  def resolveOption(identifier: Identifier): Option[T]
+  def resolveOption(identifier: Identity[ID]): Option[T]
 
-  def apply(identifier: Identifier) = resolve(identifier)
+  def apply(identifier: Identity[ID]) = resolve(identifier)
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。
@@ -47,7 +49,7 @@ trait EntityResolver[T <: Entity] {
    *  @return 存在する場合はtrue
    *  @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def contains(identifier: Identifier): Boolean
+  def contains(identifier: Identity[ID]): Boolean
 
   /**
    * 指定したのエンティティが存在するかを返す。
@@ -60,10 +62,10 @@ trait EntityResolver[T <: Entity] {
 
 }
 
-trait EntityIterableResolver[T <: Entity] extends Iterable[T] {
-  this: EntityResolver[T] =>
+trait EntityIterableResolver[T <: Entity[ID], ID <: java.io.Serializable] extends Iterable[T] {
+  this: EntityResolver[T,ID] =>
 
-  def contains(identifier: Identifier): Boolean = exists(_.identifier == identifier)
+  def contains(identifier: Identity[ID]): Boolean = exists(_.identifier == identifier)
 
   def contains(entity: T): Boolean = exists(_ == entity)
 
@@ -78,7 +80,7 @@ trait EntityIterableResolver[T <: Entity] extends Iterable[T] {
  *
  * @author j5ik2o
  */
-trait Repository[T <: Entity] extends EntityResolver[T] {
+trait Repository[T <: Entity[ID], ID <: java.io.Serializable] extends EntityResolver[T,ID] {
 
   /**
    * エンティティを保存する。
@@ -88,7 +90,7 @@ trait Repository[T <: Entity] extends EntityResolver[T] {
    */
   def store(entity: T): Unit
 
-  def update(identifier: Identifier, entity: T) = store(entity)
+  def update(identifier: Identity[ID], entity: T) = store(entity)
 
   /**
    * 指定した識別子のエンティティを削除する。
@@ -97,7 +99,7 @@ trait Repository[T <: Entity] extends EntityResolver[T] {
    * @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
    * @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def delete(identity: Identifier): Unit
+  def delete(identity: Identity[ID]): Unit
 
   /**
    * 指定したエンティティを削除する。
@@ -110,8 +112,8 @@ trait Repository[T <: Entity] extends EntityResolver[T] {
 
 }
 
-trait CallbackEntityResolver[T <: Entity] {
-  this: EntityResolver[T] =>
+trait CallbackEntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
+  this: EntityResolver[T,ID] =>
 
   def resolve[R](callbak: T => R): R
 }
@@ -121,8 +123,8 @@ trait CallbackEntityResolver[T <: Entity] {
  *
  * @author j5ik2o
  */
-trait PagingEntityResolver[T <: Entity] {
-  this: EntityResolver[T] =>
+trait PagingEntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
+  this: EntityResolver[T,ID] =>
 
   /**
    * ページを表すクラス。

@@ -17,6 +17,8 @@
 package org.sisioh.dddbase.core
 
 import collection.Iterator
+import scalaz._
+import Scalaz._
 
 /**
  * オンメモリで動作するリポジトリの実装。
@@ -24,25 +26,25 @@ import collection.Iterator
  * @author j5ik2o
  */
 @cloneable
-class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
-  extends Repository[T] with EntityIterableResolver[T] {
+class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID <: java.io.Serializable]
+  extends Repository[T, ID] with EntityIterableResolver[T, ID] {
 
-  private[core] var entities = collection.mutable.Map.empty[Identifier, T]
+  private[core] var entities = collection.mutable.Map.empty[Identity[ID], T]
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryRepository[_] => this.entities == that.entities
+    case that: OnMemoryRepository[_, _] => this.entities == that.entities
     case _ => false
   }
 
   override def hashCode = entities.hashCode
 
-  override def clone: OnMemoryRepository[T] = {
-    val result = super.clone.asInstanceOf[OnMemoryRepository[T]]
+  override def clone: OnMemoryRepository[T, ID] = {
+    val result = super.clone.asInstanceOf[OnMemoryRepository[T, ID]]
     result.entities = result.entities.map(e => (e._1 -> e._2.clone))
     result
   }
 
-  def resolve(identifier: Identifier) = {
+  def resolve(identifier: Identity[ID]) = {
     require(identifier != null)
     if (contains(identifier) == false) {
       throw new EntityNotFoundException()
@@ -50,7 +52,7 @@ class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
     entities(identifier).clone
   }
 
-  def resolveOption(identifier: Identifier) = {
+  def resolveOption(identifier: Identity[ID]) = {
     require(identifier != null)
     if (contains(identifier) == false)
       None
@@ -61,7 +63,7 @@ class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
   def store(entity: T) =
     entities += (entity.identifier -> entity)
 
-  def delete(identifier: Identifier) = {
+  def delete(identifier: Identity[ID]) = {
     if (contains(identifier) == false) {
       throw new EntityNotFoundException()
     }
@@ -73,3 +75,11 @@ class OnMemoryRepository[T <: Entity with EntityCloneable[T]]
 
   def iterator: Iterator[T] = entities.map(_._2.clone).iterator
 }
+//
+//abstract class AbstractOnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID <: java.io.Serializable] {
+//
+//  implicit def equalEntity: Equal[OnMemoryRepository[T, ID]] = equalA
+//
+//  implicit def showsEntity: Show[OnMemoryRepository[T, ID]] = shows(_.toString)
+//
+//}

@@ -22,5 +22,5 @@ package org.sisioh.dddbase.core
  * @author j5ik2o
  */
 case class EntityNotFoundException(message: Option[String] = None, cause: Option[Throwable] = None)
-  extends Exception(message.getOrElse(null), cause.getOrElse(null))
+  extends BaseException(message, cause)
 
