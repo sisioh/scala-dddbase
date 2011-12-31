@@ -21,6 +21,8 @@ import org.junit.runner.RunWith
 import org.scalatest.{ AbstractSuite, FunSuite }
 import org.scalatest.junit.{ AssertionsForJUnit, JUnitRunner }
 import org.junit.Test
+import java.util.UUID
+import scalaz.Identity
 
 /**
  * [[jp.tricreo.scala.ddd.base.lifecycle.OnMemoryRepository]]のためのテスト。
@@ -29,16 +31,16 @@ import org.junit.Test
  */
 class OnMemoryRepositoryTest extends AssertionsForJUnit {
 
-  class EntityImpl(val identifier: Identifier) extends Entity with EntityCloneable[EntityImpl]
+  class EntityImpl(val identifier: Identity[UUID]) extends Entity[UUID] with EntityCloneable[EntityImpl,UUID]
 
   import org.mockito.Mockito._
 
-  val id = UUIDIdentifier(classOf[OnMemoryRepositoryTest])
+  val id = Identity(UUID.randomUUID())
 
   @Test
   def storeText {
     val e = spy(new EntityImpl(id))
-    val repository = new OnMemoryRepository[EntityImpl]()
+    val repository = new OnMemoryRepository[EntityImpl, UUID]()
     repository.store(e)
     verify(e, atLeast(1)).identifier
     assert(repository.contains(e))
@@ -46,7 +48,7 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
 
   @Test
   def resolveTest {
-    val repository = new OnMemoryRepository[EntityImpl]()
+    val repository = new OnMemoryRepository[EntityImpl,UUID]()
     intercept[EntityNotFoundException] {
       repository.resolve(id)
     }
@@ -62,7 +64,7 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
   @Test
   def deleteTest {
     val e = spy(new EntityImpl(id))
-    val repository = new OnMemoryRepository[EntityImpl]()
+    val repository = new OnMemoryRepository[EntityImpl,UUID]()
     intercept[EntityNotFoundException] {
       repository.delete(id)
     }
@@ -78,7 +80,7 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
   @Test
   def cloneTest {
     val e = spy(new EntityImpl(id))
-    val repository = new OnMemoryRepository[EntityImpl]()
+    val repository = new OnMemoryRepository[EntityImpl,UUID]()
     repository.store(e)
     val cloneRepository = repository.clone
     assert(repository == cloneRepository)

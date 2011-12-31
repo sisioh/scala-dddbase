@@ -19,23 +19,31 @@ package org.sisioh.dddbase.core
 import org.scalatest.junit.AssertionsForJUnit
 import org.junit.Test
 import org.scalatest.mock.MockitoSugar
+import java.util.UUID
+import scalaz._
+import Scalaz._
+
+
 
 /**
- * [[Entity]]のためのテスト。
+ * [[org.sisioh.dddbase.core.Entity]]のためのテスト。
  *
  * @author j5ik2o
  */
-class EntityTest extends AssertionsForJUnit with MockitoSugar {
+class EntityTest extends /*AssertionsForJUnit with*/ MockitoSugar {
 
-  private val id = UUIDIdentifier(classOf[EntityTest])
-
-  class TestEntity(val identifier: Identifier) extends Entity
+  val id = Identity(UUID.randomUUID())
+  
+  class TestEntity(val identifier: Identity[UUID]) extends Entity[UUID]
+  class TestEntity2(val identifier: Identity[UUID]) extends Entity[UUID]
 
   @Test
   def test_コンストラクタで指定した識別子が取得できること {
     val entity = new TestEntity(id)
+    val entity2 = new TestEntity(id)
 
-    assert(entity.identifier == id)
+    assert(entity == entity2)
+    assert(entity == entity)
   }
 
   @Test
@@ -60,11 +68,11 @@ class EntityTest extends AssertionsForJUnit with MockitoSugar {
 
 class EntityCloneableTest extends AssertionsForJUnit {
 
-  private val id = UUIDIdentifier(classOf[EntityCloneableTest])
+  val id = Identity(UUID.randomUUID())
 
   @Test
   def test_cloneしたインスタンスが等価であること {
-    val entity1 = new Entity with EntityCloneable[Entity] {
+    val entity1 = new Entity[UUID] with EntityCloneable[Entity[UUID],UUID] {
       val identifier = id
     }
     val other = entity1.clone;
