@@ -1,3 +1,5 @@
+package org.sisioh.common.event
+
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
  * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
@@ -14,27 +16,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
-
-import org.sisioh.dddbase.core.event.Event
-import java.util.UUID
-import scalaz.Identity
-
 /**
- * ドメインイベントを表すトレイト。
- *
- * @author j5ik2o
+ * User: junichi
+ * Date: 11/04/18
+ * Time: 17:03
+ * To change this template use File | Settings | File Templates.
  */
-trait DomainEvent extends Event with Entity[UUID] {
 
-  /** イベントの識別子。 */
-  override val identifier: Identity[UUID]
-
-  /** 集約ルートの識別子。 */
-  val aggregateId: Identity[UUID]
-
-  /** 順序。 */
-  var sequenceNumberOption: Option[Long] = None
-
-}
-
+trait EventBus

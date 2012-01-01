@@ -27,9 +27,9 @@ import scalaz.Identity
  */
 case class DefaultEntityMeta[T <: Entity[ID], ID <: java.io.Serializable](identifier: Identity[ID]) extends EntityMeta[T, ID] {
 
-  def this(referent: T) = this(referent.identifier)
+  def this(referent: T) = this(referent.identity)
 
   def isReferenceOf(target: Entity[ID]) =
-    identifier == target.identifier
+    identifier == target.identity
 
 }

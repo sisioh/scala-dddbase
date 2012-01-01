@@ -2,16 +2,15 @@ package org.sisioh.dddbase.core.event
 
 import org.junit.Test
 import org.scalatest.junit.AssertionsForJUnit
-import org.sisioh.dddbase.core.DomainEvent
 import scalaz.Identity
 import java.util.UUID
 
-/**[[DomainEventSeq]]のためのテスト。
+/**[[org.sisioh.dddbase.core.event.DomainEventSeq]]のためのテスト。
  */
 class DomainEventSeqTest extends AssertionsForJUnit {
 
   class StubDomainEvent
-  (val identifier: Identity[UUID], val aggregateId: Identity[UUID])
+  (val identity: Identity[UUID], val aggregateIdentity: Identity[UUID])
     extends DomainEvent {
 
     def this(aggregateId: Identity[UUID]) = this (Identity(UUID.randomUUID()), aggregateId)
@@ -22,12 +21,12 @@ class DomainEventSeqTest extends AssertionsForJUnit {
 
   //  def testAddEvent_IdAndSequenceNumberInitialized_1 {
   //
-  //    val aggregateId = Identifier()
+  //    val aggregateIdentity = Identifier()
   //    val domainEvent = new StubDomainEvent()
   //
-  //    val des1 = DomainEventSeq(aggregateId)
+  //    val des1 = DomainEventSeq(aggregateIdentity)
   //
-  //    expect(aggregateId)(des1.aggregateId)
+  //    expect(aggregateIdentity)(des1.aggregateIdentity)
   //
   //  }
   //
@@ -66,18 +65,18 @@ class DomainEventSeqTest extends AssertionsForJUnit {
 
     expect(1)(des.size)
     expect(Some(13L))(domainEvent2.sequenceNumberOption)
-    expect(aggregateId)(domainEvent2.aggregateId)
+    expect(aggregateId)(domainEvent2.aggregateIdentity)
 
 
   }
 
   //
   //    public void testAddEvent_IdAndSequenceNumberInitialized() {
-  //        AggregateIdentifier identifier = new UUIDAggregateIdentifier();
+  //        AggregateIdentifier identity = new UUIDAggregateIdentifier();
   //        StubDomainEvent domainEvent = new StubDomainEvent();
   //
-  //        EventContainer eventContainer = new EventContainer(identifier);
-  //        assertEquals(identifier, eventContainer.getAggregateIdentifier());
+  //        EventContainer eventContainer = new EventContainer(identity);
+  //        assertEquals(identity, eventContainer.getAggregateIdentifier());
   //        eventContainer.initializeSequenceNumber(11L);
   //
   //        assertEquals(0, eventContainer.size());
@@ -87,7 +86,7 @@ class DomainEventSeqTest extends AssertionsForJUnit {
   //
   //        assertEquals(1, eventContainer.size());
   //        assertEquals(new Long(12), domainEvent.getSequenceNumber());
-  //        assertEquals(identifier, domainEvent.getAggregateIdentifier());
+  //        assertEquals(identity, domainEvent.getAggregateIdentifier());
   //        assertTrue(eventContainer.getEventStream().hasNext());
   //
   //        eventContainer.clear();
@@ -97,8 +96,8 @@ class DomainEventSeqTest extends AssertionsForJUnit {
   //
   //    @Test
   //    public void testAddEventWithId_IdConflictsWithContainerId() {
-  //        AggregateIdentifier identifier = new UUIDAggregateIdentifier();
-  //        StubDomainEvent domainEvent = new StubDomainEvent(identifier);
+  //        AggregateIdentifier identity = new UUIDAggregateIdentifier();
+  //        StubDomainEvent domainEvent = new StubDomainEvent(identity);
   //
   //        EventContainer eventContainer = new EventContainer(new UUIDAggregateIdentifier());
   //        eventContainer.initializeSequenceNumber(11L);
@@ -108,19 +107,19 @@ class DomainEventSeqTest extends AssertionsForJUnit {
   //            fail("Expected IllegalArgumentException");
   //        }
   //        catch (IllegalArgumentException e) {
-  //            assertTrue(e.getMessage().toLowerCase().contains("identifier"));
+  //            assertTrue(e.getMessage().toLowerCase().contains("identity"));
   //            assertTrue(e.getMessage().toLowerCase().contains("match"));
   //        }
   //    }
   //
   //    @Test
   //    public void testAddEvent_SequenceNumberInitialized() {
-  //        AggregateIdentifier identifier = new UUIDAggregateIdentifier();
-  //        StubDomainEvent domainEvent = new StubDomainEvent(identifier);
-  //        StubDomainEvent domainEvent2 = new StubDomainEvent(identifier);
+  //        AggregateIdentifier identity = new UUIDAggregateIdentifier();
+  //        StubDomainEvent domainEvent = new StubDomainEvent(identity);
+  //        StubDomainEvent domainEvent2 = new StubDomainEvent(identity);
   //        domainEvent.setSequenceNumber(123);
   //
-  //        EventContainer eventContainer = new EventContainer(identifier);
+  //        EventContainer eventContainer = new EventContainer(identity);
   //
   //        eventContainer.addEvent(domainEvent);
   //        eventContainer.addEvent(domainEvent2);

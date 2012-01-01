@@ -1,3 +1,5 @@
+package org.sisioh.dddbase.core.event
+
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
  * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
@@ -14,11 +16,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.event
+
+import java.util.UUID
+import scalaz.Identity
+import org.sisioh.common.event.Event
+import org.sisioh.dddbase.core.Entity
 
 /**
- * イベントの送信元を表すトレイト。
- * 
+ * ドメインイベントを表すトレイト。
+ *
  * @author j5ik2o
  */
-trait EventSource
+trait DomainEvent extends Event with Entity[UUID] {
+
+  /** イベントの識別子。 */
+  override val identity: Identity[UUID]
+
+  /** 集約ルートの識別子。 */
+  val aggregateIdentity: Identity[UUID]
+
+  /** 順序。 */
+  var sequenceNumberOption: Option[Long] = None
+
+}
+
