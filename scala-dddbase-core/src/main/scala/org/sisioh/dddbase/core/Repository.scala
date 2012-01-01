@@ -65,7 +65,7 @@ trait EntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
 trait EntityIterableResolver[T <: Entity[ID], ID <: java.io.Serializable] extends Iterable[T] {
   this: EntityResolver[T,ID] =>
 
-  def contains(identifier: Identity[ID]): Boolean = exists(_.identifier == identifier)
+  def contains(identifier: Identity[ID]): Boolean = exists(_.identity == identifier)
 
   def contains(entity: T): Boolean = exists(_ == entity)
 

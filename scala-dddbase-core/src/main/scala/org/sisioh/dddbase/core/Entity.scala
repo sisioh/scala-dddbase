@@ -26,16 +26,15 @@ import Scalaz._
  */
 trait Entity[ID <: java.io.Serializable] {
 
-
   /**エンティティの識別子。*/
-  val identifier: Identity[ID]
+  val identity: Identity[ID]
 
   /**
    * ハッシュコードを返す。
    *
    * @return ハッシュコード
    */
-  override final def hashCode: Int = identifier.hashCode
+  override final def hashCode: Int = identity.##
 
   /**
    * 指定されたオブジェクトと等価であるかを判定する。
@@ -44,7 +43,7 @@ trait Entity[ID <: java.io.Serializable] {
    * @return 等価である場合はtrue
    */
   override final def equals(that: Any): Boolean = that match {
-    case that: Entity[_] => identifier == that.identifier
+    case that: Entity[_] => identity == that.identity
     case _ => false
   }
 
@@ -57,6 +56,7 @@ trait Entity[ID <: java.io.Serializable] {
   //  def commitEvents
 
 }
+
 
 /**
  * クローンに対応したエンティティを実装するためのトレイト。
@@ -75,14 +75,14 @@ trait EntityCloneable[T <: Entity[ID], ID <: java.io.Serializable] {
   override def clone: T =
     super.clone.asInstanceOf[T]
 }
-//
-//object Implictits {
-//
-//  implicit def equalEntity[ID <: java.io.Serializable]: Equal[Entity[ID]] = equalA
-//
-//  implicit def showsEntity[E <: Entity[ID], ID <: java.io.Serializable]: Show[E] = shows(_.toString)
-//
-//}
+
+object Implicits {
+
+  implicit def equalEntity[ID <: java.io.Serializable]: Equal[Entity[ID]] = equalA
+
+  implicit def showEntity[ID <: java.io.Serializable]: Show[Entity[ID]] = shows(_.toString)
+
+}
 
 
 

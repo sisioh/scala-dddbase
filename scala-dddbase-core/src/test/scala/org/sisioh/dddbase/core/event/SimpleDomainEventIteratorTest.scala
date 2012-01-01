@@ -1,8 +1,6 @@
 package org.sisioh.dddbase.core.event
 
-import org.scalatest.FunSuite
 import org.scalatest.mock.MockitoSugar
-import org.sisioh.dddbase.core.DomainEvent
 import org.scalatest.junit.AssertionsForJUnit
 import org.junit.Test
 

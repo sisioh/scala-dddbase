@@ -61,7 +61,7 @@ class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID <: java
   }
 
   def store(entity: T) =
-    entities += (entity.identifier -> entity)
+    entities += (entity.identity -> entity)
 
   def delete(identifier: Identity[ID]) = {
     if (contains(identifier) == false) {
@@ -71,7 +71,7 @@ class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID <: java
   }
 
   def delete(entity: T) =
-    delete(entity.identifier)
+    delete(entity.identity)
 
   def iterator: Iterator[T] = entities.map(_._2.clone).iterator
 }

@@ -23,8 +23,6 @@ import java.util.UUID
 import scalaz._
 import Scalaz._
 
-
-
 /**
  * [[org.sisioh.dddbase.core.Entity]]のためのテスト。
  *
@@ -32,18 +30,28 @@ import Scalaz._
  */
 class EntityTest extends /*AssertionsForJUnit with*/ MockitoSugar {
 
+  class TestEntity(val identity: Identity[UUID]) extends Entity[UUID]
+  class TestEntity2(val identity: Identity[UUID]) extends Entity[UUID]
+
   val id = Identity(UUID.randomUUID())
-  
-  class TestEntity(val identifier: Identity[UUID]) extends Entity[UUID]
-  class TestEntity2(val identifier: Identity[UUID]) extends Entity[UUID]
+
+  import Implicits._
+
+//  implicit val equalEntity: Equal[TestEntity] = equalA
+//  implicit val showEntity: Show[TestEntity] = showA[TestEntity]
+
 
   @Test
   def test_コンストラクタで指定した識別子が取得できること {
-    val entity = new TestEntity(id)
+    val entity:Entity[UUID] = new TestEntity(id)
     val entity2 = new TestEntity(id)
 
     assert(entity == entity2)
     assert(entity == entity)
+
+    entity.shows
+    entity.println
+    assert(entity === entity2)
   }
 
   @Test
@@ -72,8 +80,8 @@ class EntityCloneableTest extends AssertionsForJUnit {
 
   @Test
   def test_cloneしたインスタンスが等価であること {
-    val entity1 = new Entity[UUID] with EntityCloneable[Entity[UUID],UUID] {
-      val identifier = id
+    val entity1 = new Entity[UUID] with EntityCloneable[Entity[UUID], UUID] {
+      val identity = id
     }
     val other = entity1.clone;
     assert(entity1 == other)

@@ -27,11 +27,12 @@ class AggregateTest extends AssertionsForJUnit {
   case class Department(name: String)
 
   class Employee
-  (val identifier: Identity[UUID],
+  (val identity: Identity[UUID],
    var name: String,
    var dept: Department)
-    extends Entity[UUID] with EntityCloneable[Employee,UUID]{
-    override def toString = "Employee(%s, %s, %s)".format(identifier, name, dept)
+    extends Entity[UUID] with EntityCloneable[Employee,UUID] with AggregateRoot{
+    override val aggregateIdentity = identity
+    override def toString = "Employee(%s, %s, %s, %s)".format(identity, this.aggregateIdentity, name, dept)
   }
 
   object Employee {
@@ -41,7 +42,7 @@ class AggregateTest extends AssertionsForJUnit {
 
     def apply(name: String, dept: Department): Employee = apply(Identity(UUID.randomUUID), name, dept)
 
-    def unapply(employee: Employee) = Some(employee.identifier, employee.name, employee.dept)
+    def unapply(employee: Employee) = Some(employee.identity, employee.name, employee.dept)
   }
 
   @Test
@@ -50,7 +51,7 @@ class AggregateTest extends AssertionsForJUnit {
     val emp2 = emp1.clone
     expect(emp1)(emp2)
     assert(emp1 ne emp2)
-    assert(emp1.identifier eq emp2.identifier)
+    assert(emp1.identity eq emp2.identity)
     assert(emp1.name eq emp2.name)
     assert(emp1.dept eq emp2.dept)
     println(emp1)
@@ -61,14 +62,14 @@ class AggregateTest extends AssertionsForJUnit {
     val FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT = Value
   }
 
-  class Tire(val identifier: Identity[UUID]) extends Entity[UUID] with EntityCloneable[Tire,UUID]
+  class Tire(val identity: Identity[UUID]) extends Entity[UUID] with EntityCloneable[Tire,UUID]
   object Tire {
     def apply(identifier: Identity[UUID]) = new Tire(identifier)
     def apply(): Tire = apply(Identity(UUID.randomUUID()))
   }
 
   class Car
-  (val identifier: Identity[UUID],
+  (val identity: Identity[UUID],
    var tires: Map[Position.Value, Tire])
     extends Entity[UUID] with EntityCloneable[Car,UUID]{
 
@@ -98,7 +99,7 @@ class AggregateTest extends AssertionsForJUnit {
     val car2 = car1.clone
     expect(car1)(car2)
     assert(car1 ne car2)
-    assert(car1.identifier eq car2.identifier)
+    assert(car1.identity eq car2.identity)
     assert(car1.tires ne car2.tires)
     assert(car1.tires(Position.FRONT_LEFT) ne car2.tires(Position.FRONT_LEFT))
   }

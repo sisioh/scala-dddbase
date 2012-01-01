@@ -16,8 +16,6 @@
  */
 package org.sisioh.dddbase.core.event
 
-import org.sisioh.dddbase.core.DomainEvent
-
 trait DomainEventIterator extends Iterator[DomainEvent] {
 
   /**

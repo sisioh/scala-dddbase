@@ -19,12 +19,11 @@ package org.sisioh.dddbase.core.event
 import scala.collection._
 import generic.CanBuildFrom
 import mutable.{ Builder, ListBuffer }
-import org.sisioh.dddbase.core.DomainEvent
 import scalaz.Identity
 import java.util.UUID
 
 /**
- * [[org.sisioh.dddbase.core.DomainEvent]]を格納するコンテナ。
+ * [[org.sisioh.dddbase.core.event.DomainEvent]]を格納するコンテナ。
  *
  *  @author j5ik2o
  */
@@ -83,8 +82,8 @@ class DomainEventSeqBuilder(val aggregateId: Identity[UUID] = Identity(UUID.rand
   }
 
   def +=(element: DomainEvent): this.type = {
-    require(aggregateId == element.aggregateId,
-      "aggregateId = %s, element.aggregateId = %s".format(aggregateId, element.aggregateId))
+    require(aggregateId == element.aggregateIdentity,
+      "aggregateIdentity = %s, element.aggregateIdentity = %s".format(aggregateId, element.aggregateIdentity))
     element.sequenceNumberOption match {
       case Some(_) => lastSequenceNumberOption = element.sequenceNumberOption
       case None => element.sequenceNumberOption = Some(newSequenceNumber)

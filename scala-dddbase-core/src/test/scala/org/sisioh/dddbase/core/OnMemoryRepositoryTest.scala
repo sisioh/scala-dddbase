@@ -31,7 +31,7 @@ import scalaz.Identity
  */
 class OnMemoryRepositoryTest extends AssertionsForJUnit {
 
-  class EntityImpl(val identifier: Identity[UUID]) extends Entity[UUID] with EntityCloneable[EntityImpl,UUID]
+  class EntityImpl(val identity: Identity[UUID]) extends Entity[UUID] with EntityCloneable[EntityImpl,UUID]
 
   import org.mockito.Mockito._
 
@@ -42,7 +42,7 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
     val e = spy(new EntityImpl(id))
     val repository = new OnMemoryRepository[EntityImpl, UUID]()
     repository.store(e)
-    verify(e, atLeast(1)).identifier
+    verify(e, atLeast(1)).identity
     assert(repository.contains(e))
   }
 
@@ -54,11 +54,11 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
     }
     val e = spy(new EntityImpl(id))
     repository.store(e)
-    verify(e, atLeastOnce).identifier
+    verify(e, atLeastOnce).identity
 
     val resolve2 = repository.resolve(id)
     assert(resolve2 != null)
-    assert(resolve2.identifier == id)
+    assert(resolve2.identity == id)
   }
 
   @Test
@@ -71,10 +71,10 @@ class OnMemoryRepositoryTest extends AssertionsForJUnit {
 
     assert(repository.contains(id) == false)
     repository.store(e)
-    verify(e, atLeast(1)).identifier
+    verify(e, atLeast(1)).identity
 
     repository.delete(e)
-    verify(e, atLeast(1)).identifier
+    verify(e, atLeast(1)).identity
   }
 
   @Test

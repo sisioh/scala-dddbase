@@ -1,3 +1,5 @@
+package org.sisioh.common.event
+
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
  * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
@@ -14,14 +16,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.event
 
 /**
  * イベントの受信先を表すトレイト。
+ *
  * @author j5ik2o
  */
 trait EventListener {
 
-  def handleEvent(event: Event)
+  def handleEvent(event: Event): Unit
 
 }

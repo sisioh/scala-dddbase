@@ -24,8 +24,9 @@ import scalaz.Identity
  *
  * <p>イミュータブルでなければならない(must)。</p>
  *
- * @tparam T 実体のモデル型
- * @tparam ID 識別子の型
+ *
+ * @tparam [T] 実体のモデル型
+ * @tparam [ID] 識別子の型
  * @author j5ik2o
  */
 trait EntityMeta[T <: Entity[ID], ID <: java.io.Serializable] {

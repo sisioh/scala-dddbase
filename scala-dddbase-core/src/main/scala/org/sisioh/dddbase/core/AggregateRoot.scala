@@ -16,9 +16,10 @@
  */
 package org.sisioh.dddbase.core
 
-import event.DomainEventSeq
-import java.io.{ ObjectOutputStream, IOException, ObjectInputStream }
+import event.{DomainEvent, DomainEventSeq}
+import java.io.{ObjectOutputStream, IOException, ObjectInputStream}
 import java.util.UUID
+import scalaz.Identity
 
 /**
  * DDDの集約パターンの集約ルートを表すトレイト。
@@ -27,18 +28,20 @@ import java.util.UUID
  *
  * @author j5ik2o
  */
-trait AggregateRoot[ID <: UUID] extends Serializable {
-  this: Entity[UUID] =>
+trait AggregateRoot extends Serializable {
+  this: Entity[_] =>
+
+  val aggregateIdentity = Identity(UUID.randomUUID())
 
   @transient
-  private var eventBuilder = DomainEventSeq.newBuilder(this.identifier)
+  private var eventBuilder = DomainEventSeq.newBuilder(aggregateIdentity)
 
   @transient
   private var lastCommitted: Long = _
 
   /**
    * イベントを登録する。
-   *  @param evnt [[org.sisioh.dddbase.core.DomainEvent]]
+   * @param event [[org.sisioh.dddbase.core.event.DomainEvent]]
    */
   protected def registerEvent(event: DomainEvent): Unit = eventBuilder += event
 
@@ -50,20 +53,20 @@ trait AggregateRoot[ID <: UUID] extends Serializable {
   /**
    * コミットされていないイベントをコミットする。
    */
-  def commitEvents {
+  def commitEvents() {
     lastCommitted = eventBuilder.result.lastSequenceNumber
     eventBuilder.clear
   }
 
   /**
    * コミットされていないイベントの[[org.sisioh.dddbase.core.event.DomainEventIterator]]を返す。
-   *  @return [[org.sisioh.dddbase.core.event.DomainEventIterator]]
+   * @return [[org.sisioh.dddbase.core.event.DomainEventIterator]]
    */
   def uncommittedEvents = eventBuilder.result.iterator
 
   /**
    * アグリゲートのバージョンを返す。
-   *  @return アグリゲートのバージョン
+   * @return アグリゲートのバージョン
    */
   def version = lastCommitted
 
@@ -72,11 +75,12 @@ trait AggregateRoot[ID <: UUID] extends Serializable {
   private def readObject(in: ObjectInputStream) {
     in.defaultReadObject
     lastCommitted = in.readObject.asInstanceOf[Long]
-    eventBuilder = DomainEventSeq.newBuilder(identifier)
+    eventBuilder = DomainEventSeq.newBuilder(aggregateIdentity)
     eventBuilder.initializeSequenceNumber(lastCommitted)
     val uncommitted = in.readObject.asInstanceOf[List[DomainEvent]]
-    uncommitted.foreach { uncommittedEvent =>
-      eventBuilder += uncommittedEvent
+    uncommitted.foreach {
+      uncommittedEvent =>
+        eventBuilder += uncommittedEvent
     }
   }
 
