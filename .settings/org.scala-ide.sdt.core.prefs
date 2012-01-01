@@ -1,0 +1,3 @@
+scala.compiler.useProjectSettings=true
+unchecked=true
+deprecation=true
