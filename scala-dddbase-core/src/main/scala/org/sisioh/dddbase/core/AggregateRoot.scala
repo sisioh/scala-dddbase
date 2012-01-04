@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core
 
-import event.{DomainEvent, DomainEventSeq}
+import event.{DomainEventQueue, DomainEvent, DomainEventSeq}
 import java.io.{ObjectOutputStream, IOException, ObjectInputStream}
 import java.util.UUID
 import scalaz.Identity
@@ -24,48 +24,51 @@ import scalaz.Identity
 /**
  * DDDの集約パターンの集約ルートを表すトレイト。
  *
+ * - 集約に対するイベントを管理する。
+ * - 集約内部のオブジェクトの不変条件を維持する。外部に公開する可変オブジェクトについては特に注意が必要。
+ *
  * "集約ルートは通常はエンティティだが、複雑な内部構造を持つ値オブジェクトのこともあれば列挙された値のこともある。"
  *
  * @author j5ik2o
  */
 trait AggregateRoot extends Serializable {
-  this: Entity[_] =>
 
   val aggregateIdentity = Identity(UUID.randomUUID())
 
   @transient
-  private var eventBuilder = DomainEventSeq.newBuilder(aggregateIdentity)
+  val eventQueue = new DomainEventQueue
 
   @transient
-  private var lastCommitted: Long = _
+  private var lastCommitted: Option[Long] = None
 
   /**
    * イベントを登録する。
    * @param event [[org.sisioh.dddbase.core.event.DomainEvent]]
    */
-  protected def registerEvent(event: DomainEvent): Unit = eventBuilder += event
+  protected def registerEvent(event: DomainEvent): Unit = eventQueue += event
 
   protected def initializeEventStream(lastSequenceNumber: Long) {
-    eventBuilder.initializeSequenceNumber(lastSequenceNumber)
-    lastCommitted = if (lastSequenceNumber >= 0) lastSequenceNumber else 0
+    eventQueue.initializeSequenceNumber(lastSequenceNumber)
+    lastCommitted = if (lastSequenceNumber >= 0) Some(lastSequenceNumber) else Some(0)
   }
 
   /**
    * コミットされていないイベントをコミットする。
    */
-  def commitEvents() {
-    lastCommitted = eventBuilder.result.lastSequenceNumber
-    eventBuilder.clear
+  def commitEvents {
+    lastCommitted = Some(eventQueue.lastSequenceNumber)
+    eventQueue.clear
   }
 
   /**
    * コミットされていないイベントの[[org.sisioh.dddbase.core.event.DomainEventIterator]]を返す。
    * @return [[org.sisioh.dddbase.core.event.DomainEventIterator]]
    */
-  def uncommittedEvents = eventBuilder.result.iterator
+  def uncommittedEvents = eventQueue.iterator
 
   /**
    * アグリゲートのバージョンを返す。
+   *
    * @return アグリゲートのバージョン
    */
   def version = lastCommitted
@@ -74,13 +77,12 @@ trait AggregateRoot extends Serializable {
   @throws(classOf[ClassNotFoundException])
   private def readObject(in: ObjectInputStream) {
     in.defaultReadObject
-    lastCommitted = in.readObject.asInstanceOf[Long]
-    eventBuilder = DomainEventSeq.newBuilder(aggregateIdentity)
-    eventBuilder.initializeSequenceNumber(lastCommitted)
+    lastCommitted = in.readObject.asInstanceOf[Option[Long]]
+    eventQueue.initializeSequenceNumber(lastCommitted.get)
     val uncommitted = in.readObject.asInstanceOf[List[DomainEvent]]
     uncommitted.foreach {
       uncommittedEvent =>
-        eventBuilder += uncommittedEvent
+        eventQueue += uncommittedEvent
     }
   }
 
@@ -88,7 +90,7 @@ trait AggregateRoot extends Serializable {
   private def writeObject(out: ObjectOutputStream) {
     out.defaultWriteObject
     out.writeObject(lastCommitted)
-    out.writeObject(eventBuilder.result)
+    out.writeObject(eventQueue)
   }
 
 }
