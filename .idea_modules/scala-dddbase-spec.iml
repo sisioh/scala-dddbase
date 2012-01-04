@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="scala" name="Scala">
+      <configuration>
+        <option name="compilerLibraryLevel" value="Project" />
+        <option name="compilerLibraryName" value="scala-2.9.1" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/../scala-dddbase-spec/target/scala-2.9.1/classes" />
+    <output-test url="file://$MODULE_DIR$/../scala-dddbase-spec/target/scala-2.9.1/test-classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../scala-dddbase-spec">
+      <sourceFolder url="file://$MODULE_DIR$/../scala-dddbase-spec/src/main/scala" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../scala-dddbase-spec/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../scala-dddbase-spec/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../scala-dddbase-spec/src/test/scala" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../scala-dddbase-spec/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../scala-dddbase-spec/src/test/resources" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/../scala-dddbase-spec/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="org.scala-lang_scala-library_2.9.1" level="project" />
+    <orderEntry type="library" name="org.scalaz_scalaz-core_2.9.1_6.0.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="junit_junit_4.8.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="org.mockito_mockito-core_1.8.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="org.hamcrest_hamcrest-core_1.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="org.objenesis_objenesis_1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="org.scalatest_scalatest_2.9.1_1.6.1" level="project" />
+  </component>
+</module>
+
