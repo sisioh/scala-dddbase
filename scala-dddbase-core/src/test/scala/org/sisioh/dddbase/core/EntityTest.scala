@@ -30,6 +30,8 @@ import Scalaz._
  */
 class EntityTest extends /*AssertionsForJUnit with*/ MockitoSugar {
 
+  class TestEntity3(val identity: Identity[Int]) extends Entity[Int]
+
   class TestEntity(val identity: Identity[UUID]) extends Entity[UUID]
   class TestEntity2(val identity: Identity[UUID]) extends Entity[UUID]
 
