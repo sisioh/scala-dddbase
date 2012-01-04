@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f2d27707-e0c8-4695-b608-35a6ce800a51" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/event/DomainEventQueue.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-core/.classpath" afterPath="$PROJECT_DIR$/scala-dddbase-core/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/common/event/Event.scala" afterPath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/common/event/Event.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/common/event/EventBus.scala" afterPath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/common/event/EventBus.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/AggregateRoot.scala" afterPath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/AggregateRoot.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/event/SimpleDomainEventIterator.scala" afterPath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/event/SimpleDomainEventIterator.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-spec/.classpath" afterPath="$PROJECT_DIR$/scala-dddbase-spec/.classpath" />
     </list>
     <ignored path="scala-dddbase.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -537,6 +527,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14173229" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -547,7 +538,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="SBT Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32976827" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14173229" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
