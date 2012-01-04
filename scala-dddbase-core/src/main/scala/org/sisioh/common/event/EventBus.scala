@@ -23,4 +23,8 @@ package org.sisioh.common.event
  * To change this template use File | Settings | File Templates.
  */
 
-trait EventBus
+trait EventBus{
+
+
+
+}

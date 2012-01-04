@@ -22,27 +22,22 @@ class SimpleDomainEventIterator(private val iterator: Iterator[DomainEvent])
   @volatile
   private var peekedOption: Option[DomainEvent] = None
 
-  def this(events: List[DomainEvent]) = this(events.iterator)
+  def this(events: List[DomainEvent]) = this (events.iterator)
 
-  def this(events: DomainEvent*) = this(events.iterator)
+  def this(events: DomainEvent*) = this (events.iterator)
 
-  def peek: DomainEvent = peekedOption match {
-    case Some(peeked) => peeked
-    case None => {
-      val result = iterator.next
-      peekedOption = Some(result)
-      result
-    }
+  def peek: DomainEvent = peekedOption getOrElse {
+    val result = iterator.next
+    peekedOption = Some(result)
+    result
   }
 
-  def next: DomainEvent = peekedOption match {
-    case Some(peeked) => {
-      val result = peeked
+  def next: DomainEvent = peekedOption map {
+    e =>
+      val result = e
       peekedOption = None
       result
-    }
-    case None => iterator.next
-  }
+  } getOrElse(iterator.next)
 
   def hasNext: Boolean = peekedOption != None || iterator.hasNext
 
