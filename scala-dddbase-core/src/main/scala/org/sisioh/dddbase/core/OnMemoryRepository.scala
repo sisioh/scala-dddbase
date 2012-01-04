@@ -26,7 +26,7 @@ import Scalaz._
  * @author j5ik2o
  */
 @cloneable
-class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID <: java.io.Serializable]
+class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
   extends Repository[T, ID] with EntityIterableResolver[T, ID] {
 
   private[core] var entities = collection.mutable.Map.empty[Identity[ID], T]

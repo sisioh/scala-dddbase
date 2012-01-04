@@ -24,7 +24,7 @@ import Scalaz._
  *
  * @author j5ik2o
  */
-trait Entity[ID <: java.io.Serializable] {
+trait Entity[ID] {
 
   /**エンティティの識別子。*/
   val identity: Identity[ID]
@@ -64,7 +64,7 @@ trait Entity[ID <: java.io.Serializable] {
  * @author j5ik2o
  */
 @cloneable
-trait EntityCloneable[T <: Entity[ID], ID <: java.io.Serializable] {
+trait EntityCloneable[T <: Entity[ID], ID] {
   this: Entity[ID] =>
 
   /**

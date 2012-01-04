@@ -24,7 +24,7 @@ import scalaz.Identity
  *
  * @author j5ik2o
  */
-trait EntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
+trait EntityResolver[T <: Entity[ID], ID] {
 
   /**
    * 識別子に該当するエンティティを取得する。
@@ -62,7 +62,7 @@ trait EntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
 
 }
 
-trait EntityIterableResolver[T <: Entity[ID], ID <: java.io.Serializable] extends Iterable[T] {
+trait EntityIterableResolver[T <: Entity[ID], ID] extends Iterable[T] {
   this: EntityResolver[T,ID] =>
 
   def contains(identifier: Identity[ID]): Boolean = exists(_.identity == identifier)
@@ -80,7 +80,7 @@ trait EntityIterableResolver[T <: Entity[ID], ID <: java.io.Serializable] extend
  *
  * @author j5ik2o
  */
-trait Repository[T <: Entity[ID], ID <: java.io.Serializable] extends EntityResolver[T,ID] {
+trait Repository[T <: Entity[ID], ID] extends EntityResolver[T,ID] {
 
   /**
    * エンティティを保存する。
@@ -112,7 +112,7 @@ trait Repository[T <: Entity[ID], ID <: java.io.Serializable] extends EntityReso
 
 }
 
-trait CallbackEntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
+trait CallbackEntityResolver[T <: Entity[ID], ID] {
   this: EntityResolver[T,ID] =>
 
   def resolve[R](callbak: T => R): R
@@ -123,7 +123,7 @@ trait CallbackEntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
  *
  * @author j5ik2o
  */
-trait PagingEntityResolver[T <: Entity[ID], ID <: java.io.Serializable] {
+trait PagingEntityResolver[T <: Entity[ID], ID] {
   this: EntityResolver[T,ID] =>
 
   /**
