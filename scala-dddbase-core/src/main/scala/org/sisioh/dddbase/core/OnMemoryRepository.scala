@@ -44,7 +44,7 @@ class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
     result
   }
 
-  def resolve(identifier: Identity[ID]) = {
+  def resolve(identifier: Identity[ID]) = synchronized {
     require(identifier != null)
     if (contains(identifier) == false) {
       throw new EntityNotFoundException()
@@ -52,7 +52,7 @@ class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
     entities(identifier).clone
   }
 
-  def resolveOption(identifier: Identity[ID]) = {
+  def resolveOption(identifier: Identity[ID]) = synchronized {
     require(identifier != null)
     if (contains(identifier) == false)
       None
@@ -63,7 +63,7 @@ class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
   def store(entity: T) =
     entities += (entity.identity -> entity)
 
-  def delete(identifier: Identity[ID]) = {
+  def delete(identifier: Identity[ID]) = synchronized {
     if (contains(identifier) == false) {
       throw new EntityNotFoundException()
     }
@@ -75,6 +75,7 @@ class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
 
   def iterator: Iterator[T] = entities.map(_._2.clone).iterator
 }
+
 //
 //abstract class AbstractOnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID <: java.io.Serializable] {
 //

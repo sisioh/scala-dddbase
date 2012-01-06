@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f2d27707-e0c8-4695-b608-35a6ce800a51" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/common/event/Event.scala" afterPath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/common/event/Event.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/OnMemoryRepository.scala" afterPath="$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/OnMemoryRepository.scala" />
     </list>
     <ignored path="scala-dddbase.iws" />
@@ -62,15 +61,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="scala-dddbase.iml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.idea_modules/scala-dddbase.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="AggregateRoot.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/AggregateRoot.scala">
           <provider selected="true" editor-type-id="text-editor">
@@ -107,10 +97,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OnMemoryRepository.scala" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="OnMemoryRepository.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/OnMemoryRepository.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="53" selection-start="1088" selection-end="1088" vertical-scroll-proportion="-1.3641304">
+            <state line="46" column="54" selection-start="1493" selection-end="1493" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -125,10 +115,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Repository.scala" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Repository.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/Repository.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="82" column="6" selection-start="2093" selection-end="2093" vertical-scroll-proportion="0.0">
+            <state line="26" column="6" selection-start="865" selection-end="865" vertical-scroll-proportion="0.4768786">
               <folding />
             </state>
           </provider>
@@ -886,11 +876,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.idea_modules/project.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea_modules/scala-dddbase-core.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
@@ -967,13 +952,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/Repository.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="6" selection-start="2093" selection-end="2093" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/Entity.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="66" column="41" selection-start="1484" selection-end="1484" vertical-scroll-proportion="0.0">
@@ -981,9 +959,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/collection/MapLike.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="102" column="6" selection-start="3424" selection-end="3424" vertical-scroll-proportion="0.33152175">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/OnMemoryRepository.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="53" selection-start="1088" selection-end="1088" vertical-scroll-proportion="-1.3641304">
+        <state line="46" column="54" selection-start="1493" selection-end="1493" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scala-dddbase-core/src/main/scala/org/sisioh/dddbase/core/Repository.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="6" selection-start="865" selection-end="865" vertical-scroll-proportion="0.4768786">
           <folding />
         </state>
       </provider>
