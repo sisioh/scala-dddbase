@@ -30,5 +30,4 @@ trait Event {
   val identity: Identity[UUID]
 
   val timestamp: Long
-
 }

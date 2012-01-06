@@ -29,7 +29,7 @@ import Scalaz._
 class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
   extends Repository[T, ID] with EntityIterableResolver[T, ID] {
 
-  private[core] var entities = collection.mutable.Map.empty[Identity[ID], T]
+  private[core] var entities = Map.empty[Identity[ID], T]
 
   override def equals(obj: Any) = obj match {
     case that: OnMemoryRepository[_, _] => this.entities == that.entities
