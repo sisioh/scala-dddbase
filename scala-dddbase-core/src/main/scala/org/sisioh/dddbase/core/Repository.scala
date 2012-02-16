@@ -62,6 +62,9 @@ trait EntityResolver[T <: Entity[ID], ID] {
 
 }
 
+/**
+ * [[scala.collection.Iterable]]
+ */
 trait EntityIterableResolver[T <: Entity[ID], ID] extends Iterable[T] {
   this: EntityResolver[T,ID] =>
 
