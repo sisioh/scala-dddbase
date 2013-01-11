@@ -27,11 +27,9 @@ object DDDBaseBuild extends Build {
       )
   val publish = publishTo <<= (version) { version: String =>
     if (version.trim.endsWith("SNAPSHOT")) {
-      Some(Resolver.ssh("sisioh-repo",
-      "maven.sisioh.org", "/var/www/maven.sisioh.org/snapshot"))
+      Some(Resolver.file("snaphost", new File("./repos/snapshot")))
     }else{
-      Some(Resolver.ssh("sisioh-repo",
-            "maven.sisioh.org", "/var/www/maven.sisioh.org/release"))
+      Some(Resolver.file("release", new File("./repos/release")))
     }
   }
 
