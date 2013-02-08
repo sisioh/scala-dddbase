@@ -25,9 +25,8 @@ import Scalaz._
  *
  * @author j5ik2o
  */
-@cloneable
 class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
-  extends Repository[T, ID] with EntityIterableResolver[T, ID] {
+  extends Repository[T, ID] with EntityIterableResolver[T, ID] with Cloneable {
 
   private[core] var entities = Map.empty[Identity[ID], T]
 
