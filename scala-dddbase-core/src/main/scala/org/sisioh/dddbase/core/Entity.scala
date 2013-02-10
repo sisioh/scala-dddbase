@@ -63,8 +63,7 @@ trait Entity[ID] {
  *
  * @author j5ik2o
  */
-@cloneable
-trait EntityCloneable[T <: Entity[ID], ID] {
+trait EntityCloneable[T <: Entity[ID], ID] extends Cloneable {
   this: Entity[ID] =>
 
   /**
