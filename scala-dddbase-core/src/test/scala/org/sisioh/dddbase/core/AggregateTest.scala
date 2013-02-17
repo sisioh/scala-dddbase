@@ -49,7 +49,7 @@ class AggregateTest extends AssertionsForJUnit {
   def test01_cloneしても不変条件を維持していること {
     val emp1 = Employee("KATO", Department("DEV"))
     val emp2 = emp1.clone
-    expect(emp1)(emp2)
+    expectResult(emp1)(emp2)
     assert(emp1 ne emp2)
     assert(emp1.identity eq emp2.identity)
     assert(emp1.name eq emp2.name)
@@ -97,7 +97,7 @@ class AggregateTest extends AssertionsForJUnit {
       Position.BACK_RIGHT -> Tire()))
 
     val car2 = car1.clone
-    expect(car1)(car2)
+    expectResult(car1)(car2)
     assert(car1 ne car2)
     assert(car1.identity eq car2.identity)
     assert(car1.tires ne car2.tires)

@@ -41,8 +41,8 @@ class DomainEventSeqTest extends AssertionsForJUnit {
     builder.initializeSequenceNumber(11L)
 
     val des2 = builder.result
-    expect(11)(des2.lastSequenceNumber)
-    expect(0)(des2.size)
+    expectResult(11)(des2.lastSequenceNumber)
+    expectResult(0)(des2.size)
     assert(des2.iterator.hasNext == false)
 
   }
@@ -57,15 +57,15 @@ class DomainEventSeqTest extends AssertionsForJUnit {
     builder.initializeSequenceNumber(11L)
 
     builder += domainEvent
-    expect(Some(12L))(domainEvent.sequenceNumberOption)
+    expectResult(Some(12L))(domainEvent.sequenceNumberOption)
 
     val des = builder.result
     val domainEvent2 = new StubDomainEvent(Identity(UUID.randomUUID()), aggregateId)
     val des2 = des :+ domainEvent2
 
-    expect(1)(des.size)
-    expect(Some(13L))(domainEvent2.sequenceNumberOption)
-    expect(aggregateId)(domainEvent2.aggregateIdentity)
+    expectResult(1)(des.size)
+    expectResult(Some(13L))(domainEvent2.sequenceNumberOption)
+    expectResult(aggregateId)(domainEvent2.aggregateIdentity)
 
 
   }

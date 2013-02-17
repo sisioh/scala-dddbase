@@ -13,7 +13,7 @@ class SimpleDomainEventIteratorTest extends AssertionsForJUnit with MockitoSugar
   @Test
   def testhasNext {
     val sde = new SimpleDomainEventIterator(List.empty[DomainEvent])
-    expect(false) {
+    expectResult(false) {
       sde.hasNext
     }
     intercept[NoSuchElementException] {
@@ -27,8 +27,8 @@ class SimpleDomainEventIteratorTest extends AssertionsForJUnit with MockitoSugar
     val event2 = mock[DomainEvent]
     val sde = new SimpleDomainEventIterator(event1, event2)
 
-    expect(event1)(sde.peek)
-    expect(event1)(sde.peek)
+    expectResult(event1)(sde.peek)
+    expectResult(event1)(sde.peek)
   }
 
   @Test
@@ -38,10 +38,10 @@ class SimpleDomainEventIteratorTest extends AssertionsForJUnit with MockitoSugar
     val sde = new SimpleDomainEventIterator(event1, event2)
 
     assert(sde.hasNext)
-    expect(event1)(sde.next)
+    expectResult(event1)(sde.next)
 
     assert(sde.hasNext)
-    expect(event2)(sde.next)
+    expectResult(event2)(sde.next)
 
     assert(sde.hasNext == false)
   }
@@ -50,7 +50,7 @@ class SimpleDomainEventIteratorTest extends AssertionsForJUnit with MockitoSugar
   def test_ReadBeyondEnd {
     val event1 = mock[DomainEvent]
     val sde = new SimpleDomainEventIterator(event1)
-    expect(event1)(sde.next)
+    expectResult(event1)(sde.next)
     intercept[NoSuchElementException] {
       sde.next
     }
