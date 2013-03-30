@@ -1,6 +1,7 @@
 package org.sisioh.dddbase.core.event
 
 import scala.collection.mutable.Queue
+import scala.language.implicitConversions
 
 class DomainEventQueue {
 
