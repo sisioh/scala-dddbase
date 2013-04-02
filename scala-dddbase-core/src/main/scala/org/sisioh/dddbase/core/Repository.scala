@@ -16,28 +16,26 @@
  */
 package org.sisioh.dddbase.core
 
-import scalaz.Identity
+import util.Try
 
 /**
- * [[scalaz.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+ * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
  * を検索する責務を表すインターフェイス。
  *
  * @author j5ik2o
  */
-trait EntityResolver[T <: Entity[ID], ID] {
+trait EntityResolver[ID, T <: Entity[ID]] {
 
   /**
    * 識別子に該当するエンティティを取得する。
    *
-   *  @param identifier 識別子
-   *  @return エンティティ
+   * @param identifier 識別子
+   * @return Try[E]
    *
-   *  @throws IllegalArgumentException
-   *  @throws EntityNotFoundException エンティティが見つからなかった場合
-   *  @throws RepositoryException リポジトリにアクセスできない場合
+   * @throws IllegalArgumentException
    */
-  def resolve(identifier: Identity[ID]): T
-  
+  def resolve(identifier: Identity[ID]): Try[T]
+
   def resolveOption(identifier: Identity[ID]): Option[T]
 
   def apply(identifier: Identity[ID]) = resolve(identifier)
@@ -45,53 +43,51 @@ trait EntityResolver[T <: Entity[ID], ID] {
   /**
    * 指定した識別子のエンティティが存在するかを返す。
    *
-   *  @param identifier 識別子
-   *  @return 存在する場合はtrue
-   *  @throws RepositoryException リポジトリにアクセスできない場合
+   * @param identifier 識別子
+   * @return 存在する場合はtrue
+   * @throws RepositoryException リポジトリにアクセスできない場合
    */
   def contains(identifier: Identity[ID]): Boolean
 
   /**
    * 指定したのエンティティが存在するかを返す。
    *
-   *  @param entity エンティティ
-   *  @return 存在する場合はtrue
-   *  @throws RepositoryException リポジトリにアクセスできない場合
+   * @param entity エンティティ
+   * @return 存在する場合はtrue
+   * @throws RepositoryException リポジトリにアクセスできない場合
    */
-  def contains(entity: T): Boolean
+  def contains(entity: T): Boolean = contains(entity.identity)
 
 }
 
 /**
  * [[scala.collection.Iterable]]
  */
-trait EntityIterableResolver[T <: Entity[ID], ID] extends Iterable[T] {
-  this: EntityResolver[T,ID] =>
+trait EntityIterableResolver[ID, T <: Entity[ID]] extends Iterable[T] {
+  this: EntityResolver[ID, T] =>
 
   def contains(identifier: Identity[ID]): Boolean = exists(_.identity == identifier)
-
-  def contains(entity: T): Boolean = exists(_ == entity)
 
 }
 
 /**
  * 基本的なリポジトリのトレイト。
- *  リポジトリとして、基本的に必要な機能を定義するトレイト。
+ * リポジトリとして、基本的に必要な機能を定義するトレイト。
  *
  * @tparam T エンティティの型
  * @tparam ID エンティティの識別子の型
  *
  * @author j5ik2o
  */
-trait Repository[T <: Entity[ID], ID] extends EntityResolver[T,ID] {
+trait Repository[ID, T <: Entity[ID]] extends EntityResolver[ID, T] {
 
   /**
    * エンティティを保存する。
    *
    * @param entity 保存する対象のエンティティ
-   * @throws RepositoryException リポジトリにアクセスできない場合
+   * @return Try
    */
-  def store(entity: T): Unit
+  def store(entity: T): Try[Repository[ID, T]]
 
   def update(identifier: Identity[ID], entity: T) = store(entity)
 
@@ -99,26 +95,25 @@ trait Repository[T <: Entity[ID], ID] extends EntityResolver[T,ID] {
    * 指定した識別子のエンティティを削除する。
    *
    * @param identity 識別子
-   * @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
-   * @throws RepositoryException リポジトリにアクセスできない場合
+   * @return Try
    */
-  def delete(identity: Identity[ID]): Unit
+  def delete(identity: Identity[ID]): Try[Repository[ID, T]]
 
   /**
    * 指定したエンティティを削除する。
    *
    * @param entity エンティティ
-   * @throws EntityNotFoundException 指定された識別子を持つエンティティが見つからなかった場合
-   * @throws RepositoryException リポジトリにアクセスできない場合
+   * @return Try
    */
-  def delete(entity: T): Unit
+  def delete(entity: T): Try[Repository[ID, T]] = delete(entity.identity)
 
 }
 
-trait CallbackEntityResolver[T <: Entity[ID], ID] {
-  this: EntityResolver[T,ID] =>
+trait CallbackEntityResolver[ID, T <: Entity[ID]] {
+  this: EntityResolver[ID, T] =>
 
   def resolve[R](callbak: T => R): R
+
 }
 
 /**
@@ -126,15 +121,15 @@ trait CallbackEntityResolver[T <: Entity[ID], ID] {
  *
  * @author j5ik2o
  */
-trait PagingEntityResolver[T <: Entity[ID], ID] {
-  this: EntityResolver[T,ID] =>
+trait PagingEntityResolver[ID, T <: Entity[ID]] {
+  this: EntityResolver[ID, T] =>
 
   /**
    * ページを表すクラス。
    *
    * @author j5ik2o
    */
-  case class Page(size: Int, entities: List[T])
+  case class Page(size: Int, entities: Seq[T])
 
   /**
    * エンティティをページ単位で検索する。
@@ -143,5 +138,5 @@ trait PagingEntityResolver[T <: Entity[ID], ID] {
    * @param index 検索するページのインデックス
    * @return ページ
    */
-  def resolvePage(pageSize: Int, index: Int): Page
+  def resolvePage(pageSize: Int, index: Int): Try[Page]
 }
