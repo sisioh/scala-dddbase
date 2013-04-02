@@ -12,7 +12,7 @@ object DDDBaseBuild extends Build {
 
   lazy val commonSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.sisioh",
-    version := "0.0.1",
+    version := "0.1.0",
     scalaVersion := "2.10.0",
     libraryDependencies ++= Seq(junit, scalaTest, mockito, scalaTest, specs2),
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
