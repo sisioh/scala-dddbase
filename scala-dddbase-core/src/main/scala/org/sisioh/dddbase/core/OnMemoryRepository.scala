@@ -17,16 +17,16 @@
 package org.sisioh.dddbase.core
 
 import collection.Iterator
-import scalaz._
-import Scalaz._
+import util.{Try, Success, Failure}
+import scala.collection.immutable.HashMap
 
 /**
  * オンメモリで動作するリポジトリの実装。
  *
  * @author j5ik2o
  */
-class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
-  extends Repository[T, ID] with EntityIterableResolver[T, ID] with Cloneable {
+class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends Repository[ID, T] with EntityIterableResolver[ID, T] with Cloneable {
 
   private[core] var entities = Map.empty[Identity[ID], T]
 
@@ -37,49 +37,45 @@ class OnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID]
 
   override def hashCode = entities.hashCode
 
-  override def clone: OnMemoryRepository[T, ID] = {
-    val result = super.clone.asInstanceOf[OnMemoryRepository[T, ID]]
-    result.entities = result.entities.map(e => (e._1 -> e._2.clone))
+  override def clone: OnMemoryRepository[ID, T] = {
+    val result = super.clone.asInstanceOf[OnMemoryRepository[ID, T]]
+    val array = result.entities.toArray
+    result.entities = HashMap(array: _*).map(e => (e._1 -> e._2.clone))
     result
   }
 
   def resolve(identifier: Identity[ID]) = synchronized {
     require(identifier != null)
     if (contains(identifier) == false) {
-      throw new EntityNotFoundException()
+      Failure(new EntityNotFoundException())
+    } else {
+      try {
+        Success(entities(identifier).clone)
+      } catch {
+        case ex: NoSuchElementException => Failure(ex)
+      }
     }
-    entities(identifier).clone
   }
 
-  def resolveOption(identifier: Identity[ID]) = synchronized {
-    require(identifier != null)
+  def resolveOption(identifier: Identity[ID]) =
+    resolve(identifier).toOption
+
+  def store(entity: T): Try[OnMemoryRepository[ID, T]] = {
+    val result = clone
+    result.entities += (entity.identity -> entity)
+    Success(result)
+  }
+
+  def delete(identifier: Identity[ID]): Try[OnMemoryRepository[ID, T]] = synchronized {
     if (contains(identifier) == false)
-      None
-    else
-      Some(entities(identifier).clone)
-  }
-
-  def store(entity: T) =
-    entities += (entity.identity -> entity)
-
-  def delete(identifier: Identity[ID]) = synchronized {
-    if (contains(identifier) == false) {
-      throw new EntityNotFoundException()
+      Failure(new EntityNotFoundException())
+    else {
+      val result = clone
+      result.entities -= identifier
+      Success(result)
     }
-    entities -= identifier
   }
-
-  def delete(entity: T) =
-    delete(entity.identity)
 
   def iterator: Iterator[T] = entities.map(_._2.clone).iterator
-}
 
-//
-//abstract class AbstractOnMemoryRepository[T <: Entity[ID] with EntityCloneable[T, ID], ID <: java.io.Serializable] {
-//
-//  implicit def equalEntity: Equal[OnMemoryRepository[T, ID]] = equalA
-//
-//  implicit def showsEntity: Show[OnMemoryRepository[T, ID]] = shows(_.toString)
-//
-//}
+}
