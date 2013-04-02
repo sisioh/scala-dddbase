@@ -16,9 +16,6 @@
  */
 package org.sisioh.dddbase.core
 
-import scalaz._
-import Scalaz._
-
 /**
  * エンティティを表すトレイト。
  *
@@ -26,7 +23,7 @@ import Scalaz._
  */
 trait Entity[ID] {
 
-  /**エンティティの識別子。*/
+  /** エンティティの識別子。 */
   val identity: Identity[ID]
 
   /**
@@ -63,7 +60,7 @@ trait Entity[ID] {
  *
  * @author j5ik2o
  */
-trait EntityCloneable[T <: Entity[ID], ID] extends Cloneable {
+trait EntityCloneable[ID, T <: Entity[ID]] extends Cloneable {
   this: Entity[ID] =>
 
   /**
@@ -73,13 +70,6 @@ trait EntityCloneable[T <: Entity[ID], ID] extends Cloneable {
    */
   override def clone: T =
     super.clone.asInstanceOf[T]
-}
-
-object Implicits {
-
-  implicit def equalEntity[ID <: java.io.Serializable]: Equal[Entity[ID]] = equalA
-
-  implicit def showEntity[ID <: java.io.Serializable]: Show[Entity[ID]] = shows(_.toString)
 
 }
 
