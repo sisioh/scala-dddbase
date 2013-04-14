@@ -46,14 +46,15 @@ class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
 
   def resolve(identifier: Identity[ID]) = synchronized {
     require(identifier != null)
-    if (contains(identifier) == false) {
+    contains(identifier).flatMap {
+      _ =>
+        try {
+          Success(entities(identifier).clone)
+        } catch {
+          case ex: NoSuchElementException => Failure(ex)
+        }
+    }.orElse {
       Failure(new EntityNotFoundException())
-    } else {
-      try {
-        Success(entities(identifier).clone)
-      } catch {
-        case ex: NoSuchElementException => Failure(ex)
-      }
     }
   }
 
@@ -67,12 +68,15 @@ class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
   }
 
   def delete(identifier: Identity[ID]): Try[OnMemoryRepository[ID, T]] = synchronized {
-    if (contains(identifier) == false)
-      Failure(new EntityNotFoundException())
-    else {
-      val result = clone
-      result.entities -= identifier
-      Success(result)
+    contains(identifier).flatMap {
+      e =>
+        if (e == true) {
+          val result = clone
+          result.entities -= identifier
+          Success(result)
+        } else {
+          Failure(new EntityNotFoundException())
+        }
     }
   }
 
