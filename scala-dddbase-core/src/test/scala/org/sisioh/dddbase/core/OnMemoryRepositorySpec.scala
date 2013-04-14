@@ -5,6 +5,7 @@ import org.junit.runner.RunWith
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
+import scala.util.Success
 
 @RunWith(classOf[JUnitRunner])
 class OnMemoryRepositorySpec extends Specification with Mockito {
@@ -19,19 +20,27 @@ class OnMemoryRepositorySpec extends Specification with Mockito {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
-      repos.map(_.contains(entity)).getOrElse(false) must_== true
+      repos.flatMap(_.contains(entity)).getOrElse(false) must_== true
     }
-    "resolve entity by using identity" in {
+    "resolve a entity by using identity" in {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repos.flatMap(_.resolve(id)).get must_== entity
     }
-    "delete entity by using identity" in {
+    "delete a entity by using identity" in {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repos.flatMap(_.delete(id)).get must_!= repos
+    }
+    "fail to resolve a entity by a non-existent identity" in {
+      repository.resolve(id).isFailure must_== true
+      repository.resolve(id).get must throwA[EntityNotFoundException]
+    }
+    "fail to delete a entity by a non-existent identity" in {
+      repository.delete(id).isFailure must_== true
+      repository.delete(id).get must throwA[EntityNotFoundException]
     }
   }
 
