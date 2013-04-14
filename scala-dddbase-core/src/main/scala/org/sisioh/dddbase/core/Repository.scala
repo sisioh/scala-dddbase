@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core
 
-import util.Try
+import scala.util.{Success, Try}
 
 /**
  * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
@@ -29,34 +29,46 @@ trait EntityResolver[ID, T <: Entity[ID]] {
   /**
    * 識別子に該当するエンティティを取得する。
    *
-   * @param identifier 識別子
-   * @return Try[E]
-   *
-   * @throws IllegalArgumentException
+   * @param identity 識別子
+   * @return Success:
+   *          エンティティ
+   *         Failure:
+   *          EntityNotFoundExceptionは、エンティティが見つからなかった場合
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolve(identifier: Identity[ID]): Try[T]
+  def resolve(identity: Identity[ID]): Try[T]
 
-  def resolveOption(identifier: Identity[ID]): Option[T]
+  /**
+   * 識別子に該当するエンティティを取得する。
+   *
+   * @param identity 識別子
+   * @return Option[T]
+   */
+  def resolveOption(identity: Identity[ID]): Option[T]
 
-  def apply(identifier: Identity[ID]) = resolve(identifier)
+  def apply(identity: Identity[ID]) = resolve(identity)
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。
    *
    * @param identifier 識別子
-   * @return 存在する場合はtrue
-   * @throws RepositoryException リポジトリにアクセスできない場合
+   * @return Success:
+   *          存在する場合はtrue
+   *         Failure:
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def contains(identifier: Identity[ID]): Boolean
+  def contains(identifier: Identity[ID]): Try[Boolean]
 
   /**
    * 指定したのエンティティが存在するかを返す。
    *
    * @param entity エンティティ
-   * @return 存在する場合はtrue
-   * @throws RepositoryException リポジトリにアクセスできない場合
+   * @return Success:
+   *          存在する場合はtrue
+   *         Failure:
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def contains(entity: T): Boolean = contains(entity.identity)
+  def contains(entity: T): Try[Boolean] = contains(entity.identity)
 
 }
 
@@ -66,13 +78,17 @@ trait EntityResolver[ID, T <: Entity[ID]] {
 trait EntityIterableResolver[ID, T <: Entity[ID]] extends Iterable[T] {
   this: EntityResolver[ID, T] =>
 
-  def contains(identifier: Identity[ID]): Boolean = exists(_.identity == identifier)
+  def contains(identifier: Identity[ID]): Try[Boolean] = Success(exists(_.identity == identifier))
 
 }
 
 /**
  * 基本的なリポジトリのトレイト。
  * リポジトリとして、基本的に必要な機能を定義するトレイト。
+ *
+ * リポジトリの状態を変更するメソッドの戻り値としては、
+ * Immutableなリポジトリは新しいリポジトリインスタンスを返し、
+ * Mutableなリポジトリは同一インスタンスを返すこと、を推奨する。
  *
  * @tparam T エンティティの型
  * @tparam ID エンティティの識別子の型
@@ -85,17 +101,23 @@ trait Repository[ID, T <: Entity[ID]] extends EntityResolver[ID, T] {
    * エンティティを保存する。
    *
    * @param entity 保存する対象のエンティティ
-   * @return Try
+   * @return Success:
+   *          リポジトリインスタンス
+   *         Failure:
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def store(entity: T): Try[Repository[ID, T]]
 
-  def update(identifier: Identity[ID], entity: T) = store(entity)
+  def update(identity: Identity[ID], entity: T) = store(entity)
 
   /**
    * 指定した識別子のエンティティを削除する。
    *
    * @param identity 識別子
-   * @return Try
+   * @return Success:
+   *          リポジトリインスタンス
+   *         Failure:
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def delete(identity: Identity[ID]): Try[Repository[ID, T]]
 
@@ -103,7 +125,10 @@ trait Repository[ID, T <: Entity[ID]] extends EntityResolver[ID, T] {
    * 指定したエンティティを削除する。
    *
    * @param entity エンティティ
-   * @return Try
+   * @return Success:
+   *          リポジトリインスタンス
+   *         Failure:
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def delete(entity: T): Try[Repository[ID, T]] = delete(entity.identity)
 
@@ -136,7 +161,10 @@ trait PagingEntityResolver[ID, T <: Entity[ID]] {
    *
    * @param pageSize 1ページの件数
    * @param index 検索するページのインデックス
-   * @return ページ
+   * @return Success:
+   *          ページ
+   *         Failure:
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def resolvePage(pageSize: Int, index: Int): Try[Page]
 }
