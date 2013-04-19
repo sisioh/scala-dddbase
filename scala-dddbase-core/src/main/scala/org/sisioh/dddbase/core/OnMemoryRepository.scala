@@ -25,10 +25,10 @@ import scala.collection.immutable.HashMap
  *
  * @author j5ik2o
  */
-class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
+class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends Repository[ID, T] with EntityIterableResolver[ID, T] with Cloneable {
 
-  private[core] var entities = Map.empty[Identity[ID], T]
+  private[core] var entities = Map.empty[ID, T]
 
   override def equals(obj: Any) = obj match {
     case that: OnMemoryRepository[_, _] => this.entities == that.entities
@@ -44,7 +44,7 @@ class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
     result
   }
 
-  def resolve(identifier: Identity[ID]) = synchronized {
+  override def resolve(identifier: ID) = synchronized {
     require(identifier != null)
     contains(identifier).flatMap {
       _ =>
@@ -58,16 +58,16 @@ class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
     }
   }
 
-  def resolveOption(identifier: Identity[ID]) =
+  override def resolveOption(identifier: ID) =
     resolve(identifier).toOption
 
-  def store(entity: T): Try[OnMemoryRepository[ID, T]] = {
+  override def store(entity: T): Try[OnMemoryRepository[ID, T]] = {
     val result = clone
     result.entities += (entity.identity -> entity)
     Success(result)
   }
 
-  def delete(identifier: Identity[ID]): Try[OnMemoryRepository[ID, T]] = synchronized {
+  override def delete(identifier: ID): Try[OnMemoryRepository[ID, T]] = synchronized {
     contains(identifier).flatMap {
       e =>
         if (e == true) {
