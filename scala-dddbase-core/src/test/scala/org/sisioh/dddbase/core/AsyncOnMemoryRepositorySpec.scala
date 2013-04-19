@@ -9,12 +9,12 @@ import concurrent.duration.Duration
 
 class AsyncOnMemoryRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID]) extends Entity[UUID] with EntityCloneable[UUID, EntityImpl]
+  class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
 
   val id = Identity(UUID.randomUUID)
 
   "The repository" should {
-    val repository = new AsyncOnMemoryRepository[UUID, EntityImpl]()
+    val repository = new AsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
     "have stored entity" in {
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
