@@ -14,4 +14,11 @@ object Identity {
 
 }
 
-
+/**
+ * シリアライズに対応したIdentityを実装するためのトレイト。
+ *
+ * @author mtgto
+ */
+trait IdentitySerializable[A] extends Identity[A] with Serializable {
+  this: Identity[A] =>
+}
