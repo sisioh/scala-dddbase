@@ -24,7 +24,7 @@ import scala.util.{Success, Try}
  *
  * @author j5ik2o
  */
-trait EntityResolver[ID, T <: Entity[ID]] {
+trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 
   /**
    * 識別子に該当するエンティティを取得する。
@@ -36,7 +36,7 @@ trait EntityResolver[ID, T <: Entity[ID]] {
    *          EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolve(identity: Identity[ID]): Try[T]
+  def resolve(identity: ID): Try[T]
 
   /**
    * 識別子に該当するエンティティを取得する。
@@ -44,9 +44,9 @@ trait EntityResolver[ID, T <: Entity[ID]] {
    * @param identity 識別子
    * @return Option[T]
    */
-  def resolveOption(identity: Identity[ID]): Option[T]
+  def resolveOption(identity: ID): Option[T]
 
-  def apply(identity: Identity[ID]) = resolve(identity)
+  def apply(identity: ID) = resolve(identity)
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。
@@ -57,7 +57,7 @@ trait EntityResolver[ID, T <: Entity[ID]] {
    *         Failure:
    *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def contains(identifier: Identity[ID]): Try[Boolean]
+  def contains(identifier: ID): Try[Boolean]
 
   /**
    * 指定したのエンティティが存在するかを返す。
@@ -75,10 +75,10 @@ trait EntityResolver[ID, T <: Entity[ID]] {
 /**
  * [[scala.collection.Iterable]]
  */
-trait EntityIterableResolver[ID, T <: Entity[ID]] extends Iterable[T] {
+trait EntityIterableResolver[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
   this: EntityResolver[ID, T] =>
 
-  def contains(identifier: Identity[ID]): Try[Boolean] = Success(exists(_.identity == identifier))
+  def contains(identifier: ID): Try[Boolean] = Success(exists(_.identity == identifier))
 
 }
 
@@ -95,7 +95,7 @@ trait EntityIterableResolver[ID, T <: Entity[ID]] extends Iterable[T] {
  *
  * @author j5ik2o
  */
-trait Repository[ID, T <: Entity[ID]] extends EntityResolver[ID, T] {
+trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityResolver[ID, T] {
 
   /**
    * エンティティを保存する。
@@ -108,7 +108,7 @@ trait Repository[ID, T <: Entity[ID]] extends EntityResolver[ID, T] {
    */
   def store(entity: T): Try[Repository[ID, T]]
 
-  def update(identity: Identity[ID], entity: T) = store(entity)
+  def update(identity: ID, entity: T) = store(entity)
 
   /**
    * 指定した識別子のエンティティを削除する。
@@ -119,7 +119,7 @@ trait Repository[ID, T <: Entity[ID]] extends EntityResolver[ID, T] {
    *         Failure:
    *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: Identity[ID]): Try[Repository[ID, T]]
+  def delete(identity: ID): Try[Repository[ID, T]]
 
   /**
    * 指定したエンティティを削除する。
@@ -134,7 +134,7 @@ trait Repository[ID, T <: Entity[ID]] extends EntityResolver[ID, T] {
 
 }
 
-trait CallbackEntityResolver[ID, T <: Entity[ID]] {
+trait CallbackEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityResolver[ID, T] =>
 
   def resolve[R](callbak: T => R): R
@@ -146,7 +146,7 @@ trait CallbackEntityResolver[ID, T <: Entity[ID]] {
  *
  * @author j5ik2o
  */
-trait PagingEntityResolver[ID, T <: Entity[ID]] {
+trait PagingEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityResolver[ID, T] =>
 
   /**
