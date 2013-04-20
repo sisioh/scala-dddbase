@@ -9,7 +9,7 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityResolver[ID, T <: Entity[ID]] {
+trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 
   /**
    * 識別子に該当するエンティティを取得する。
@@ -23,7 +23,7 @@ trait AsyncEntityResolver[ID, T <: Entity[ID]] {
    *          EntityNotFoundException リポジトリにアクセスできなかった場合
    *          RepositoryException リポジトリにアクセスできなかった場合
    */
-  def resolve(identity: Identity[ID]): Future[T]
+  def resolve(identity: ID): Future[T]
 
   /**
    * 識別子に該当するエンティティを取得する。
@@ -36,9 +36,9 @@ trait AsyncEntityResolver[ID, T <: Entity[ID]] {
    *         Failure:
    *          Futureが失敗した場合の例外
    */
-  def resolveOption(identity: Identity[ID]): Future[Option[T]]
+  def resolveOption(identity: ID): Future[Option[T]]
 
-  def apply(identity: Identity[ID]) = resolve(identity)
+  def apply(identity: ID) = resolve(identity)
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。
@@ -51,7 +51,7 @@ trait AsyncEntityResolver[ID, T <: Entity[ID]] {
    *          RepositoryException リポジトリにアクセスできなかった場合
    *          Futureが失敗した場合の例外
    */
-  def contains(identity: Identity[ID]): Future[Boolean]
+  def contains(identity: ID): Future[Boolean]
 
   /**
    * 指定したエンティティが存在するかを返す。
@@ -74,7 +74,7 @@ trait AsyncEntityResolver[ID, T <: Entity[ID]] {
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncRepository[ID, T <: Entity[ID]] extends AsyncEntityResolver[ID, T] {
+trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityResolver[ID, T] {
 
   /**
    * storeメソッドの非同期版
@@ -90,7 +90,7 @@ trait AsyncRepository[ID, T <: Entity[ID]] extends AsyncEntityResolver[ID, T] {
    */
   def store(entity: T): Future[AsyncRepository[ID, T]]
 
-  def update(identifier: Identity[ID], entity: T) = store(entity)
+  def update(identifier: ID, entity: T) = store(entity)
 
   /**
    * deleteメソッドの非同期版
@@ -104,7 +104,7 @@ trait AsyncRepository[ID, T <: Entity[ID]] extends AsyncEntityResolver[ID, T] {
    *          RepositoryException リポジトリにアクセスできなかった場合
    *          Futureが失敗した場合の例外
    */
-  def delete(identity: Identity[ID]): Future[AsyncRepository[ID, T]]
+  def delete(identity: ID): Future[AsyncRepository[ID, T]]
 
   /**
    * 指定したエンティティを削除する。
