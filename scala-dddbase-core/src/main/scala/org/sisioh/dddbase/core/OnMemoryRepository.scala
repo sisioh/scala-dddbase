@@ -21,9 +21,10 @@ import util.{Try, Success, Failure}
 import scala.collection.immutable.HashMap
 
 /**
- * オンメモリで動作するリポジトリの実装。
+ * オンメモリで動作する[[org.sisioh.dddbase.core.Repository]]の実装。
  *
- * @author j5ik2o
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
  */
 class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends Repository[ID, T] with EntityIterableResolver[ID, T] with Cloneable {
