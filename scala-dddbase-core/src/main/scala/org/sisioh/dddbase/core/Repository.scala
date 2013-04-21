@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core
 
-import scala.util.{Success, Try}
+import scala.util._
 
 /**
  * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
@@ -27,7 +27,7 @@ import scala.util.{Success, Try}
 trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 
   /**
-   * 識別子に該当するエンティティを取得する。
+   * 識別子に該当するエンティティを解決する。
    *
    * @param identity 識別子
    * @return Success:
@@ -39,13 +39,23 @@ trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   def resolve(identity: ID): Try[T]
 
   /**
-   * 識別子に該当するエンティティを取得する。
+   * 識別子に該当するエンティティを解決する。
    *
    * @param identity 識別子
    * @return Option[T]
    */
   def resolveOption(identity: ID): Option[T]
 
+  /**
+   * [[org.sisioh.dddbase.core.EntityResolver#reoslve]]へのショートカット。
+   *
+   * @param identity 識別子
+   * @return Success:
+   *          エンティティ
+   *         Failure:
+   *          EntityNotFoundExceptionは、エンティティが見つからなかった場合
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
   def apply(identity: ID) = resolve(identity)
 
   /**
@@ -73,7 +83,7 @@ trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * [[scala.collection.Iterable]]
+ * [[scala.collection.Iterable]]を実装するためのトレイト。
  */
 trait EntityIterableResolver[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
   this: EntityResolver[ID, T] =>
@@ -108,6 +118,16 @@ trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityResolver[ID, 
    */
   def store(entity: T): Try[Repository[ID, T]]
 
+  /**
+   * [[org.sisioh.dddbase.core.Repository#store]] へのショートカット。
+   *
+   * @param identity 識別子
+   * @param entity 保存する対象のエンティティ
+   * @return Success:
+   *          リポジトリインスタンス
+   *         Failure:
+   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
   def update(identity: ID, entity: T) = store(entity)
 
   /**
@@ -134,10 +154,27 @@ trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityResolver[ID, 
 
 }
 
+/**
+ * 解決したエンティティをコールバックで返すためのトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
 trait CallbackEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityResolver[ID, T] =>
 
-  def resolve[R](callbak: T => R): R
+  /**
+   * 識別子に該当するエンティティを解決する。
+   *
+   * callbackの引数である`Try[T]`は[[org.sisioh.dddbase.core.EntityResolver.resolve()]]の戻り値と同じ結果を返す
+   *
+   * @see [[org.sisioh.dddbase.core.EntityResolver.resolve()]]
+   *
+   * @param callback コールバック
+   * @tparam R コールバックの戻り値の型
+   * @return コールバックの戻り値
+   */
+  def resolve[R](callback: Try[T] => R): R
 
 }
 
