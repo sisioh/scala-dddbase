@@ -1,10 +1,27 @@
+/*
+ * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.sisioh.dddbase.core
 
 import scala.concurrent._
-import scala.util.Try
 
 /**
- * 非同期版エンティティリゾルバ。
+ * 非同期版[[org.sisioh.dddbase.core.EntityResolver]]。
+ *
+ * @see [[org.sisioh.dddbase.core.EntityResolver]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -12,7 +29,7 @@ import scala.util.Try
 trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 
   /**
-   * 識別子に該当するエンティティを取得する。
+   * 識別子に該当するエンティティを解決する。
    *
    * @see [[org.sisioh.dddbase.core.EntityResolver.resolve()]]
    *
@@ -26,7 +43,7 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   def resolve(identity: ID): Future[T]
 
   /**
-   * 識別子に該当するエンティティを取得する。
+   * 識別子に該当するエンティティを解決する。
    *
    * @see [[org.sisioh.dddbase.core.EntityResolver.resolve()]]
    *
@@ -38,6 +55,16 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
    */
   def resolveOption(identity: ID): Future[Option[T]]
 
+  /**
+   * [[org.sisioh.dddbase.core.AsyncEntityResolver.resolve()]]へのショートカット。
+   *
+   * @param identity 識別子
+   * @return Success:
+   *          非同期リポジトリ
+   *         Failure:
+   *          EntityNotFoundException リポジトリにアクセスできなかった場合
+   *          RepositoryException リポジトリにアクセスできなかった場合
+   */
   def apply(identity: ID) = resolve(identity)
 
   /**
@@ -69,7 +96,9 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * 非同期版リポジトリ。
+ * 非同期版[[org.sisioh.dddbase.core.Repository]]。
+ *
+ * @see [[org.sisioh.dddbase.core.Repository]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -77,7 +106,7 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityResolver[ID, T] {
 
   /**
-   * storeメソッドの非同期版
+   * エンティティを保存する。
    *
    * @see [[org.sisioh.dddbase.core.Repository.store( )]]
    *
@@ -90,12 +119,23 @@ trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityRes
    */
   def store(entity: T): Future[AsyncRepository[ID, T]]
 
+  /**
+   * [[org.sisioh.dddbase.core.AsyncRepository.store()]]へのショートカット。
+   *
+   * @param identifier 識別子
+   * @param entity 保存する対象のエンティティ
+   * @return Success:
+   *          非同期リポジトリ
+   *         Failure:
+   *          RepositoryException リポジトリにアクセスできなかった場合
+   *          Futureが失敗した場合の例外
+   */
   def update(identifier: ID, entity: T) = store(entity)
 
   /**
    * deleteメソッドの非同期版
    *
-   * @see [[org.sisioh.dddbase.core.Repository.delete( )]]
+   * @see [[org.sisioh.dddbase.core.Repository.delete()]]
    *
    * @param identity 識別子
    * @return Success:

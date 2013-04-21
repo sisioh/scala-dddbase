@@ -44,16 +44,7 @@ trait Entity[ID <: Identity[_]] {
     case _ => false
   }
 
-  // var version: Long = _
-
-  //  var uncommittedEventCount:Int = _
-
-  //  var uncommittedEvents = Stream.empty[DomainEvent[_]]
-
-  //  def commitEvents
-
 }
-
 
 /**
  * クローンに対応したエンティティを実装するためのトレイト。
