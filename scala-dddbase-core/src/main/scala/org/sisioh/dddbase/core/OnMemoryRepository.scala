@@ -21,14 +21,15 @@ import util.{Try, Success, Failure}
 import scala.collection.immutable.HashMap
 
 /**
- * オンメモリで動作するリポジトリの実装。
+ * オンメモリで動作する[[org.sisioh.dddbase.core.Repository]]の実装。
  *
- * @author j5ik2o
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
  */
-class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
+class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends Repository[ID, T] with EntityIterableResolver[ID, T] with Cloneable {
 
-  private[core] var entities = Map.empty[Identity[ID], T]
+  private[core] var entities = Map.empty[ID, T]
 
   override def equals(obj: Any) = obj match {
     case that: OnMemoryRepository[_, _] => this.entities == that.entities
@@ -44,30 +45,39 @@ class OnMemoryRepository[ID, T <: Entity[ID] with EntityCloneable[ID, T]]
     result
   }
 
-  def resolve(identifier: Identity[ID]) = synchronized {
+  override def resolve(identifier: ID) = synchronized {
     require(identifier != null)
     contains(identifier).flatMap {
       _ =>
         try {
           Success(entities(identifier).clone)
         } catch {
-          case ex: NoSuchElementException => Failure(ex)
+          case ex: NoSuchElementException => Failure(new EntityNotFoundException())
+          case ex: Exception => Failure(ex)
         }
-    }.orElse {
-      Failure(new EntityNotFoundException())
     }
   }
 
-  def resolveOption(identifier: Identity[ID]) =
-    resolve(identifier).toOption
+  override def resolveOption(identifier: ID) = synchronized {
+    require(identifier != null)
+    contains(identifier).flatMap {
+      _ =>
+        try {
+          Success(Some(entities(identifier).clone))
+        } catch {
+          case ex: NoSuchElementException => Success(None)
+          case ex: Exception => Failure(ex)
+        }
+    }
+  }
 
-  def store(entity: T): Try[OnMemoryRepository[ID, T]] = {
+  override def store(entity: T): Try[OnMemoryRepository[ID, T]] = {
     val result = clone
     result.entities += (entity.identity -> entity)
     Success(result)
   }
 
-  def delete(identifier: Identity[ID]): Try[OnMemoryRepository[ID, T]] = synchronized {
+  override def delete(identifier: ID): Try[OnMemoryRepository[ID, T]] = synchronized {
     contains(identifier).flatMap {
       e =>
         if (e == true) {

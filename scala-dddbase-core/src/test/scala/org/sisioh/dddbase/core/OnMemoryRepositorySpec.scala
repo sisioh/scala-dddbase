@@ -10,12 +10,12 @@ import scala.util.Success
 @RunWith(classOf[JUnitRunner])
 class OnMemoryRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID]) extends Entity[UUID] with EntityCloneable[UUID, EntityImpl]
+  class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
 
   val id = Identity(UUID.randomUUID())
 
   "The repository" should {
-    val repository = new OnMemoryRepository[UUID, EntityImpl]()
+    val repository = new OnMemoryRepository[Identity[UUID], EntityImpl]()
     "have stored entity" in {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
@@ -45,7 +45,7 @@ class OnMemoryRepositorySpec extends Specification with Mockito {
   }
 
   "The cloned repository" should {
-    val repository = new OnMemoryRepository[UUID, EntityImpl]()
+    val repository = new OnMemoryRepository[Identity[UUID], EntityImpl]()
     "equals the repository before clone" in {
       repository must_== repository.clone
     }

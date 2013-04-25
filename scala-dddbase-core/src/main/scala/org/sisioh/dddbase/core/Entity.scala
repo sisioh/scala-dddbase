@@ -21,10 +21,10 @@ package org.sisioh.dddbase.core
  *
  * @author j5ik2o
  */
-trait Entity[ID] {
+trait Entity[ID <: Identity[_]] {
 
   /** エンティティの識別子。 */
-  val identity: Identity[ID]
+  val identity: ID
 
   /**
    * ハッシュコードを返す。
@@ -44,23 +44,14 @@ trait Entity[ID] {
     case _ => false
   }
 
-  // var version: Long = _
-
-  //  var uncommittedEventCount:Int = _
-
-  //  var uncommittedEvents = Stream.empty[DomainEvent[_]]
-
-  //  def commitEvents
-
 }
-
 
 /**
  * クローンに対応したエンティティを実装するためのトレイト。
  *
  * @author j5ik2o
  */
-trait EntityCloneable[ID, T <: Entity[ID]] extends Cloneable {
+trait EntityCloneable[ID <: Identity[_], T <: Entity[ID]] extends Cloneable {
   this: Entity[ID] =>
 
   /**
@@ -73,5 +64,11 @@ trait EntityCloneable[ID, T <: Entity[ID]] extends Cloneable {
 
 }
 
-
-
+/**
+ * シリアライズに対応したエンティティを実装するためのトレイト。
+ *
+ * @author mtgto
+ */
+trait EntitySerializable[ID <: Identity[_ <: java.io.Serializable], T <: Entity[ID]] extends Serializable {
+  this: Entity[ID] =>
+}
