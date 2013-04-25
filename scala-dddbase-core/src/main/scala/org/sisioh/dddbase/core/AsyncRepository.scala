@@ -31,7 +31,7 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.EntityResolver.resolve()]]
+   * @see [[org.sisioh.dddbase.core.EntityResolver!.resolve]]
    *
    * @param identity 識別子
    * @return Success:
@@ -45,7 +45,7 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.EntityResolver.resolve()]]
+   * @see [[org.sisioh.dddbase.core.EntityResolver!.resolve]]
    *
    * @param identity 識別子
    * @return Success:
@@ -56,7 +56,7 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   def resolveOption(identity: ID): Future[Option[T]]
 
   /**
-   * [[org.sisioh.dddbase.core.AsyncEntityResolver.resolve()]]へのショートカット。
+   * [[org.sisioh.dddbase.core.AsyncEntityResolver!.resolve]]へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
@@ -108,7 +108,7 @@ trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityRes
   /**
    * エンティティを保存する。
    *
-   * @see [[org.sisioh.dddbase.core.Repository.store( )]]
+   * @see [[org.sisioh.dddbase.core.Repository!.store]]
    *
    * @param entity 保存する対象のエンティティ
    * @return Success:
@@ -120,7 +120,7 @@ trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityRes
   def store(entity: T): Future[AsyncRepository[ID, T]]
 
   /**
-   * [[org.sisioh.dddbase.core.AsyncRepository.store()]]へのショートカット。
+   * [[org.sisioh.dddbase.core.AsyncRepository!.store]]へのショートカット。
    *
    * @param identifier 識別子
    * @param entity 保存する対象のエンティティ
@@ -133,9 +133,7 @@ trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityRes
   def update(identifier: ID, entity: T) = store(entity)
 
   /**
-   * deleteメソッドの非同期版
-   *
-   * @see [[org.sisioh.dddbase.core.Repository.delete()]]
+   * 識別子を指定してエンティティを削除する。
    *
    * @param identity 識別子
    * @return Success:
