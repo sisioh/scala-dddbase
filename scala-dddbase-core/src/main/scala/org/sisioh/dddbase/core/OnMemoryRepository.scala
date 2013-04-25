@@ -52,15 +52,24 @@ class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable
         try {
           Success(entities(identifier).clone)
         } catch {
-          case ex: NoSuchElementException => Failure(ex)
+          case ex: NoSuchElementException => Failure(new EntityNotFoundException())
+          case ex: Exception => Failure(ex)
         }
-    }.orElse {
-      Failure(new EntityNotFoundException())
     }
   }
 
-  override def resolveOption(identifier: ID) =
-    resolve(identifier).toOption
+  override def resolveOption(identifier: ID) = synchronized {
+    require(identifier != null)
+    contains(identifier).flatMap {
+      _ =>
+        try {
+          Success(Some(entities(identifier).clone))
+        } catch {
+          case ex: NoSuchElementException => Success(None)
+          case ex: Exception => Failure(ex)
+        }
+    }
+  }
 
   override def store(entity: T): Try[OnMemoryRepository[ID, T]] = {
     val result = clone

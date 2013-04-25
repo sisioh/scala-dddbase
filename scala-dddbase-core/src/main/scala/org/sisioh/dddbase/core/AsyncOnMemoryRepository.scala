@@ -36,7 +36,7 @@ class AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityClon
   }
 
   def resolveOption(identifier: ID) = future {
-    core.resolveOption(identifier)
+    core.resolveOption(identifier).get
   }
 
   def contains(identifier: ID) = future {
