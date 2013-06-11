@@ -17,6 +17,7 @@
 package org.sisioh.dddbase.core
 
 import scala.util._
+import org.sisioh.dddbase.spec.Specification
 
 /**
  * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
@@ -116,7 +117,7 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] {
   def store(entity: T): Try[Repository[ID, T]]
 
   /**
-   * [[org.sisioh.dddbase.core.Repository!.store]] へのショートカット。
+   * [[org.sisioh.dddbase.core.Repository!.s t o r e]] へのショートカット。
    *
    * @param identity 識別子
    * @param entity 保存する対象のエンティティ
@@ -168,26 +169,72 @@ trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityReader[ID, T]
 
 
 /**
+ * 述語関数に該当したエンティティを検索することができるトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait EntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
+  this: EntityReader[ID, T] =>
+
+  /**
+   * 述語関数に該当したエンティティを取得する。
+   *
+   * @param predicate 述語関数
+   * @return Success:
+   *         エンティティのリスト
+   *         Failure:
+   *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def filterByPredicate(predicate: T => Boolean): Try[List[T]]
+
+}
+
+/**
+ * [[org.sisioh.dddbase.spec.Specification]]を述語に取り、エンティティを検索することができるトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait EntityReaderBySpecification[ID <: Identity[_], T <: Entity[ID]] {
+  this: EntityReader[ID, T] =>
+
+  /**
+   * [[org.sisioh.dddbase.spec.Specification]]に該当したエンティティを取得する。
+   *
+   * @param specification [[org.sisioh.dddbase.spec.Specification]]
+   * @return Success:
+   *         エンティティのリスト
+   *         Failure:
+   *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def filterBySpecification(specification: Specification[T]): Try[List[T]]
+
+}
+
+/**
  * 解決したエンティティをコールバックで返すためのトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait CallbackEntityReader[ID <: Identity[_], T <: Entity[ID]] {
+trait EntityReaderByCallback[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityReader[ID, T] =>
 
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * callbackの引数である`Try[T]`は[[org.sisioh.dddbase.core.EntityReader!.resolve]]の戻り値と同じ結果を返す
+   * callbackの引数である`Try[T]`は[[org.sisioh.dddbase.core.EntityReader!.r e s o l v e]]の戻り値と同じ結果を返す
    *
-   * @see [[org.sisioh.dddbase.core.EntityReader!.resolve]]
+   * @see [[org.sisioh.dddbase.core.EntityReader!.r e s o l v e]]
    *
    * @param callback コールバック
    * @tparam R コールバックの戻り値の型
    * @return コールバックの戻り値
    */
-  def resolve[R](callback: Try[T] => R): R
+  def resolveByCallback[R](callback: Try[T] => R): R
 
 }
 
@@ -196,7 +243,7 @@ trait CallbackEntityReader[ID <: Identity[_], T <: Entity[ID]] {
  *
  * @author j5ik2o
  */
-trait PagingEntityReader[ID <: Identity[_], T <: Entity[ID]] {
+trait EntityReaderByPaging[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityReader[ID, T] =>
 
   /**
