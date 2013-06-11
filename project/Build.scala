@@ -24,13 +24,14 @@ object DDDBaseBuild extends Build {
     settings = commonSettings,
     aggregate = Seq(core, spec))
 
-  val core: Project = Project("scala-dddbase-core",
-    file("scala-dddbase-core"),
-    settings = commonSettings)
-
   val spec: Project = Project("scala-dddbase-spec",
     file("scala-dddbase-spec"),
     settings = commonSettings)
+
+  val core: Project = Project("scala-dddbase-core",
+    file("scala-dddbase-core"),
+    settings = commonSettings) dependsOn(spec)
+
 
   def projectId(state: State) = extracted(state).currentProject.id
 
