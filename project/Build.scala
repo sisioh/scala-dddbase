@@ -9,8 +9,8 @@ object DDDBaseBuild extends Build {
 
   lazy val commonSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.sisioh",
-    version := "0.1.2",
-    scalaVersion := "2.10.0",
+    version := "0.1.3",
+    scalaVersion := "2.10.2",
     libraryDependencies ++= Seq(junit, scalaTest, mockito, scalaTest, specs2),
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
     shellPrompt := {
@@ -24,13 +24,14 @@ object DDDBaseBuild extends Build {
     settings = commonSettings,
     aggregate = Seq(core, spec))
 
-  val core: Project = Project("scala-dddbase-core",
-    file("scala-dddbase-core"),
-    settings = commonSettings)
-
   val spec: Project = Project("scala-dddbase-spec",
     file("scala-dddbase-spec"),
     settings = commonSettings)
+
+  val core: Project = Project("scala-dddbase-core",
+    file("scala-dddbase-core"),
+    settings = commonSettings) dependsOn(spec)
+
 
   def projectId(state: State) = extracted(state).currentProject.id
 
