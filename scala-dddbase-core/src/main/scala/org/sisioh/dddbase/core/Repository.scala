@@ -20,21 +20,21 @@ import scala.util._
 
 /**
  * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
- * を検索する責務を表すインターフェイス。
+ * を読み込むための責務を表すインターフェイス。
  *
  * @author j5ik2o
  */
-trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
+trait EntityReader[ID <: Identity[_], T <: Entity[ID]] {
 
   /**
    * 識別子に該当するエンティティを解決する。
    *
    * @param identity 識別子
    * @return Success:
-   *          エンティティ
+   *         エンティティ
    *         Failure:
-   *          EntityNotFoundExceptionは、エンティティが見つからなかった場合
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def resolve(identity: ID): Try[T]
 
@@ -43,22 +43,22 @@ trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
    *
    * @param identity 識別子
    * @return Success:
-   *          Some: エンティティが存在する場合
-   *          None: エンティティが存在しない場合
+   *         Some: エンティティが存在する場合
+   *         None: エンティティが存在しない場合
    *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def resolveOption(identity: ID): Try[Option[T]]
 
   /**
-   * [[org.sisioh.dddbase.core.EntityResolver!.resolve]]へのショートカット。
+   * [[org.sisioh.dddbase.core.EntityReader!.r e s o l v e]]へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
-   *          エンティティ
+   *         エンティティ
    *         Failure:
-   *          EntityNotFoundExceptionは、エンティティが見つからなかった場合
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def apply(identity: ID) = resolve(identity)
 
@@ -67,9 +67,9 @@ trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
    *
    * @param identifier 識別子
    * @return Success:
-   *          存在する場合はtrue
+   *         存在する場合はtrue
    *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def contains(identifier: ID): Try[Boolean]
 
@@ -78,9 +78,9 @@ trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
    *
    * @param entity エンティティ
    * @return Success:
-   *          存在する場合はtrue
+   *         存在する場合はtrue
    *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def contains(entity: T): Try[Boolean] = contains(entity.identity)
 
@@ -89,10 +89,65 @@ trait EntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 /**
  * `scala.collection.Iterable`を実装するためのトレイト。
  */
-trait EntityIterableResolver[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
-  this: EntityResolver[ID, T] =>
+trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
+  this: EntityReader[ID, T] =>
 
   def contains(identifier: ID): Try[Boolean] = Success(exists(_.identity == identifier))
+
+}
+
+/**
+ * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+ * を書き込むための責務を表すインターフェイス。
+ *
+ * @author j5ik2o
+ */
+trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] {
+
+  /**
+   * エンティティを保存する。
+   *
+   * @param entity 保存する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンス
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def store(entity: T): Try[Repository[ID, T]]
+
+  /**
+   * [[org.sisioh.dddbase.core.Repository!.store]] へのショートカット。
+   *
+   * @param identity 識別子
+   * @param entity 保存する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンス
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def update(identity: ID, entity: T) = store(entity)
+
+  /**
+   * 指定した識別子のエンティティを削除する。
+   *
+   * @param identity 識別子
+   * @return Success:
+   *         リポジトリインスタンス
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def delete(identity: ID): Try[Repository[ID, T]]
+
+  /**
+   * 指定したエンティティを削除する。
+   *
+   * @param entity エンティティ
+   * @return Success:
+   *         リポジトリインスタンス
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def delete(entity: T): Try[Repository[ID, T]] = delete(entity.identity)
 
 }
 
@@ -109,54 +164,8 @@ trait EntityIterableResolver[ID <: Identity[_], T <: Entity[ID]] extends Iterabl
  *
  * @author j5ik2o
  */
-trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityResolver[ID, T] {
+trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityReader[ID, T] with EntityWriter[ID, T]
 
-  /**
-   * エンティティを保存する。
-   *
-   * @param entity 保存する対象のエンティティ
-   * @return Success:
-   *          リポジトリインスタンス
-   *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
-   */
-  def store(entity: T): Try[Repository[ID, T]]
-
-  /**
-   * [[org.sisioh.dddbase.core.Repository!.store]] へのショートカット。
-   *
-   * @param identity 識別子
-   * @param entity 保存する対象のエンティティ
-   * @return Success:
-   *          リポジトリインスタンス
-   *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
-   */
-  def update(identity: ID, entity: T) = store(entity)
-
-  /**
-   * 指定した識別子のエンティティを削除する。
-   *
-   * @param identity 識別子
-   * @return Success:
-   *          リポジトリインスタンス
-   *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
-   */
-  def delete(identity: ID): Try[Repository[ID, T]]
-
-  /**
-   * 指定したエンティティを削除する。
-   *
-   * @param entity エンティティ
-   * @return Success:
-   *          リポジトリインスタンス
-   *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
-   */
-  def delete(entity: T): Try[Repository[ID, T]] = delete(entity.identity)
-
-}
 
 /**
  * 解決したエンティティをコールバックで返すためのトレイト。
@@ -164,15 +173,15 @@ trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityResolver[ID, 
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait CallbackEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
-  this: EntityResolver[ID, T] =>
+trait CallbackEntityReader[ID <: Identity[_], T <: Entity[ID]] {
+  this: EntityReader[ID, T] =>
 
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * callbackの引数である`Try[T]`は[[org.sisioh.dddbase.core.EntityResolver!.resolve]]の戻り値と同じ結果を返す
+   * callbackの引数である`Try[T]`は[[org.sisioh.dddbase.core.EntityReader!.resolve]]の戻り値と同じ結果を返す
    *
-   * @see [[org.sisioh.dddbase.core.EntityResolver!.resolve]]
+   * @see [[org.sisioh.dddbase.core.EntityReader!.resolve]]
    *
    * @param callback コールバック
    * @tparam R コールバックの戻り値の型
@@ -187,8 +196,8 @@ trait CallbackEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
  *
  * @author j5ik2o
  */
-trait PagingEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
-  this: EntityResolver[ID, T] =>
+trait PagingEntityReader[ID <: Identity[_], T <: Entity[ID]] {
+  this: EntityReader[ID, T] =>
 
   /**
    * ページを表すクラス。
@@ -203,9 +212,9 @@ trait PagingEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
    * @param pageSize 1ページの件数
    * @param index 検索するページのインデックス
    * @return Success:
-   *          ページ
+   *         ページ
    *         Failure:
-   *          RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def resolvePage(pageSize: Int, index: Int): Try[Page]
 }

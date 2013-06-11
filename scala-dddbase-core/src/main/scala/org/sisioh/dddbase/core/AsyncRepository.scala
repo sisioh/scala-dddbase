@@ -19,19 +19,19 @@ package org.sisioh.dddbase.core
 import scala.concurrent._
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.EntityResolver]]。
+ * 非同期版[[org.sisioh.dddbase.core.EntityReader]]。
  *
- * @see [[org.sisioh.dddbase.core.EntityResolver]]
+ * @see [[org.sisioh.dddbase.core.EntityReader]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
+trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] {
 
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.EntityResolver!.resolve]]
+   * @see [[org.sisioh.dddbase.core.EntityReader!.resolve]]
    *
    * @param identity 識別子
    * @return Success:
@@ -45,7 +45,7 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.EntityResolver!.resolve]]
+   * @see [[org.sisioh.dddbase.core.EntityReader!.resolve]]
    *
    * @param identity 識別子
    * @return Success:
@@ -56,7 +56,7 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
   def resolveOption(identity: ID): Future[Option[T]]
 
   /**
-   * [[org.sisioh.dddbase.core.AsyncEntityResolver!.resolve]]へのショートカット。
+   * [[org.sisioh.dddbase.core.AsyncEntityReader!.resolve]]へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
@@ -96,14 +96,14 @@ trait AsyncEntityResolver[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.Repository]]。
+ * 非同期版[[org.sisioh.dddbase.core.EntityWriter]]。
  *
- * @see [[org.sisioh.dddbase.core.Repository]]
+ * @see [[org.sisioh.dddbase.core.EntityWriter]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityResolver[ID, T] {
+trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] {
 
   /**
    * エンティティを保存する。
@@ -157,3 +157,13 @@ trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityRes
   def delete(entity: T): Future[AsyncRepository[ID, T]] = delete(entity.identity)
 
 }
+
+/**
+ * 非同期版[[org.sisioh.dddbase.core.Repository]]。
+ *
+ * @see [[org.sisioh.dddbase.core.Repository]]
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[ID, T]
