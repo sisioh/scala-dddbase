@@ -31,12 +31,12 @@ trait AsyncEntityIO
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityIOEventHandler[ID <: Identity[_], T <: Entity[ID]] {
+trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
   this: AsyncEntityIO =>
 
   type EventHandler = (T, EventType.Value) => Unit
 
-  protected val eventHandlers = new ListBuffer[EventHandler]()
+  protected val eventHandlers = new ListBuffer[Future[EventHandler]]()
 
   /**
    * イベントハンドラを登録する。
@@ -45,8 +45,8 @@ trait AsyncEntityIOEventHandler[ID <: Identity[_], T <: Entity[ID]] {
    * @param executor [[scala.concurrent.ExecutionContext]]
    * @return `Future` にラップされた `this`
    */
-  def addEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventHandler[ID, T]] = future {
-    eventHandlers += eventHandler
+  def addEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
+    eventHandlers += future(eventHandler)
     this
   }
 
@@ -57,22 +57,28 @@ trait AsyncEntityIOEventHandler[ID <: Identity[_], T <: Entity[ID]] {
    * @param executor [[scala.concurrent.ExecutionContext]]
    * @return `Future` にラップされた `this`
    */
-  def removeEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventHandler[ID, T]] = future {
-    eventHandlers -= eventHandler
+  def removeEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
+    eventHandlers -= future(eventHandler)
     this
   }
 
   /**
-   * イベントハンドラにイベントを発火する。
+   * イベントハンドラにイベントを送信する。
    *
    * @param entity エンティティ
    * @param eventType イベントタイプ
    * @param executor [[scala.concurrent.ExecutionContext]]
    * @return
    */
-  protected def fireEventHandlers(entity: T, eventType: EventType.Value)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventHandler[ID, T]] =
+  protected def submitToEventHandlers(entity: T, eventType: EventType.Value)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] =
     future {
-      eventHandlers.foreach(_(entity, eventType))
+      eventHandlers.map {
+        eventHandler =>
+          eventHandler.map {
+            e2 =>
+              e2(entity, eventType)
+          }
+      }
       this
     }
 

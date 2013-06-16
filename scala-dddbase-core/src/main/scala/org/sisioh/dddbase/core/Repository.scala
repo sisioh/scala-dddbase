@@ -38,7 +38,7 @@ trait EntityIO
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait EntityIOEventHandler[ID <: Identity[_], T <: Entity[ID]] {
+trait EntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityIO =>
 
   type EventHandler = (T, EventType.Value) => Unit
@@ -51,7 +51,7 @@ trait EntityIOEventHandler[ID <: Identity[_], T <: Entity[ID]] {
    * @param eventHandler イベントハンドラ
    * @return `Try` にラップされた `this`
    */
-  def addEventHandler(eventHandler: EventHandler): Try[EntityIOEventHandler[ID, T]] = {
+  def addEventHandler(eventHandler: EventHandler): Try[EntityIOEventSubmitter[ID, T]] = {
     eventHandlers += eventHandler
     Success(this)
   }
@@ -62,19 +62,19 @@ trait EntityIOEventHandler[ID <: Identity[_], T <: Entity[ID]] {
    * @param eventHandler イベントハンドラ
    * @return `Try` にラップされた `this`
    */
-  def removeEventHandler(eventHandler: EventHandler): Try[EntityIOEventHandler[ID, T]] = {
+  def removeEventHandler(eventHandler: EventHandler): Try[EntityIOEventSubmitter[ID, T]] = {
     eventHandlers -= eventHandler
     Success(this)
   }
 
   /**
-   * イベントハンドラにイベントを発火する。
+   * イベントハンドラにイベントを送信する。
    *
    * @param entity エンティティ
    * @param eventType イベントタイプ
    * @return `Try` にラップされた `this`
    */
-  protected def fireEventHandlers(entity: T, eventType: EventType.Value): Try[EntityIOEventHandler[ID, T]] = {
+  protected def submitToEventHandlers(entity: T, eventType: EventType.Value): Try[EntityIOEventSubmitter[ID, T]] = {
     eventHandlers.foreach(_(entity, eventType))
     Success(this)
   }
