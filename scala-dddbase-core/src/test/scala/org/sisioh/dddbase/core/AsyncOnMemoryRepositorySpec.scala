@@ -17,6 +17,7 @@ class AsyncOnMemoryRepositorySpec extends Specification with Mockito {
     val repository = new AsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
     "have stored entity" in {
       val entity = spy(new EntityImpl(id))
+      repository(entity.identity) = entity
       val future = repository.store(entity).flatMap {
         asyncRepos =>
           asyncRepos.contains(id)

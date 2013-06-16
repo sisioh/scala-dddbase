@@ -61,7 +61,7 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
   /**
    * ビルダを設定する関数を追加する。
    *
-   *  @param configurator [[org.sisioh.dddbase.core.ValueObjectBuilder.Configure]]
+   *  @param configure [[org.sisioh.dddbase.core.ValueObjectBuilder.Configure]]
    */
   protected def addConfigurator(configure: Configure): Unit = {
     configurators += configure

@@ -18,6 +18,71 @@ package org.sisioh.dddbase.core
 
 import scala.concurrent._
 import org.sisioh.dddbase.spec.Specification
+import scala.collection.mutable.ListBuffer
+
+/**
+ * 非同期にエンティティをIOするためのトレイト。
+ */
+trait AsyncEntityIO
+
+/**
+ * 非同期にエンティティのIOイベントを管理するためのトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
+  this: AsyncEntityIO =>
+
+  type EventHandler = (T, EventType.Value) => Unit
+
+  protected val eventHandlers = new ListBuffer[Future[EventHandler]]()
+
+  /**
+   * イベントハンドラを登録する。
+   *
+   * @param eventHandler イベントハンドラ
+   * @param executor [[scala.concurrent.ExecutionContext]]
+   * @return `Future` にラップされた `this`
+   */
+  def addEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
+    eventHandlers += future(eventHandler)
+    this
+  }
+
+  /**
+   * イベントハンドラを削除する。
+   *
+   * @param eventHandler イベントハンドラ
+   * @param executor [[scala.concurrent.ExecutionContext]]
+   * @return `Future` にラップされた `this`
+   */
+  def removeEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
+    eventHandlers -= future(eventHandler)
+    this
+  }
+
+  /**
+   * イベントハンドラにイベントを送信する。
+   *
+   * @param entity エンティティ
+   * @param eventType イベントタイプ
+   * @param executor [[scala.concurrent.ExecutionContext]]
+   * @return
+   */
+  protected def submitToEventHandlers(entity: T, eventType: EventType.Value)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] =
+    future {
+      eventHandlers.map {
+        eventHandler =>
+          eventHandler.map {
+            e2 =>
+              e2(entity, eventType)
+          }
+      }
+      this
+    }
+
+}
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.EntityReader]]。
@@ -27,74 +92,62 @@ import org.sisioh.dddbase.spec.Specification
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] {
+trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
 
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.EntityReader!.resolve]]
+   * @see [[org.sisioh.dddbase.core.EntityReader]] `resolve`
    *
    * @param identity 識別子
    * @return Success:
-   *          非同期リポジトリ
+   *         非同期リポジトリ
    *         Failure:
-   *          EntityNotFoundException リポジトリにアクセスできなかった場合
-   *          RepositoryException リポジトリにアクセスできなかった場合
+   *         EntityNotFoundException リポジトリにアクセスできなかった場合
+   *         RepositoryException リポジトリにアクセスできなかった場合
    */
-  def resolve(identity: ID): Future[T]
+  def resolve(identity: ID)(implicit executor: ExecutionContext): Future[T]
 
   /**
-   * 識別子に該当するエンティティを解決する。
-   *
-   * @see [[org.sisioh.dddbase.core.EntityReader!.resolve]]
+   * [[org.sisioh.dddbase.core.AsyncEntityReader]] `resolve`へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
-   *          Option[エンティティ]
+   *         非同期リポジトリ
    *         Failure:
-   *          Futureが失敗した場合の例外
+   *         EntityNotFoundException リポジトリにアクセスできなかった場合
+   *         RepositoryException リポジトリにアクセスできなかった場合
    */
-  def resolveOption(identity: ID): Future[Option[T]]
-
-  /**
-   * [[org.sisioh.dddbase.core.AsyncEntityReader!.resolve]]へのショートカット。
-   *
-   * @param identity 識別子
-   * @return Success:
-   *          非同期リポジトリ
-   *         Failure:
-   *          EntityNotFoundException リポジトリにアクセスできなかった場合
-   *          RepositoryException リポジトリにアクセスできなかった場合
-   */
-  def apply(identity: ID) = resolve(identity)
+  def apply(identity: ID)(implicit executor: ExecutionContext) = resolve(identity)
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。
    *
    * @param identity 識別子
    * @return Success:
-   *          存在する場合はtrue
+   *         存在する場合はtrue
    *         Failure:
-   *          EntityNotFoundException リポジトリにアクセスできなかった場合
-   *          RepositoryException リポジトリにアクセスできなかった場合
-   *          Futureが失敗した場合の例外
+   *         EntityNotFoundException リポジトリにアクセスできなかった場合
+   *         RepositoryException リポジトリにアクセスできなかった場合
+   *         Futureが失敗した場合の例外
    */
-  def contains(identity: ID): Future[Boolean]
+  def contains(identity: ID)(implicit executor: ExecutionContext): Future[Boolean]
 
   /**
    * 指定したエンティティが存在するかを返す。
    *
    * @param entity エンティティ
    * @return Success:
-   *          存在する場合はtrue
+   *         存在する場合はtrue
    *         Failure:
-   *          EntityNotFoundException リポジトリにアクセスできなかった場合
-   *          RepositoryException リポジトリにアクセスできなかった場合
-   *          Futureが失敗した場合の例外
+   *         EntityNotFoundException リポジトリにアクセスできなかった場合
+   *         RepositoryException リポジトリにアクセスできなかった場合
+   *         Futureが失敗した場合の例外
    */
-  def contains(entity: T): Future[Boolean] = contains(entity.identity)
+  def contains(entity: T)(implicit executor: ExecutionContext): Future[Boolean] = contains(entity.identity)
 
 }
+
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.EntityWriter]]。
@@ -104,58 +157,58 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] {
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] {
+trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
 
   /**
    * エンティティを保存する。
    *
-   * @see [[org.sisioh.dddbase.core.Repository!.store]]
+   * @see [[org.sisioh.dddbase.core.Repository]] `store`
    *
    * @param entity 保存する対象のエンティティ
    * @return Success:
-   *          非同期リポジトリ
+   *         非同期リポジトリ
    *         Failure:
-   *          RepositoryException リポジトリにアクセスできなかった場合
-   *          Futureが失敗した場合の例外
+   *         RepositoryException リポジトリにアクセスできなかった場合
+   *         Futureが失敗した場合の例外
    */
-  def store(entity: T): Future[AsyncRepository[ID, T]]
+  def store(entity: T)(implicit executor: ExecutionContext): Future[AsyncRepository[ID, T]]
 
   /**
-   * [[org.sisioh.dddbase.core.AsyncRepository!.store]]へのショートカット。
+   * [[org.sisioh.dddbase.core.AsyncRepository]] `store`へのショートカット。
    *
    * @param identifier 識別子
    * @param entity 保存する対象のエンティティ
    * @return Success:
-   *          非同期リポジトリ
+   *         非同期リポジトリ
    *         Failure:
-   *          RepositoryException リポジトリにアクセスできなかった場合
-   *          Futureが失敗した場合の例外
+   *         RepositoryException リポジトリにアクセスできなかった場合
+   *         Futureが失敗した場合の例外
    */
-  def update(identifier: ID, entity: T) = store(entity)
+  def update(identifier: ID, entity: T)(implicit executor: ExecutionContext) = store(entity)
 
   /**
    * 識別子を指定してエンティティを削除する。
    *
    * @param identity 識別子
    * @return Success:
-   *          非同期リポジトリ
+   *         非同期リポジトリ
    *         Failure:
-   *          RepositoryException リポジトリにアクセスできなかった場合
-   *          Futureが失敗した場合の例外
+   *         RepositoryException リポジトリにアクセスできなかった場合
+   *         Futureが失敗した場合の例外
    */
-  def delete(identity: ID): Future[AsyncRepository[ID, T]]
+  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AsyncRepository[ID, T]]
 
   /**
    * 指定したエンティティを削除する。
    *
    * @param entity エンティティ
    * @return Success:
-   *          非同期リポジトリ
+   *         非同期リポジトリ
    *         Failure:
-   *          RepositoryException リポジトリにアクセスできなかった場合
-   *          Futureが失敗した場合の例外
+   *         RepositoryException リポジトリにアクセスできなかった場合
+   *         Futureが失敗した場合の例外
    */
-  def delete(entity: T): Future[AsyncRepository[ID, T]] = delete(entity.identity)
+  def delete(entity: T)(implicit executor: ExecutionContext): Future[AsyncRepository[ID, T]] = delete(entity.identity)
 
 }
 
@@ -170,6 +223,30 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] {
 trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[ID, T]
 
 /**
+ * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.AsyncEntityReader]]。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]] {
+  this: AsyncEntityReader[ID, T] =>
+
+  /**
+   * 識別子に該当するエンティティを解決する。
+   *
+   * @see [[org.sisioh.dddbase.core.EntityReader]] `resolve`
+   *
+   * @param identity 識別子
+   * @return Success:
+   *         Option[エンティティ]
+   *         Failure:
+   *         Futureが失敗した場合の例外
+   */
+  def resolveOption(identity: ID)(implicit executor: ExecutionContext): Future[Option[T]]
+
+}
+
+/**
  * 非同期版[[org.sisioh.dddbase.core.EntityReaderByPredicate]]。
  *
  * @tparam ID 識別子の型
@@ -182,13 +259,15 @@ trait AsyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
    * 述語関数に該当したエンティティを取得する。
    *
    * @param predicate 述語関数
+   * @param index チャンクのインデックス
+   * @param maxEntities 1チャンク内の件数
    * @return Success:
-   *         エンティティのリスト
+   *         チャンク
    *         Failure:
    *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def filterByPredicate(predicate: T => Boolean): Future[List[T]]
+  def filterByPredicate(predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
 
 }
 
@@ -205,65 +284,36 @@ trait AsyncEntityReaderBySpecification[ID <: Identity[_], T <: Entity[ID]] {
    * [[org.sisioh.dddbase.spec.Specification]]に該当したエンティティを取得する。
    *
    * @param specification [[org.sisioh.dddbase.spec.Specification]]
+   * @param index チャンクのインデックス
+   * @param maxEntities 1チャンク内の件数
    * @return Success:
-   *         エンティティのリスト
+   *         チャンク
    *         Failure:
    *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def filterBySpecification(specification: Specification[T]): Future[List[T]]
+  def filterBySpecification(specification: Specification[T], index: Option[Int] = None, maxEntities: Option[Int] = None)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
 
 }
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.EntityReaderByCallback]]。
+ * 非同期版[[org.sisioh.dddbase.core.EntityReaderByChunk]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityReaderByCallback[ID <: Identity[_], T <: Entity[ID]] {
+trait AsyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]] {
   this: AsyncEntityReader[ID, T] =>
 
   /**
-   * 識別子に該当するエンティティを解決する。
+   * エンティティをチャンク単位で検索する。
    *
-   * callbackの引数である`Try[T]`は[[org.sisioh.dddbase.core.EntityReader!.resolve]]の戻り値と同じ結果を返す
-   *
-   * @see [[org.sisioh.dddbase.core.EntityReader!.resolve]]
-   *
-   * @param callback コールバック
-   * @tparam R コールバックの戻り値の型
-   * @return コールバックの戻り値
-   */
-  def resolveByCallback[R](callback: Future[T] => Future[R]): Future[R]
-
-}
-
-/**
- * 非同期版[[org.sisioh.dddbase.core.EntityReaderByPaging]]。
- *
- * @tparam ID 識別子の型
- * @tparam T エンティティの型
- */
-trait AsyncEntityReaderByPaging[ID <: Identity[_], T <: Entity[ID]] {
-  this: AsyncEntityReader[ID, T] =>
-
-  /**
-   * ページを表すクラス。
-   *
-   * @author j5ik2o
-   */
-  case class Page(size: Int, entities: Seq[T])
-
-  /**
-   * エンティティをページ単位で検索する。
-   *
-   * @param pageSize 1ページの件数
-   * @param index 検索するページのインデックス
+   * @param index 検索するチャンクのインデックス
+   * @param maxEntities 1チャンクの件数
    * @return Success:
-   *         ページ
+   *         チャンク
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolvePage(pageSize: Int, index: Int): Future[Page]
+  def resolvePage(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
 }

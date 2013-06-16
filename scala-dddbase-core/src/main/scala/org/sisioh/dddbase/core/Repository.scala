@@ -18,14 +18,77 @@ package org.sisioh.dddbase.core
 
 import scala.util._
 import org.sisioh.dddbase.spec.Specification
+import scala.collection.mutable.ListBuffer
+
+/**
+ * イベントタイプ。
+ */
+object EventType extends Enumeration {
+  val Resolve, Store, Delete = Value
+}
+
+/**
+ * エンティティをIOするためのトレイト。
+ */
+trait EntityIO
+
+/**
+ * エンティティのIOイベントを管理するためのトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait EntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
+  this: EntityIO =>
+
+  type EventHandler = (T, EventType.Value) => Unit
+
+  protected val eventHandlers = new ListBuffer[EventHandler]()
+
+  /**
+   * イベントハンドラを登録する。
+   *
+   * @param eventHandler イベントハンドラ
+   * @return `Try` にラップされた `this`
+   */
+  def addEventHandler(eventHandler: EventHandler): Try[EntityIOEventSubmitter[ID, T]] = {
+    eventHandlers += eventHandler
+    Success(this)
+  }
+
+  /**
+   * イベントハンドラを削除する。
+   *
+   * @param eventHandler イベントハンドラ
+   * @return `Try` にラップされた `this`
+   */
+  def removeEventHandler(eventHandler: EventHandler): Try[EntityIOEventSubmitter[ID, T]] = {
+    eventHandlers -= eventHandler
+    Success(this)
+  }
+
+  /**
+   * イベントハンドラにイベントを送信する。
+   *
+   * @param entity エンティティ
+   * @param eventType イベントタイプ
+   * @return `Try` にラップされた `this`
+   */
+  protected def submitToEventHandlers(entity: T, eventType: EventType.Value): Try[EntityIOEventSubmitter[ID, T]] = {
+    eventHandlers.foreach(_(entity, eventType))
+    Success(this)
+  }
+
+}
 
 /**
  * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
  * を読み込むための責務を表すインターフェイス。
  *
- * @author j5ik2o
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
  */
-trait EntityReader[ID <: Identity[_], T <: Entity[ID]] {
+trait EntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
 
   /**
    * 識別子に該当するエンティティを解決する。
@@ -40,19 +103,7 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] {
   def resolve(identity: ID): Try[T]
 
   /**
-   * 識別子に該当するエンティティを解決する。
-   *
-   * @param identity 識別子
-   * @return Success:
-   *         Some: エンティティが存在する場合
-   *         None: エンティティが存在しない場合
-   *         Failure:
-   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
-   */
-  def resolveOption(identity: ID): Try[Option[T]]
-
-  /**
-   * [[org.sisioh.dddbase.core.EntityReader!.r e s o l v e]]へのショートカット。
+   * [[org.sisioh.dddbase.core.EntityReader]]の`resolve`へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
@@ -88,7 +139,33 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
+ * エンティティをOptionでラップして返すための[[org.sisioh.dddbase.core.EntityReader]]。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait EntityReaderByOption[ID <: Identity[_], T <: Entity[ID]] {
+  this: EntityReader[ID, T] =>
+
+  /**
+   * 識別子に該当するエンティティを解決する。
+   *
+   * @param identity 識別子
+   * @return Success:
+   *         Some: エンティティが存在する場合
+   *         None: エンティティが存在しない場合
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def resolveOption(identity: ID): Try[Option[T]]
+
+}
+
+/**
  * `scala.collection.Iterable`を実装するためのトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
  */
 trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
   this: EntityReader[ID, T] =>
@@ -97,13 +174,15 @@ trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[
 
 }
 
+
 /**
  * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
  * を書き込むための責務を表すインターフェイス。
  *
- * @author j5ik2o
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
  */
-trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] {
+trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
 
   /**
    * エンティティを保存する。
@@ -117,7 +196,7 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] {
   def store(entity: T): Try[Repository[ID, T]]
 
   /**
-   * [[org.sisioh.dddbase.core.Repository!.s t o r e]] へのショートカット。
+   * [[org.sisioh.dddbase.core.Repository]] `store` へのショートカット。
    *
    * @param identity 識別子
    * @param entity 保存する対象のエンティティ
@@ -162,8 +241,6 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] {
  *
  * @tparam T エンティティの型
  * @tparam ID エンティティの識別子の型
- *
- * @author j5ik2o
  */
 trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityReader[ID, T] with EntityWriter[ID, T]
 
@@ -182,12 +259,12 @@ trait EntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
    *
    * @param predicate 述語関数
    * @return Success:
-   *         エンティティのリスト
+   *         チャンク
    *         Failure:
    *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def filterByPredicate(predicate: T => Boolean): Try[List[T]]
+  def filterByPredicate(predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None): Try[EntitiesChunk[ID, T]]
 
 }
 
@@ -205,63 +282,33 @@ trait EntityReaderBySpecification[ID <: Identity[_], T <: Entity[ID]] {
    *
    * @param specification [[org.sisioh.dddbase.spec.Specification]]
    * @return Success:
-   *         エンティティのリスト
+   *         チャンク
    *         Failure:
    *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def filterBySpecification(specification: Specification[T]): Try[List[T]]
-
-}
-
-/**
- * 解決したエンティティをコールバックで返すためのトレイト。
- *
- * @tparam ID 識別子の型
- * @tparam T エンティティの型
- */
-trait EntityReaderByCallback[ID <: Identity[_], T <: Entity[ID]] {
-  this: EntityReader[ID, T] =>
-
-  /**
-   * 識別子に該当するエンティティを解決する。
-   *
-   * callbackの引数である`Try[T]`は[[org.sisioh.dddbase.core.EntityReader!.r e s o l v e]]の戻り値と同じ結果を返す
-   *
-   * @see [[org.sisioh.dddbase.core.EntityReader!.r e s o l v e]]
-   *
-   * @param callback コールバック
-   * @tparam R コールバックの戻り値の型
-   * @return コールバックの戻り値
-   */
-  def resolveByCallback[R](callback: Try[T] => R): R
+  def filterBySpecification(specification: Specification[T], index: Option[Int] = None, maxEntities: Option[Int] = None): Try[EntitiesChunk[ID, T]]
 
 }
 
 /**
  * ページングによる検索を行うためのトレイト。
  *
- * @author j5ik2o
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
  */
-trait EntityReaderByPaging[ID <: Identity[_], T <: Entity[ID]] {
+trait EntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityReader[ID, T] =>
 
   /**
-   * ページを表すクラス。
+   * エンティティをチャンク単位で検索する。
    *
-   * @author j5ik2o
-   */
-  case class Page(size: Int, entities: Seq[T])
-
-  /**
-   * エンティティをページ単位で検索する。
-   *
-   * @param pageSize 1ページの件数
-   * @param index 検索するページのインデックス
+   * @param index 検索するチャンクのインデックス
+   * @param maxEntities 1チャンクの件数
    * @return Success:
-   *         ページ
+   *         チャンク
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolvePage(pageSize: Int, index: Int): Try[Page]
+  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]]
 }
