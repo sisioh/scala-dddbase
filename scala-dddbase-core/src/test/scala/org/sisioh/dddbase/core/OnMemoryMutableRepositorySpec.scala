@@ -6,8 +6,9 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class OnMemoryMutableRepositorySpec extends Specification with Mockito {
+
+  sequential
 
   class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
 
