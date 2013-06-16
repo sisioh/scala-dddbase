@@ -1,13 +1,9 @@
 package org.sisioh.dddbase.core
 
 import java.util.UUID
-import org.junit.runner.RunWith
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
-import org.specs2.runner.JUnitRunner
-import scala.util.Success
 
-@RunWith(classOf[JUnitRunner])
 class OnMemoryRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]

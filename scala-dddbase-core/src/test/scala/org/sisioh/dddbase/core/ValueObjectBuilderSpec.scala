@@ -1,10 +1,7 @@
 package org.sisioh.dddbase.core
 
-import org.junit.runner.RunWith
 import org.specs2.mutable._
-import org.specs2.runner.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class ValueObjectBuilderSpec extends Specification {
 
   case class PersonName(firstName: String, lastName: String)
