@@ -1,17 +1,21 @@
 package org.sisioh.dddbase.core
 
 import java.util.UUID
+import org.junit.runner.RunWith
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
+import org.specs2.runner.JUnitRunner
 
-class OnMemoryRepositorySpec extends Specification with Mockito {
+class OnMemoryMutableRepositorySpec extends Specification with Mockito {
+
+  sequential
 
   class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
 
   val id = Identity(UUID.randomUUID())
 
   "The repository" should {
-    val repository = new OnMemoryRepository[Identity[UUID], EntityImpl]()
+    val repository = new OnMemoryMutableRepository[Identity[UUID], EntityImpl]()
     "have stored entity" in {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
@@ -37,18 +41,6 @@ class OnMemoryRepositorySpec extends Specification with Mockito {
     "fail to delete a entity by a non-existent identity" in {
       repository.delete(id).isFailure must_== true
       repository.delete(id).get must throwA[EntityNotFoundException]
-    }
-  }
-
-  "The cloned repository" should {
-    val repository = new OnMemoryRepository[Identity[UUID], EntityImpl]()
-    "equals the repository before clone" in {
-      repository must_== repository.clone
-    }
-    "have unequal values to the repository before clone" in {
-      val cloneRepository = repository.clone
-      val r = repository.entities ne cloneRepository.entities
-      r must beTrue
     }
   }
 }

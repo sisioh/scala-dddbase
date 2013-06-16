@@ -32,7 +32,8 @@ trait Identity[A] {
   def value: A
 }
 
-private class IdentityImpl[A](val value: A) extends Identity[A] with Serializable {
+private[core]
+class IdentityImpl[A](val value: A) extends Identity[A] with Serializable {
 
   override def toString = s"Identity($value)"
 

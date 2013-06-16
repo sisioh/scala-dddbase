@@ -27,7 +27,7 @@ import scala.collection.immutable.HashMap
  * @tparam T エンティティの型
  */
 class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends Repository[ID, T] with EntityIterableReader[ID, T] with Cloneable {
+  extends Repository[ID, T] with EntityIterableReader[ID, T] with EntityReaderByOption[ID, T] with Cloneable {
 
   private[core] var entities = Map.empty[ID, T]
 
@@ -36,12 +36,12 @@ class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable
     case _ => false
   }
 
-  override def hashCode = entities.hashCode
+  override def hashCode = entities.hashCode()
 
   override def clone: OnMemoryRepository[ID, T] = {
     val result = super.clone.asInstanceOf[OnMemoryRepository[ID, T]]
     val array = result.entities.toArray
-    result.entities = HashMap(array: _*).map(e => (e._1 -> e._2.clone))
+    result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
     result
   }
 
@@ -80,7 +80,7 @@ class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable
   override def delete(identifier: ID): Try[OnMemoryRepository[ID, T]] = synchronized {
     contains(identifier).flatMap {
       e =>
-        if (e == true) {
+        if (e) {
           val result = clone
           result.entities -= identifier
           Success(result)

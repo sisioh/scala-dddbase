@@ -2,17 +2,13 @@ package org.sisioh.dddbase.core
 
 import java.io._
 import java.util.UUID
-import org.junit.runner.RunWith
 import org.specs2.mutable._
-import org.specs2.runner.JUnitRunner
 
 case class TestSerializableId(value: UUID) extends Identity[UUID] with IdentitySerializable[UUID]
 
 class TestSerializableEntity(val identity: TestSerializableId, val name: String)
 extends Entity[TestSerializableId] with EntitySerializable[TestSerializableId, TestSerializableEntity]
 
-
-@RunWith(classOf[JUnitRunner])
 class EntitySpec extends Specification {
 
   class TestEntity(val identity: Identity[UUID]) extends Entity[Identity[UUID]]
