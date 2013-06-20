@@ -26,7 +26,7 @@ import scala.collection.immutable.HashMap
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-class OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+trait OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends Repository[ID, T] with EntityIterableReader[ID, T] with EntityReaderByOption[ID, T] with Cloneable {
 
   private[core] var entities = Map.empty[ID, T]
