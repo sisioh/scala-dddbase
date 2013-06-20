@@ -21,13 +21,15 @@ import scala.concurrent._
 /**
  * オンメモリで動作する[[org.sisioh.dddbase.core.AsyncRepository]]の実装。
  *
- * @param core 内部で利用する[[org.sisioh.dddbase.core.OnMemoryRepository]]
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-class AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-(private val core: OnMemoryRepository[ID, T] = new OnMemoryRepository[ID, T]())
+trait AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncRepository[ID, T] with AsyncEntityReaderByOption[ID, T] {
+
+  protected val core: OnMemoryRepository[ID, T]
+
+  protected def createInstance(state: OnMemoryRepository[ID, T]): AsyncOnMemoryRepository[ID, T]
 
   def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolve(identifier).get
@@ -41,12 +43,12 @@ class AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityClon
     core.contains(identifier).get
   }
 
-  def store(entity: T)(implicit executor: ExecutionContext) = future {
-    new AsyncOnMemoryRepository(core.store(entity).get)
+  def store(entity: T)(implicit executor: ExecutionContext): Future[AsyncOnMemoryRepository[ID, T]] = future {
+    createInstance(core.store(entity).get)
   }
 
-  def delete(identity: ID)(implicit executor: ExecutionContext) = future {
-    new AsyncOnMemoryRepository(core.delete(identity).get)
+  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AsyncOnMemoryRepository[ID, T]] = future {
+    createInstance(core.delete(identity).get)
   }
 
 }

@@ -4,14 +4,14 @@ import java.util.UUID
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 
-class OnMemoryRepositorySpec extends Specification with Mockito {
+class GenericOnMemoryRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
 
   val id = Identity(UUID.randomUUID())
 
   "The repository" should {
-    val repository = new OnMemoryRepository[Identity[UUID], EntityImpl]()
+    val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
     "have stored entity" in {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
@@ -41,7 +41,7 @@ class OnMemoryRepositorySpec extends Specification with Mockito {
   }
 
   "The cloned repository" should {
-    val repository = new OnMemoryRepository[Identity[UUID], EntityImpl]()
+    val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
     "equals the repository before clone" in {
       repository must_== repository.clone
     }

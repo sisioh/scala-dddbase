@@ -6,7 +6,7 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 
-class OnMemoryMutableRepositorySpec extends Specification with Mockito {
+class GenericOnMemoryMutableRepositorySpec extends Specification with Mockito {
 
   sequential
 
@@ -15,7 +15,7 @@ class OnMemoryMutableRepositorySpec extends Specification with Mockito {
   val id = Identity(UUID.randomUUID())
 
   "The repository" should {
-    val repository = new OnMemoryMutableRepository[Identity[UUID], EntityImpl]()
+    val repository = new GenericOnMemoryMutableRepository[Identity[UUID], EntityImpl]()
     "have stored entity" in {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
