@@ -46,6 +46,14 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
    */
   protected def createInstance(state: SR): AR
 
+  override def equals(obj: Any) = obj match {
+    case that: AsyncOnMemoryRepository[_, _, _, _] =>
+      this.core == that.core
+    case _ => false
+  }
+
+  override def hashCode = 31 * core.hashCode()
+
   def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolve(identifier).get
   }
