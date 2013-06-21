@@ -24,12 +24,16 @@ import scala.concurrent._
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepository[ID, T] with AsyncEntityReaderByOption[ID, T] {
+trait AsyncOnMemoryRepository
+[AR <: AsyncOnMemoryRepository[AR, SR, ID, T],
+SR <: OnMemoryRepository[SR, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncRepository[AR, ID, T] with AsyncEntityReaderByOption[ID, T] {
 
-  protected val core: OnMemoryRepository[ID, T]
+  protected val core: SR
 
-  protected def createInstance(state: OnMemoryRepository[ID, T]): AsyncOnMemoryRepository[ID, T]
+  protected def createInstance(state: SR): AR
 
   def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolve(identifier).get
@@ -43,11 +47,11 @@ trait AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityClon
     core.contains(identifier).get
   }
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[AsyncOnMemoryRepository[ID, T]] = future {
+  def store(entity: T)(implicit executor: ExecutionContext): Future[AR] = future {
     createInstance(core.store(entity).get)
   }
 
-  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AsyncOnMemoryRepository[ID, T]] = future {
+  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AR] = future {
     createInstance(core.delete(identity).get)
   }
 

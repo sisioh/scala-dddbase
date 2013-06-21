@@ -2,24 +2,27 @@ package org.sisioh.dddbase.core
 
 import scala.util.Try
 
-trait OnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends Repository[ID, T] with EntityIterableReader[ID, T] with EntityReaderByOption[ID, T] {
+trait OnMemoryMutableRepository
+[R <: OnMemoryMutableRepository[R, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryRepository[R, ID, T] {
 
-  protected var core: OnMemoryRepository[ID, T] = new GenericOnMemoryRepository[ID, T]()
+  protected var core: OnMemoryRepository[_, ID, T] = new GenericOnMemoryImmutableRepository[ID, T]()
 
-  def store(entity: T): Try[OnMemoryMutableRepository[ID, T]] = {
+  def store(entity: T): Try[R] = {
     core.store(entity).map {
       result =>
-        core = result
-        this
+        core = result.asInstanceOf[OnMemoryRepository[_, ID, T]]
+        this.asInstanceOf[R]
     }
   }
 
-  def delete(identity: ID): Try[OnMemoryMutableRepository[ID, T]] = {
+  def delete(identity: ID): Try[R] = {
     core.delete(identity).map {
       result =>
-        core = result
-        this
+        core = result.asInstanceOf[OnMemoryRepository[_, ID, T]]
+        this.asInstanceOf[R]
     }
   }
 
