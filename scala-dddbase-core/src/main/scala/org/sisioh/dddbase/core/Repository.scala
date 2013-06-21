@@ -40,8 +40,14 @@ trait EntityIO
 trait EntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityIO =>
 
+  /**
+   * イベントハンドラ。
+   */
   type EventHandler = (T, EventType.Value) => Unit
 
+  /**
+   * イベントハンドラのリスト。
+   */
   protected val eventHandlers = new ListBuffer[EventHandler]()
 
   /**
