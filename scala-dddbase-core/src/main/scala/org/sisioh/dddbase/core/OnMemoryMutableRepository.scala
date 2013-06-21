@@ -18,6 +18,14 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   protected var core: OnMemoryRepository[_, ID, T] =
     new GenericOnMemoryImmutableRepository[ID, T]()
 
+  override def equals(obj: Any) = obj match {
+    case that: OnMemoryMutableRepository[_, _, _] =>
+      this.core == that.core
+    case _ => false
+  }
+
+  override def hashCode = 31 * core.hashCode()
+
   def store(entity: T): Try[R] = {
     core.store(entity).map {
       result =>

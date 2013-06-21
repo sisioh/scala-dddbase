@@ -19,6 +19,7 @@ package org.sisioh.dddbase.core
 import collection.Iterator
 import scala.collection.immutable.HashMap
 import util.{Try, Success, Failure}
+import scala.util.control.NonFatal
 
 /**
  * オンメモリで動作する不変リポジトリの実装。
@@ -40,7 +41,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     case _ => false
   }
 
-  override def hashCode = entities.hashCode()
+  override def hashCode = 31 * entities.hashCode()
 
   override def clone: R = {
     val result = super.clone.asInstanceOf[R]
@@ -57,7 +58,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
           Success(entities(identifier).clone)
         } catch {
           case ex: NoSuchElementException => Failure(new EntityNotFoundException())
-          case ex: Exception => Failure(ex)
+          case NonFatal(ex) => Failure(ex)
         }
     }
   }
