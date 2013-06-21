@@ -21,15 +21,38 @@ import scala.concurrent._
 /**
  * オンメモリで動作する[[org.sisioh.dddbase.core.AsyncRepository]]の実装。
  *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepository[ID, T] with AsyncEntityReaderByOption[ID, T] {
+trait AsyncOnMemoryRepository
+[AR <: AsyncOnMemoryRepository[AR, SR, ID, T],
+SR <: OnMemoryRepository[SR, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncRepository[AR, ID, T] with AsyncEntityReaderByOption[ID, T] {
 
-  protected val core: OnMemoryRepository[ID, T]
+  /**
+   * 内部で利用する同期型リポジトリ。
+   */
+  protected val core: SR
 
-  protected def createInstance(state: OnMemoryRepository[ID, T]): AsyncOnMemoryRepository[ID, T]
+  /**
+   * 新しい非同期型リポジトリを生成する。
+   *
+   * @param state 新しい同期型リポジトリ
+   * @return 新しい非同期型のリポジトリ
+   */
+  protected def createInstance(state: SR): AR
+
+  override def equals(obj: Any) = obj match {
+    case that: AsyncOnMemoryRepository[_, _, _, _] =>
+      this.core == that.core
+    case _ => false
+  }
+
+  override def hashCode = 31 * core.hashCode()
 
   def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolve(identifier).get
@@ -43,11 +66,11 @@ trait AsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityClon
     core.contains(identifier).get
   }
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[AsyncOnMemoryRepository[ID, T]] = future {
+  def store(entity: T)(implicit executor: ExecutionContext): Future[AR] = future {
     createInstance(core.store(entity).get)
   }
 
-  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AsyncOnMemoryRepository[ID, T]] = future {
+  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AR] = future {
     createInstance(core.delete(identity).get)
   }
 

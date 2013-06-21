@@ -40,8 +40,14 @@ trait EntityIO
 trait EntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
   this: EntityIO =>
 
+  /**
+   * イベントハンドラ。
+   */
   type EventHandler = (T, EventType.Value) => Unit
 
+  /**
+   * イベントハンドラのリスト。
+   */
   protected val eventHandlers = new ListBuffer[EventHandler]()
 
   /**
@@ -181,7 +187,7 @@ trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
+trait EntityWriter[R <: EntityWriter[R, ID, T], ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
 
   /**
    * エンティティを保存する。
@@ -192,10 +198,10 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): Try[Repository[ID, T]]
+  def store(entity: T): Try[R]
 
   /**
-   * [[org.sisioh.dddbase.core.Repository]] `store` へのショートカット。
+   * [[org.sisioh.dddbase.core.EntityWriter]] `store` へのショートカット。
    *
    * @param identity 識別子
    * @param entity 保存する対象のエンティティ
@@ -215,7 +221,7 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: ID): Try[Repository[ID, T]]
+  def delete(identity: ID): Try[R]
 
   /**
    * 指定したエンティティを削除する。
@@ -226,7 +232,7 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(entity: T): Try[Repository[ID, T]] = delete(entity.identity)
+  def delete(entity: T): Try[R] = delete(entity.identity)
 
 }
 
@@ -241,7 +247,8 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
  * @tparam T エンティティの型
  * @tparam ID エンティティの識別子の型
  */
-trait Repository[ID <: Identity[_], T <: Entity[ID]] extends EntityReader[ID, T] with EntityWriter[ID, T]
+trait Repository[R <: Repository[R, ID, T], ID <: Identity[_], T <: Entity[ID]]
+  extends EntityReader[ID, T] with EntityWriter[R, ID, T]
 
 
 /**
@@ -266,7 +273,6 @@ trait EntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
   def filterByPredicate(predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None): Try[EntitiesChunk[ID, T]]
 
 }
-
 
 
 /**
