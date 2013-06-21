@@ -16,8 +16,8 @@
  */
 package org.sisioh.dddbase.core
 
-import scala.concurrent._
 import scala.collection.mutable.ListBuffer
+import scala.concurrent._
 
 /**
  * 非同期にエンティティをIOするためのトレイト。
@@ -33,8 +33,14 @@ trait AsyncEntityIO
 trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
   this: AsyncEntityIO =>
 
+  /**
+   * イベントハンドラ型
+   */
   type EventHandler = (T, EventType.Value) => Unit
 
+  /**
+   * イベントハンドラのリスト
+   */
   protected val eventHandlers = new ListBuffer[Future[EventHandler]]()
 
   /**
@@ -45,7 +51,7 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
    * @return `Future` にラップされた `this`
    */
   def addEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
-    eventHandlers += future(eventHandler)
+    eventHandlers += Future.successful(eventHandler)
     this
   }
 
@@ -57,7 +63,7 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
    * @return `Future` にラップされた `this`
    */
   def removeEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
-    eventHandlers -= future(eventHandler)
+    eventHandlers -= Future.successful(eventHandler)
     this
   }
 
@@ -71,11 +77,11 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
    */
   protected def submitToEventHandlers(entity: T, eventType: EventType.Value)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] =
     future {
-      eventHandlers.map {
-        eventHandler =>
-          eventHandler.map {
-            e2 =>
-              e2(entity, eventType)
+      eventHandlers.par.foreach {
+        eventHandlerFuture =>
+          eventHandlerFuture.foreach {
+            eventHandler =>
+              eventHandler(entity, eventType)
           }
       }
       this
@@ -156,7 +162,7 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
+trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
 
   /**
    * エンティティを保存する。
@@ -170,7 +176,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: T)(implicit executor: ExecutionContext): Future[AsyncRepository[ID, T]]
+  def store(entity: T)(implicit executor: ExecutionContext): Future[R]
 
   /**
    * [[org.sisioh.dddbase.core.AsyncRepository]] `store`へのショートカット。
@@ -195,7 +201,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AsyncRepository[ID, T]]
+  def delete(identity: ID)(implicit executor: ExecutionContext): Future[R]
 
   /**
    * 指定したエンティティを削除する。
@@ -207,7 +213,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def delete(entity: T)(implicit executor: ExecutionContext): Future[AsyncRepository[ID, T]] = delete(entity.identity)
+  def delete(entity: T)(implicit executor: ExecutionContext): Future[R] = delete(entity.identity)
 
 }
 
@@ -219,7 +225,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[ID, T]
+trait AsyncRepository[R <: AsyncRepository[R, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[R, ID, T]
 
 /**
  * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.AsyncEntityReader]]。
@@ -269,7 +275,6 @@ trait AsyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
   def filterByPredicate(predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
 
 }
-
 
 
 /**

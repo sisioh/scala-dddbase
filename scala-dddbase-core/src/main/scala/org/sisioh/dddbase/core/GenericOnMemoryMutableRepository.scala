@@ -1,15 +1,11 @@
 package org.sisioh.dddbase.core
 
-import scala.util.Try
-
+/**
+ * 汎用的な同期型オンメモリ可変リポジトリ。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
 class GenericOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends OnMemoryMutableRepository[ID, T] {
-
-  override def store(entity: T): Try[GenericOnMemoryMutableRepository[ID, T]] =
-    super.store(entity).map(_.asInstanceOf[GenericOnMemoryMutableRepository[ID, T]])
-
-  override def delete(entity: T): Try[GenericOnMemoryMutableRepository[ID, T]] =
-    super.delete(entity).map(_.asInstanceOf[GenericOnMemoryMutableRepository[ID, T]])
-
-}
+  extends OnMemoryMutableRepository[GenericOnMemoryMutableRepository[ID, T], ID, T]
 
