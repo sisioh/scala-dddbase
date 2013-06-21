@@ -20,26 +20,31 @@ import collection.Iterator
 import util.{Try, Success, Failure}
 import scala.collection.immutable.HashMap
 
+trait OnMemoryRepository[R <: OnMemoryRepository[R, ID, T], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends Repository[R, ID, T] with EntityIterableReader[ID, T] with EntityReaderByOption[ID, T] with Cloneable {
+
+}
+
 /**
  * オンメモリで動作する[[org.sisioh.dddbase.core.Repository]]の実装。
  *
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends Repository[ID, T] with EntityIterableReader[ID, T] with EntityReaderByOption[ID, T] with Cloneable {
+trait OnMemoryImmutableRepository[R <: OnMemoryImmutableRepository[R, ID, T], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryRepository[R, ID, T] {
 
   private[core] var entities = Map.empty[ID, T]
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryRepository[_, _] => this.entities == that.entities
+    case that: OnMemoryImmutableRepository[_, _, _] => this.entities == that.entities
     case _ => false
   }
 
   override def hashCode = entities.hashCode()
 
-  override def clone: OnMemoryRepository[ID, T] = {
-    val result = super.clone.asInstanceOf[OnMemoryRepository[ID, T]]
+  override def clone: R = {
+    val result = super.clone.asInstanceOf[R]
     val array = result.entities.toArray
     result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
     result
@@ -71,13 +76,13 @@ trait OnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable
     }
   }
 
-  override def store(entity: T): Try[OnMemoryRepository[ID, T]] = {
+  override def store(entity: T): Try[R] = {
     val result = clone
     result.entities += (entity.identity -> entity)
     Success(result)
   }
 
-  override def delete(identifier: ID): Try[OnMemoryRepository[ID, T]] = synchronized {
+  override def delete(identifier: ID): Try[R] = synchronized {
     contains(identifier).flatMap {
       e =>
         if (e) {
