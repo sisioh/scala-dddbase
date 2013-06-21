@@ -16,8 +16,8 @@
  */
 package org.sisioh.dddbase.core
 
-import scala.concurrent._
 import scala.collection.mutable.ListBuffer
+import scala.concurrent._
 
 /**
  * 非同期にエンティティをIOするためのトレイト。
@@ -33,8 +33,14 @@ trait AsyncEntityIO
 trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
   this: AsyncEntityIO =>
 
+  /**
+   * イベントハンドラ型
+   */
   type EventHandler = (T, EventType.Value) => Unit
 
+  /**
+   * イベントハンドラのリスト
+   */
   protected val eventHandlers = new ListBuffer[Future[EventHandler]]()
 
   /**
@@ -45,7 +51,7 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
    * @return `Future` にラップされた `this`
    */
   def addEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
-    eventHandlers += future(eventHandler)
+    eventHandlers += Future.successful(eventHandler)
     this
   }
 
@@ -57,7 +63,7 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
    * @return `Future` にラップされた `this`
    */
   def removeEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
-    eventHandlers -= future(eventHandler)
+    eventHandlers -= Future.successful(eventHandler)
     this
   }
 
@@ -71,11 +77,11 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
    */
   protected def submitToEventHandlers(entity: T, eventType: EventType.Value)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] =
     future {
-      eventHandlers.map {
-        eventHandler =>
-          eventHandler.map {
-            e2 =>
-              e2(entity, eventType)
+      eventHandlers.par.foreach {
+        eventHandlerFuture =>
+          eventHandlerFuture.foreach {
+            eventHandler =>
+              eventHandler(entity, eventType)
           }
       }
       this

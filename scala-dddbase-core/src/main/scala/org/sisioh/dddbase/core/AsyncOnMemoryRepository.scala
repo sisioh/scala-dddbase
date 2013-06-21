@@ -21,6 +21,8 @@ import scala.concurrent._
 /**
  * オンメモリで動作する[[org.sisioh.dddbase.core.AsyncRepository]]の実装。
  *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
@@ -31,8 +33,17 @@ ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncRepository[AR, ID, T] with AsyncEntityReaderByOption[ID, T] {
 
+  /**
+   * 内部で利用する同期型リポジトリ。
+   */
   protected val core: SR
 
+  /**
+   * 新しい非同期型リポジトリを生成する。
+   *
+   * @param state 新しい同期型リポジトリ
+   * @return 新しい非同期型のリポジトリ
+   */
   protected def createInstance(state: SR): AR
 
   def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {

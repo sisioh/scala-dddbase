@@ -2,13 +2,21 @@ package org.sisioh.dddbase.core
 
 import scala.util.Try
 
+/**
+ * オンメモリで動作する可変リポジトリの実装。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
 trait OnMemoryMutableRepository
 [R <: OnMemoryMutableRepository[R, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryRepository[R, ID, T] {
 
-  protected var core: OnMemoryRepository[_, ID, T] = new GenericOnMemoryImmutableRepository[ID, T]()
+  protected var core: OnMemoryRepository[_, ID, T] =
+    new GenericOnMemoryImmutableRepository[ID, T]()
 
   def store(entity: T): Try[R] = {
     core.store(entity).map {
