@@ -92,9 +92,9 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * 非同期版[[EntityReader]]。
+ * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
  *
- * @see [[EntityReader]]
+ * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -104,7 +104,7 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[EntityReader]] `resolve`
+   * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
    *
    * @param identity 識別子
    * @return Success:
@@ -116,7 +116,7 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
   def resolve(identity: ID)(implicit executor: ExecutionContext): Future[T]
 
   /**
-   * [[AsyncEntityReader]] `resolve`へのショートカット。
+   * [[org.sisioh.dddbase.core.lifecycle.AsyncEntityReader]] `resolve`へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
@@ -157,19 +157,19 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
 
 
 /**
- * 非同期版[[EntityWriter]]。
+ * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityWriter]]。
  *
- * @see [[EntityWriter]]
+ * @see [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
+trait AsyncEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
 
   /**
    * エンティティを保存する。
    *
-   * @see [[Repository]] `store`
+   * @see [[org.sisioh.dddbase.core.lifecycle.Repository]] `store`
    *
    * @param entity 保存する対象のエンティティ
    * @return Success:
@@ -181,7 +181,7 @@ trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <
   def store(entity: T)(implicit executor: ExecutionContext): Future[R]
 
   /**
-   * [[AsyncRepository]] `store`へのショートカット。
+   * [[org.sisioh.dddbase.core.lifecycle.AsyncRepository]] `store`へのショートカット。
    *
    * @param identifier 識別子
    * @param entity 保存する対象のエンティティ
@@ -220,17 +220,17 @@ trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <
 }
 
 /**
- * 非同期版[[Repository]]。
+ * 非同期版[[org.sisioh.dddbase.core.lifecycle.Repository]]。
  *
- * @see [[Repository]]
+ * @see [[org.sisioh.dddbase.core.lifecycle.Repository]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncRepository[R <: AsyncRepository[R, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[R, ID, T]
+trait AsyncRepository[R <: AsyncRepository[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[R, ID, T]
 
 /**
- * エンティティを`Option`でラップして返すための[[AsyncEntityReader]]。
+ * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.AsyncEntityReader]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -241,7 +241,7 @@ trait AsyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]] {
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[EntityReader]] `resolve`
+   * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
    *
    * @param identity 識別子
    * @return Success:
@@ -254,7 +254,7 @@ trait AsyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * 非同期版[[EntityReaderByPredicate]]。
+ * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -280,7 +280,7 @@ trait AsyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
 
 
 /**
- * 非同期版[[EntityReaderByChunk]]。
+ * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReaderByChunk]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -298,5 +298,5 @@ trait AsyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]] {
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolvePage(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
+  def resolveChunk(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
 }

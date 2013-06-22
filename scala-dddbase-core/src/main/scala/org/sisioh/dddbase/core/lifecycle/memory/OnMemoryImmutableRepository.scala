@@ -17,15 +17,12 @@
 package org.sisioh.dddbase.core.lifecycle.memory
 
 import collection.Iterator
-import org.sisioh.dddbase.core._
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.Some
 import scala.collection.immutable.HashMap
-import scala.util.Failure
-import scala.util.Success
 import scala.util.control.NonFatal
 import util.{Try, Success, Failure}
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
  * オンメモリで動作する不変リポジトリの実装。
@@ -35,7 +32,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait OnMemoryImmutableRepository
-[R <: OnMemoryImmutableRepository[R, ID, T],
+[R <: OnMemoryImmutableRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryRepository[R, ID, T] {

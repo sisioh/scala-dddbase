@@ -27,3 +27,8 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 class GenericOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryMutableRepository[GenericOnMemoryMutableRepository[ID, T], ID, T]
 
+object GenericOnMemoryMutableRepository {
+
+  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]() =
+    new GenericOnMemoryMutableRepository[ID, T]
+}

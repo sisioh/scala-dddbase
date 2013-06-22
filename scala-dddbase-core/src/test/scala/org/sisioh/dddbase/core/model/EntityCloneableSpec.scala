@@ -1,7 +1,6 @@
 package org.sisioh.dddbase.core.model
 
 import java.util.UUID
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import org.specs2.mutable._
 
 class EntityCloneableSpec extends Specification {

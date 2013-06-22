@@ -1,13 +1,10 @@
 package org.sisioh.dddbase.core.lifecycle.memory
 
 import java.util.UUID
-import org.junit.runner.RunWith
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemoryMutableRepository
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
-import org.specs2.runner.JUnitRunner
 
 class GenericOnMemoryMutableRepositorySpec extends Specification with Mockito {
 

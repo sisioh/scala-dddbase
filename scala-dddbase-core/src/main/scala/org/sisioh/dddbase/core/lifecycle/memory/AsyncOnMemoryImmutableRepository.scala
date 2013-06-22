@@ -28,8 +28,8 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait AsyncOnMemoryImmutableRepository
-[AR <: AsyncOnMemoryImmutableRepository[AR, SR, ID, T],
-SR <: OnMemoryRepository[SR, ID, T],
+[AR <: AsyncOnMemoryImmutableRepository[_, SR, ID, T],
+SR <: OnMemoryRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncOnMemoryRepository[AR, ID, T] {
@@ -68,11 +68,11 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   }
 
   def store(entity: T)(implicit executor: ExecutionContext): Future[AR] = future {
-    createInstance(core.store(entity).get)
+    createInstance(core.store(entity).get.asInstanceOf[SR])
   }
 
   def delete(identity: ID)(implicit executor: ExecutionContext): Future[AR] = future {
-    createInstance(core.delete(identity).get)
+    createInstance(core.delete(identity).get.asInstanceOf[SR])
   }
 
 }
