@@ -31,6 +31,16 @@ class GenericOnMemoryMutableRepositorySpec extends Specification with Mockito {
       repository.resolve(id).get must_== entity
       repos.flatMap(_.resolve(id)).get must_== entity
     }
+    "resolveOption a entity by using identity" in {
+      class TestRepository extends GenericOnMemoryMutableRepository[Identity[UUID], EntityImpl]
+      with OnMemoryMutableRepositoryByOption[TestRepository, Identity[UUID], EntityImpl]
+      val repository = new TestRepository
+      val entity = spy(new EntityImpl(id))
+      val repos = repository.store(entity)
+      there was atLeastOne(entity).identity
+      repository.resolveOption(id).get must_== Some(entity)
+      repos.flatMap(_.resolveOption(id)).get must_== Some(entity)
+    }
     "delete a entity by using identity" in {
       val repository = new GenericOnMemoryMutableRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))

@@ -31,12 +31,31 @@ class GenericAsyncOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] w
 
 }
 
+/**
+ * コンパニオンオブジェクト。
+ */
 object GenericAsyncOnMemoryMutableRepository {
 
+  /**
+   * ファクトリメソッド。
+   *
+   * @param core 内部で利用するオンメモリ可変リポジトリ。
+   * @tparam ID 識別子の型
+   * @tparam T エンティティの型
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryMutableRepository]]
+   */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   (core: GenericOnMemoryMutableRepository[ID, T] = GenericOnMemoryMutableRepository[ID, T]()) =
     new GenericAsyncOnMemoryMutableRepository(core)
 
+  /**
+   * エクストラクタメソッド。
+   *
+   * @param repository [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryMutableRepository]]
+   * @tparam ID 識別子の型
+   * @tparam T エンティティの型
+   * @return 構成要素
+   */
   def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   (repository: GenericAsyncOnMemoryMutableRepository[ID, T]): Option[GenericOnMemoryMutableRepository[ID, T]] =
     Some(repository.core)

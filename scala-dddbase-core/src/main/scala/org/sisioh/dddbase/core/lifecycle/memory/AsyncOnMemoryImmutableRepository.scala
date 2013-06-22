@@ -16,8 +16,30 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import scala.concurrent._
+import org.sisioh.dddbase.core.lifecycle.{AsyncEntityReaderByOption, EntityReaderByOption, AsyncRepository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import scala.concurrent._
+
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryImmutableRepository]]にOption型のサポートを追加するトレイト。
+ *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncOnMemoryImmutableRepositoryByOption
+[+AR <: AsyncRepository[_, ID, T],
+SR <: OnMemoryRepository[_, ID, T] with EntityReaderByOption[ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncOnMemoryImmutableRepository[AR, SR, ID, T] with AsyncEntityReaderByOption[ID, T] {
+
+  def resolveOption(identifier: ID)(implicit executor: ExecutionContext) = future {
+    core.resolveOption(identifier).get
+  }
+
+}
 
 /**
  * 非同期型オンメモリ不変リポジトリのためのトレイト。
@@ -28,7 +50,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait AsyncOnMemoryImmutableRepository
-[AR <: AsyncOnMemoryImmutableRepository[_, SR, ID, T],
+[+AR <: AsyncRepository[_, ID, T],
 SR <: OnMemoryRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
@@ -57,10 +79,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 
   def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolve(identifier).get
-  }
-
-  def resolveOption(identifier: ID)(implicit executor: ExecutionContext) = future {
-    core.resolveOption(identifier).get
   }
 
   def contains(identifier: ID)(implicit executor: ExecutionContext) = future {

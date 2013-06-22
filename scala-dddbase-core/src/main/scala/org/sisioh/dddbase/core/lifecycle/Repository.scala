@@ -123,13 +123,13 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
   /**
    * 指定した識別子のエンティティが存在するかを返す。
    *
-   * @param identifier 識別子
+   * @param identity 識別子
    * @return Success:
    *         存在する場合はtrue
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def contains(identifier: ID): Try[Boolean]
+  def contains(identity: ID): Try[Boolean]
 
   /**
    * 指定したのエンティティが存在するかを返す。
@@ -188,7 +188,7 @@ trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait EntityWriter[R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
+trait EntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
 
   /**
    * エンティティを保存する。
@@ -248,7 +248,7 @@ trait EntityWriter[R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[I
  * @tparam T エンティティの型
  * @tparam ID エンティティの識別子の型
  */
-trait Repository[R <: Repository[_, ID, T], ID <: Identity[_], T <: Entity[ID]]
+trait Repository[+R <: Repository[_, ID, T], ID <: Identity[_], T <: Entity[ID]]
   extends EntityReader[ID, T] with EntityWriter[R, ID, T]
 
 
