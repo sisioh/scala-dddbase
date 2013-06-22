@@ -45,12 +45,20 @@ object GenericAsyncOnMemoryImmutableRepository {
    * @param core 内部で利用するオンメモリ不変リポジトリ
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
-   * @return
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryImmutableRepository]]
    */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   (core: GenericOnMemoryImmutableRepository[ID, T] = GenericOnMemoryImmutableRepository[ID, T]()) =
     new GenericAsyncOnMemoryImmutableRepository(core)
 
+  /**
+   * エクストラクタメソッド。
+   *
+   * @param repository [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryImmutableRepository]]
+   * @tparam ID 識別子の型
+   * @tparam T エンティティの型
+   * @return 構成要素
+   */
   def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   (repository: GenericAsyncOnMemoryImmutableRepository[ID, T]) : Option[GenericOnMemoryImmutableRepository[ID, T]] =
     Some(repository.core)

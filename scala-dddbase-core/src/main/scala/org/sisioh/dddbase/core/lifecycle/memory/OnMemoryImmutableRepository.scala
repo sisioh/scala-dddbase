@@ -17,11 +17,10 @@
 package org.sisioh.dddbase.core.lifecycle.memory
 
 import collection.Iterator
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.{Repository, EntityNotFoundException}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.Some
 import scala.collection.immutable.HashMap
-import scala.util.control.NonFatal
 import util.{Try, Success, Failure}
 
 /**
@@ -32,66 +31,68 @@ import util.{Try, Success, Failure}
  * @tparam T エンティティの型
  */
 trait OnMemoryImmutableRepository
-[R <: OnMemoryImmutableRepository[_, ID, T],
+[+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryRepository[R, ID, T] {
 
-  protected[core] var entities = Map.empty[ID, T]
+  /**
+   * エンティティを保存するためのマップ。
+   */
+  protected[core] var entities = new HashMap[ID, T]()
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryImmutableRepository[_, _, _] => this.entities == that.entities
+    case that: OnMemoryImmutableRepository[_, _, _] =>
+      this.entities == that.entities
     case _ => false
   }
 
   override def hashCode = 31 * entities.hashCode()
 
   override def clone: R = {
-    val result = super.clone.asInstanceOf[R]
+    val result = super.clone.asInstanceOf[OnMemoryImmutableRepository[R, ID, T]]
     val array = result.entities.toArray
     result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
-    result
+    result.asInstanceOf[R]
   }
 
-  override def resolve(identifier: ID) = synchronized {
-    require(identifier != null)
-    contains(identifier).flatMap {
+  override def resolve(identity: ID) = synchronized {
+    contains(identity).flatMap {
       _ =>
-        try {
-          Success(entities(identifier).clone)
-        } catch {
-          case ex: NoSuchElementException => Failure(new EntityNotFoundException())
-          case NonFatal(ex) => Failure(ex)
+        Try {
+          entities(identity).clone
+        }.recoverWith {
+          case ex: NoSuchElementException =>
+            Failure(new EntityNotFoundException())
         }
     }
   }
 
-  override def resolveOption(identifier: ID) = synchronized {
-    require(identifier != null)
-    contains(identifier).flatMap {
+  override def resolveOption(identity: ID) = synchronized {
+    contains(identity).flatMap {
       _ =>
-        try {
-          Success(Some(entities(identifier).clone))
-        } catch {
-          case ex: NoSuchElementException => Success(None)
-          case ex: Exception => Failure(ex)
+        Try {
+          Some(entities(identity).clone)
+        }.recoverWith {
+          case ex: NoSuchElementException =>
+            Success(None)
         }
     }
   }
 
   override def store(entity: T): Try[R] = {
-    val result = clone
+    val result = clone.asInstanceOf[OnMemoryImmutableRepository[R, ID, T]]
     result.entities += (entity.identity -> entity)
-    Success(result)
+    Success(result.asInstanceOf[R])
   }
 
   override def delete(identifier: ID): Try[R] = synchronized {
     contains(identifier).flatMap {
       e =>
         if (e) {
-          val result = clone
+          val result = clone.asInstanceOf[OnMemoryImmutableRepository[R, ID, T]]
           result.entities -= identifier
-          Success(result)
+          Success(result.asInstanceOf[R])
         } else {
           Failure(new EntityNotFoundException())
         }

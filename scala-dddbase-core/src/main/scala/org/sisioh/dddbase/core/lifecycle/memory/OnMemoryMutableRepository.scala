@@ -16,9 +16,9 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import org.sisioh.dddbase.core._
-import scala.util.Try
+import org.sisioh.dddbase.core.lifecycle.Repository
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import scala.util.Try
 
 /**
  * オンメモリで動作する可変リポジトリの実装。
@@ -28,11 +28,14 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait OnMemoryMutableRepository
-[R <: OnMemoryMutableRepository[_, ID, T],
+[+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryRepository[R, ID, T] {
 
+  /**
+   * 内部で利用されるオンメモリリポジトリ
+   */
   protected var core: OnMemoryRepository[_, ID, T] =
     new GenericOnMemoryImmutableRepository[ID, T]()
 
