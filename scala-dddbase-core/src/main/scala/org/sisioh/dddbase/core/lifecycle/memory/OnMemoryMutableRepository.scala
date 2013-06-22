@@ -20,6 +20,13 @@ import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityReaderB
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.util.{Success, Try}
 
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryMutableRepository]]にOption型のサポートを追加するトレイト。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
 trait OnMemoryMutableRepositoryByOption
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
@@ -32,7 +39,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
         Success(None)
     }
   }
-
 
 }
 
