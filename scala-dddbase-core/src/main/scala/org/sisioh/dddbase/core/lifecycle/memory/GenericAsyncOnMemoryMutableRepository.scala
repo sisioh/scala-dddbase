@@ -26,7 +26,20 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 class GenericAsyncOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-(protected val core: GenericOnMemoryMutableRepository[ID, T] = new GenericOnMemoryMutableRepository[ID, T])
+(protected val core: GenericOnMemoryMutableRepository[ID, T] = GenericOnMemoryMutableRepository[ID, T]())
   extends AsyncOnMemoryMutableRepository[GenericAsyncOnMemoryMutableRepository[ID, T], GenericOnMemoryMutableRepository[ID, T], ID, T] {
 
 }
+
+object GenericAsyncOnMemoryMutableRepository {
+
+  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  (core: GenericOnMemoryMutableRepository[ID, T] = GenericOnMemoryMutableRepository[ID, T]()) =
+    new GenericAsyncOnMemoryMutableRepository(core)
+
+  def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  (repository: GenericAsyncOnMemoryMutableRepository[ID, T]): Option[GenericOnMemoryMutableRepository[ID, T]] =
+    Some(repository.core)
+
+}
+

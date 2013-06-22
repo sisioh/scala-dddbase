@@ -16,19 +16,18 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import org.sisioh.dddbase.core._
 import org.sisioh.dddbase.core.lifecycle.{AsyncEntityReaderByOption, AsyncRepository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * オンメモリで動作する[[AsyncRepository]]の実装。
+ * オンメモリで動作する[[org.sisioh.dddbase.core.lifecycle.AsyncRepository]]。
  *
  * @tparam AR 当該リポジトリを実装する派生型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
 trait AsyncOnMemoryRepository
-[AR <: AsyncOnMemoryRepository[AR, ID, T],
+[AR <: AsyncOnMemoryRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncRepository[AR, ID, T] with AsyncEntityReaderByOption[ID, T]

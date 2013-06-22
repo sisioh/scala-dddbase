@@ -16,10 +16,9 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.{model}
+import org.sisioh.dddbase.core.model.{Identity, Entity}
 import scala.collection.mutable.ListBuffer
 import scala.util._
-import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
  * イベントタイプ。
@@ -89,7 +88,7 @@ trait EntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * [[Identity]]を用いて、[[Entity]]
+ * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
  * を読み込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型
@@ -110,7 +109,7 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
   def resolve(identity: ID): Try[T]
 
   /**
-   * [[EntityReader]]の`resolve`へのショートカット。
+   * [[org.sisioh.dddbase.core.lifecycle.EntityReader]]の`resolve`へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
@@ -146,7 +145,7 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
 }
 
 /**
- * エンティティをOptionでラップして返すための[[EntityReader]]。
+ * エンティティをOptionでラップして返すための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -183,13 +182,13 @@ trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[
 
 
 /**
- * [[model.Identity]]を用いて、[[Entity]]
+ * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
  * を書き込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait EntityWriter[R <: EntityWriter[R, ID, T], ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
+trait EntityWriter[R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
 
   /**
    * エンティティを保存する。
@@ -203,7 +202,7 @@ trait EntityWriter[R <: EntityWriter[R, ID, T], ID <: Identity[_], T <: Entity[I
   def store(entity: T): Try[R]
 
   /**
-   * [[EntityWriter]] `store` へのショートカット。
+   * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]] `store` へのショートカット。
    *
    * @param identity 識別子
    * @param entity 保存する対象のエンティティ
@@ -249,7 +248,7 @@ trait EntityWriter[R <: EntityWriter[R, ID, T], ID <: Identity[_], T <: Entity[I
  * @tparam T エンティティの型
  * @tparam ID エンティティの識別子の型
  */
-trait Repository[R <: Repository[R, ID, T], ID <: Identity[_], T <: Entity[ID]]
+trait Repository[R <: Repository[_, ID, T], ID <: Identity[_], T <: Entity[ID]]
   extends EntityReader[ID, T] with EntityWriter[R, ID, T]
 
 
