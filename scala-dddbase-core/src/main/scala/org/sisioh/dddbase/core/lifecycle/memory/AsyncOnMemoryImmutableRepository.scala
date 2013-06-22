@@ -18,6 +18,7 @@ package org.sisioh.dddbase.core.lifecycle.memory
 
 import scala.concurrent._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.lifecycle.AsyncRepository
 
 /**
  * 非同期型オンメモリ不変リポジトリのためのトレイト。
@@ -28,7 +29,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait AsyncOnMemoryImmutableRepository
-[AR <: AsyncOnMemoryImmutableRepository[_, SR, ID, T],
+[+AR <: AsyncRepository[_, ID, T],
 SR <: OnMemoryRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]

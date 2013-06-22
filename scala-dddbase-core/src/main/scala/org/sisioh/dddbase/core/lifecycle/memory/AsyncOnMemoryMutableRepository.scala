@@ -17,6 +17,7 @@
 package org.sisioh.dddbase.core.lifecycle.memory
 
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.lifecycle.AsyncRepository
 
 /**
  * 非同期型オンメモリ可変リポジトリのためのトレイト。
@@ -27,7 +28,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait AsyncOnMemoryMutableRepository
-[AR <: AsyncOnMemoryImmutableRepository[_, SR, ID, T],
+[+AR <: AsyncRepository[_, ID, T],
 SR <: OnMemoryRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
