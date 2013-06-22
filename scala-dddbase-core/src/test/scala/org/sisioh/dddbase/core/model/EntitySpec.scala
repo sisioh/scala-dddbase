@@ -1,7 +1,8 @@
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.model
 
 import java.io._
 import java.util.UUID
+import org.sisioh.dddbase.core.model.{IdentitySerializable, Identity, EntitySerializable, Entity}
 import org.specs2.mutable._
 
 case class TestSerializableId(value: UUID) extends Identity[UUID] with IdentitySerializable[UUID]

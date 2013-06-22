@@ -2,6 +2,8 @@ package org.sisioh.dddbase.core
 
 import org.sisioh.dddbase.spec.Specification
 import scala.util.Try
+import org.sisioh.dddbase.core.lifecycle.{EntitiesChunk, EntityReader}
+import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
  * [[org.sisioh.dddbase.spec.Specification]]を述語に取り、エンティティを検索することができるトレイト。

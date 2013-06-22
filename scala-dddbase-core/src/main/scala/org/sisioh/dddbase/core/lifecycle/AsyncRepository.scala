@@ -14,10 +14,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent._
+import org.sisioh.dddbase.core.lifecycle._
+import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
  * 非同期にエンティティをIOするためのトレイト。
@@ -90,9 +92,9 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.EntityReader]]。
+ * 非同期版[[EntityReader]]。
  *
- * @see [[org.sisioh.dddbase.core.EntityReader]]
+ * @see [[EntityReader]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -102,7 +104,7 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.EntityReader]] `resolve`
+   * @see [[EntityReader]] `resolve`
    *
    * @param identity 識別子
    * @return Success:
@@ -114,7 +116,7 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
   def resolve(identity: ID)(implicit executor: ExecutionContext): Future[T]
 
   /**
-   * [[org.sisioh.dddbase.core.AsyncEntityReader]] `resolve`へのショートカット。
+   * [[AsyncEntityReader]] `resolve`へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
@@ -155,9 +157,9 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
 
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.EntityWriter]]。
+ * 非同期版[[EntityWriter]]。
  *
- * @see [[org.sisioh.dddbase.core.EntityWriter]]
+ * @see [[EntityWriter]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -167,7 +169,7 @@ trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <
   /**
    * エンティティを保存する。
    *
-   * @see [[org.sisioh.dddbase.core.Repository]] `store`
+   * @see [[Repository]] `store`
    *
    * @param entity 保存する対象のエンティティ
    * @return Success:
@@ -179,7 +181,7 @@ trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <
   def store(entity: T)(implicit executor: ExecutionContext): Future[R]
 
   /**
-   * [[org.sisioh.dddbase.core.AsyncRepository]] `store`へのショートカット。
+   * [[AsyncRepository]] `store`へのショートカット。
    *
    * @param identifier 識別子
    * @param entity 保存する対象のエンティティ
@@ -218,9 +220,9 @@ trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <
 }
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.Repository]]。
+ * 非同期版[[Repository]]。
  *
- * @see [[org.sisioh.dddbase.core.Repository]]
+ * @see [[Repository]]
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -228,7 +230,7 @@ trait AsyncEntityWriter[R <: AsyncEntityWriter[R, ID, T], ID <: Identity[_], T <
 trait AsyncRepository[R <: AsyncRepository[R, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[R, ID, T]
 
 /**
- * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.AsyncEntityReader]]。
+ * エンティティを`Option`でラップして返すための[[AsyncEntityReader]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -239,7 +241,7 @@ trait AsyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]] {
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.EntityReader]] `resolve`
+   * @see [[EntityReader]] `resolve`
    *
    * @param identity 識別子
    * @return Success:
@@ -252,7 +254,7 @@ trait AsyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.EntityReaderByPredicate]]。
+ * 非同期版[[EntityReaderByPredicate]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -278,7 +280,7 @@ trait AsyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
 
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.EntityReaderByChunk]]。
+ * 非同期版[[EntityReaderByChunk]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型

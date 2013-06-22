@@ -14,10 +14,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle
 
-import scala.util._
+import org.sisioh.dddbase.core.{model}
 import scala.collection.mutable.ListBuffer
+import scala.util._
+import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
  * イベントタイプ。
@@ -87,7 +89,7 @@ trait EntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
 }
 
 /**
- * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+ * [[Identity]]を用いて、[[Entity]]
  * を読み込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型
@@ -108,7 +110,7 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
   def resolve(identity: ID): Try[T]
 
   /**
-   * [[org.sisioh.dddbase.core.EntityReader]]の`resolve`へのショートカット。
+   * [[EntityReader]]の`resolve`へのショートカット。
    *
    * @param identity 識別子
    * @return Success:
@@ -144,7 +146,7 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
 }
 
 /**
- * エンティティをOptionでラップして返すための[[org.sisioh.dddbase.core.EntityReader]]。
+ * エンティティをOptionでラップして返すための[[EntityReader]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -181,7 +183,7 @@ trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[
 
 
 /**
- * [[org.sisioh.dddbase.core.Identity]]を用いて、[[org.sisioh.dddbase.core.Entity]]
+ * [[model.Identity]]を用いて、[[Entity]]
  * を書き込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型
@@ -201,7 +203,7 @@ trait EntityWriter[R <: EntityWriter[R, ID, T], ID <: Identity[_], T <: Entity[I
   def store(entity: T): Try[R]
 
   /**
-   * [[org.sisioh.dddbase.core.EntityWriter]] `store` へのショートカット。
+   * [[EntityWriter]] `store` へのショートカット。
    *
    * @param identity 識別子
    * @param entity 保存する対象のエンティティ

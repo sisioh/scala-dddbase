@@ -2,6 +2,8 @@ package org.sisioh.dddbase.core
 
 import org.sisioh.dddbase.spec.Specification
 import scala.concurrent.{Future, ExecutionContext}
+import org.sisioh.dddbase.core.lifecycle.{EntitiesChunk, AsyncEntityReader}
+import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.EntityReaderBySpecification]]。

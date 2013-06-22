@@ -14,12 +14,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle.memory
 
 import collection.Iterator
+import org.sisioh.dddbase.core._
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import scala.Some
 import scala.collection.immutable.HashMap
-import util.{Try, Success, Failure}
+import scala.util.Failure
+import scala.util.Success
 import scala.util.control.NonFatal
+import util.{Try, Success, Failure}
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
  * オンメモリで動作する不変リポジトリの実装。

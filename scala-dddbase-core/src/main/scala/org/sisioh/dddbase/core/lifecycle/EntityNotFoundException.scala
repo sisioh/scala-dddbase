@@ -14,7 +14,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle
+
+import org.sisioh.dddbase.core.BaseException
 
 /**
  * リポジトリにアクセスできなかった場合の例外。
