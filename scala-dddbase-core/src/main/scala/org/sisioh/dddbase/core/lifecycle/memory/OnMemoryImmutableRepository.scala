@@ -14,12 +14,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle.memory
 
 import collection.Iterator
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import scala.Some
 import scala.collection.immutable.HashMap
-import util.{Try, Success, Failure}
 import scala.util.control.NonFatal
+import util.{Try, Success, Failure}
 
 /**
  * オンメモリで動作する不変リポジトリの実装。
@@ -29,7 +32,7 @@ import scala.util.control.NonFatal
  * @tparam T エンティティの型
  */
 trait OnMemoryImmutableRepository
-[R <: OnMemoryImmutableRepository[R, ID, T],
+[R <: OnMemoryImmutableRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryRepository[R, ID, T] {

@@ -14,7 +14,8 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.model
+
 
 /**
  * エンティティの識別子を表すトレイト。
@@ -52,18 +53,18 @@ class IdentityImpl[A](val value: A) extends Identity[A] with Serializable {
 object Identity {
 
   /**
-   * [[org.sisioh.dddbase.core.Identity]]を生成する。
+   * [[org.sisioh.dddbase.core.model.Identity]]を生成する。
    *
    * @param value 識別子の値
    * @tparam A 識別子の値の型
-   * @return [[org.sisioh.dddbase.core.Identity]]
+   * @return [[org.sisioh.dddbase.core.model.Identity]]
    */
   def apply[A](value: => A): Identity[A] = new IdentityImpl(value)
 
   /**
    * 抽出子メソッド。
    *
-   * @param v [[org.sisioh.dddbase.core.Identity]]
+   * @param v [[org.sisioh.dddbase.core.model.Identity]]
    * @tparam A 識別子の値の型
    * @return 識別子の値
    */

@@ -1,4 +1,4 @@
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.model
 
 import java.util.UUID
 import org.specs2.mutable._
