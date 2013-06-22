@@ -14,24 +14,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle.memory
 
 import scala.concurrent._
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * オンメモリで動作する[[org.sisioh.dddbase.core.AsyncRepository]]の実装。
+ * 非同期型オンメモリ不変リポジトリのためのトレイト。
  *
  * @tparam AR 当該リポジトリを実装する派生型
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncOnMemoryRepository
-[AR <: AsyncOnMemoryRepository[AR, SR, ID, T],
+trait AsyncOnMemoryImmutableRepository
+[AR <: AsyncOnMemoryImmutableRepository[AR, SR, ID, T],
 SR <: OnMemoryRepository[SR, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepository[AR, ID, T] with AsyncEntityReaderByOption[ID, T] {
+  extends AsyncOnMemoryRepository[AR, ID, T] {
 
   /**
    * 内部で利用する同期型リポジトリ。
@@ -47,7 +48,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   protected def createInstance(state: SR): AR
 
   override def equals(obj: Any) = obj match {
-    case that: AsyncOnMemoryRepository[_, _, _, _] =>
+    case that: AsyncOnMemoryImmutableRepository[_, _, _, _] =>
       this.core == that.core
     case _ => false
   }

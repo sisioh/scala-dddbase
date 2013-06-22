@@ -1,6 +1,6 @@
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
- * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
+ * Copyright 2013 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle
+
+import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
- * リポジトリにアクセスできなかった場合の例外。
+ * 複数のエンティティをまとめたIO単位。
  *
- * @author j5ik2o
+ * @param index チャンクインデックス
+ * @param entities 複数のエンティティ
+ * @tparam ID 識別子
+ * @tparam E エンティティ
  */
-case class RepositoryException(message: Option[String] = None, cause: Option[Throwable] = None)
-  extends BaseException(message, cause)
+case class EntitiesChunk[ID <: Identity[_], E <: Entity[ID]](index: Int, entities: Seq[E])
+

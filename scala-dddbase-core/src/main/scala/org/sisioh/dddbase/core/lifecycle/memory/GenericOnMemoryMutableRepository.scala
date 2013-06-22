@@ -1,6 +1,6 @@
 /*
  * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
- * Copyright 2013 Sisioh Project and others. (http://www.sisioh.org/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle.memory
+
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * 複数のエンティティをまとめたIO単位。
+ * 汎用的な同期型オンメモリ可変リポジトリ。
  *
- * @param index チャンクインデックス
- * @param entities 複数のエンティティ
- * @tparam ID 識別子
- * @tparam E エンティティ
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
  */
-case class EntitiesChunk[ID <: Identity[_], E <: Entity[ID]](index: Int, entities: Seq[E])
+class GenericOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryMutableRepository[GenericOnMemoryMutableRepository[ID, T], ID, T]
 

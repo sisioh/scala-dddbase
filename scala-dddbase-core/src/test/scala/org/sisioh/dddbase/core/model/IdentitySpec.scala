@@ -1,6 +1,7 @@
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.model
 
 import java.io._
+import org.sisioh.dddbase.core.model.{IdentitySerializable, Identity}
 import org.specs2.mutable._
 
 class DummyValue
