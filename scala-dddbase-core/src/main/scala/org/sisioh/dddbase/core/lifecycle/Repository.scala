@@ -123,13 +123,13 @@ trait EntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityIO {
   /**
    * 指定した識別子のエンティティが存在するかを返す。
    *
-   * @param identifier 識別子
+   * @param identity 識別子
    * @return Success:
    *         存在する場合はtrue
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def contains(identifier: ID): Try[Boolean]
+  def contains(identity: ID): Try[Boolean]
 
   /**
    * 指定したのエンティティが存在するかを返す。

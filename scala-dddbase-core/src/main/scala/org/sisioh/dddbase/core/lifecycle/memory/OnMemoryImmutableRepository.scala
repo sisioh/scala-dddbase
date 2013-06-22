@@ -17,11 +17,32 @@
 package org.sisioh.dddbase.core.lifecycle.memory
 
 import collection.Iterator
-import org.sisioh.dddbase.core.lifecycle.{Repository, EntityNotFoundException}
+import org.sisioh.dddbase.core.lifecycle.{EntityReaderByOption, Repository, EntityNotFoundException}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
-import scala.Some
 import scala.collection.immutable.HashMap
-import util.{Try, Success, Failure}
+import scala.util.{Try, Success, Failure}
+
+
+trait OnMemoryImmutableRepositoryByOption
+[+R <: Repository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryImmutableRepository[R, ID, T] with EntityReaderByOption[ID, T] {
+
+  override def resolveOption(identity: ID) = synchronized {
+    contains(identity).flatMap {
+      _ =>
+        Try {
+          Some(entities(identity).clone)
+        }.recoverWith {
+          case ex: NoSuchElementException =>
+            Success(None)
+        }
+    }
+  }
+
+}
+
 
 /**
  * オンメモリで動作する不変リポジトリの実装。
@@ -68,17 +89,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     }
   }
 
-  override def resolveOption(identity: ID) = synchronized {
-    contains(identity).flatMap {
-      _ =>
-        Try {
-          Some(entities(identity).clone)
-        }.recoverWith {
-          case ex: NoSuchElementException =>
-            Success(None)
-        }
-    }
-  }
 
   override def store(entity: T): Try[R] = {
     val result = clone.asInstanceOf[OnMemoryImmutableRepository[R, ID, T]]

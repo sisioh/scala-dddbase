@@ -16,9 +16,25 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import org.sisioh.dddbase.core.lifecycle.Repository
+import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityReaderByOption, Repository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
-import scala.util.Try
+import scala.util.{Success, Try}
+
+trait OnMemoryMutableRepositoryByOption
+[+R <: Repository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryMutableRepository[R, ID, T] with EntityReaderByOption[ID, T] {
+
+  def resolveOption(identity: ID): Try[Option[T]] = synchronized {
+    resolve(identity).map(Some(_)).recoverWith {
+      case ex: EntityNotFoundException =>
+        Success(None)
+    }
+  }
+
+
+}
 
 /**
  * オンメモリで動作する可変リポジトリの実装。
@@ -63,7 +79,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     }
   }
 
-  def resolveOption(identity: ID): Try[Option[T]] = core.resolveOption(identity)
 
   def iterator: Iterator[T] = core.iterator
 

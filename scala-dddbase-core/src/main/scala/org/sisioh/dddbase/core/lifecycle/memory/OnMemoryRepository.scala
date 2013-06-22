@@ -27,6 +27,6 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait OnMemoryRepository[+R <: Repository[_, ID, T], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends Repository[R, ID, T] with EntityIterableReader[ID, T] with EntityReaderByOption[ID, T] with Cloneable
+  extends Repository[R, ID, T] with EntityIterableReader[ID, T] with Cloneable
 
 

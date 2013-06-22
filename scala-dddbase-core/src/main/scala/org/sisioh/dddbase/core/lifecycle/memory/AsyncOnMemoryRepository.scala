@@ -30,4 +30,4 @@ trait AsyncOnMemoryRepository
 [+AR <: AsyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepository[AR, ID, T] with AsyncEntityReaderByOption[ID, T]
+  extends AsyncRepository[AR, ID, T]

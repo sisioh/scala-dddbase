@@ -16,9 +16,23 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import scala.concurrent._
+import org.sisioh.dddbase.core.lifecycle.{AsyncEntityReaderByOption, EntityReaderByOption, AsyncRepository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
-import org.sisioh.dddbase.core.lifecycle.AsyncRepository
+import scala.concurrent._
+
+trait AsyncOnMemoryImmutableRepositoryByOption
+[+AR <: AsyncRepository[_, ID, T],
+SR <: OnMemoryRepository[_, ID, T] with EntityReaderByOption[ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncOnMemoryImmutableRepository[AR, SR, ID, T] with AsyncEntityReaderByOption[ID, T] {
+
+  def resolveOption(identifier: ID)(implicit executor: ExecutionContext) = future {
+    core.resolveOption(identifier).get
+  }
+
+}
+
 
 /**
  * 非同期型オンメモリ不変リポジトリのためのトレイト。
@@ -58,10 +72,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 
   def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolve(identifier).get
-  }
-
-  def resolveOption(identifier: ID)(implicit executor: ExecutionContext) = future {
-    core.resolveOption(identifier).get
   }
 
   def contains(identifier: ID)(implicit executor: ExecutionContext) = future {
