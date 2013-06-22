@@ -21,19 +21,19 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.concurrent._
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryImmutableRepository]]にOption型のサポートを追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
  *
  * @tparam AR 当該リポジトリを実装する派生型
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncOnMemoryImmutableRepositoryByOption
+trait AsyncOnMemoryRepositorySupportByOption
 [+AR <: AsyncRepository[_, ID, T],
 SR <: OnMemoryRepository[_, ID, T] with EntityReaderByOption[ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncOnMemoryImmutableRepository[AR, SR, ID, T] with AsyncEntityReaderByOption[ID, T] {
+  extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] with AsyncEntityReaderByOption[ID, T] {
 
   def resolveOption(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolveOption(identifier).get
@@ -42,14 +42,18 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 }
 
 /**
- * 非同期型オンメモリ不変リポジトリのためのトレイト。
+ * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
+ *
+ * `Future` の中で `core` に同期型のオンメモリリポジトリを利用することで非同期版として
+ * 実装を提供する。リポジトリの状態変更を起こすメソッドを呼び出した際に、新しいインスタンス
+ * を生成するか `this` を返すかは `createInstance` メソッドの振る舞いによって決定する。
  *
  * @tparam AR 当該リポジトリを実装する派生型
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncOnMemoryImmutableRepository
+trait AsyncOnMemoryRepositorySupport
 [+AR <: AsyncRepository[_, ID, T],
 SR <: OnMemoryRepository[_, ID, T],
 ID <: Identity[_],
@@ -70,7 +74,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   protected def createInstance(state: SR): AR
 
   override def equals(obj: Any) = obj match {
-    case that: AsyncOnMemoryImmutableRepository[_, _, _, _] =>
+    case that: AsyncOnMemoryRepositorySupport[_, _, _, _] =>
       this.core == that.core
     case _ => false
   }

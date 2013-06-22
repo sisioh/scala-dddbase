@@ -19,27 +19,27 @@ package org.sisioh.dddbase.core.lifecycle.memory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * 汎用的な同期型オンメモリ可変リポジトリ。
+ * 汎用的な非同期型オンメモリ不変リポジトリ。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-class GenericOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends OnMemoryMutableRepository[GenericOnMemoryMutableRepository[ID, T], ID, T]
+class GenericOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryRepositorySupport[GenericOnMemoryRepository[ID, T], ID, T]
 
 /**
  * コンパニオンオブジェクト。
  */
-object GenericOnMemoryMutableRepository {
+object GenericOnMemoryRepository {
 
   /**
    * ファクトリメソッド。
    *
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
-   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemoryMutableRepository]]
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemoryRepository]]
    */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]() =
-    new GenericOnMemoryMutableRepository[ID, T]
+    new GenericOnMemoryRepository[ID, T]
 
 }

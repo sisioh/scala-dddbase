@@ -14,7 +14,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle.memory
+package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
@@ -25,16 +25,16 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-class GenericAsyncOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-(protected val core: GenericOnMemoryMutableRepository[ID, T] = GenericOnMemoryMutableRepository[ID, T]())
-  extends AsyncOnMemoryMutableRepository[GenericAsyncOnMemoryMutableRepository[ID, T], GenericOnMemoryMutableRepository[ID, T], ID, T] {
+class GenericAsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+(protected val core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]())
+  extends AsyncOnMemoryRepository[GenericAsyncOnMemoryRepository[ID, T], GenericOnMemoryRepository[ID, T], ID, T] {
 
 }
 
 /**
  * コンパニオンオブジェクト。
  */
-object GenericAsyncOnMemoryMutableRepository {
+object GenericAsyncOnMemoryRepository {
 
   /**
    * ファクトリメソッド。
@@ -42,22 +42,22 @@ object GenericAsyncOnMemoryMutableRepository {
    * @param core 内部で利用するオンメモリ可変リポジトリ。
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
-   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryMutableRepository]]
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.mutable.GenericAsyncOnMemoryRepository]]
    */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  (core: GenericOnMemoryMutableRepository[ID, T] = GenericOnMemoryMutableRepository[ID, T]()) =
-    new GenericAsyncOnMemoryMutableRepository(core)
+  (core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]()) =
+    new GenericAsyncOnMemoryRepository(core)
 
   /**
    * エクストラクタメソッド。
    *
-   * @param repository [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryMutableRepository]]
+   * @param repository [[org.sisioh.dddbase.core.lifecycle.memory.mutable.GenericAsyncOnMemoryRepository]]
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
    * @return 構成要素
    */
   def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  (repository: GenericAsyncOnMemoryMutableRepository[ID, T]): Option[GenericOnMemoryMutableRepository[ID, T]] =
+  (repository: GenericAsyncOnMemoryRepository[ID, T]): Option[GenericOnMemoryRepository[ID, T]] =
     Some(repository.core)
 
 }
