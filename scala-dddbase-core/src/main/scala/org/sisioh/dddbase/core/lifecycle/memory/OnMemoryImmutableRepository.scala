@@ -22,7 +22,13 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.collection.immutable.HashMap
 import scala.util.{Try, Success, Failure}
 
-
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryImmutableRepository]]にOption型のサポートを追加するトレイト。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
 trait OnMemoryImmutableRepositoryByOption
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
@@ -42,7 +48,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   }
 
 }
-
 
 /**
  * オンメモリで動作する不変リポジトリの実装。

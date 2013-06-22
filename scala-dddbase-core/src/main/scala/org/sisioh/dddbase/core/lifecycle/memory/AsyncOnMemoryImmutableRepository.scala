@@ -20,6 +20,14 @@ import org.sisioh.dddbase.core.lifecycle.{AsyncEntityReaderByOption, EntityReade
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.concurrent._
 
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryImmutableRepository]]にOption型のサポートを追加するトレイト。
+ *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
 trait AsyncOnMemoryImmutableRepositoryByOption
 [+AR <: AsyncRepository[_, ID, T],
 SR <: OnMemoryRepository[_, ID, T] with EntityReaderByOption[ID, T],
@@ -32,7 +40,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   }
 
 }
-
 
 /**
  * 非同期型オンメモリ不変リポジトリのためのトレイト。
