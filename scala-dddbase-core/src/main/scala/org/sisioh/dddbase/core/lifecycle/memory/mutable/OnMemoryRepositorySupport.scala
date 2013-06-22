@@ -14,24 +14,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle.memory
+package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
+import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemoryRepository, OnMemoryRepository}
 import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityReaderByOption, Repository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.util.{Success, Try}
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryMutableRepository]]にOption型のサポートを追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryMutableRepositoryByOption
+trait OnMemoryRepositorySupportByOption
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends OnMemoryMutableRepository[R, ID, T] with EntityReaderByOption[ID, T] {
+  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByOption[ID, T] {
 
   def resolveOption(identity: ID): Try[Option[T]] = synchronized {
     resolve(identity).map(Some(_)).recoverWith {
@@ -49,7 +50,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryMutableRepository
+trait OnMemoryRepositorySupport
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
@@ -59,10 +60,10 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
    * 内部で利用されるオンメモリリポジトリ
    */
   protected var core: OnMemoryRepository[_, ID, T] =
-    new GenericOnMemoryImmutableRepository[ID, T]()
+    new GenericOnMemoryRepository[ID, T]()
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryMutableRepository[_, _, _] =>
+    case that: OnMemoryRepositorySupport[_, _, _] =>
       this.core == that.core
     case _ => false
   }

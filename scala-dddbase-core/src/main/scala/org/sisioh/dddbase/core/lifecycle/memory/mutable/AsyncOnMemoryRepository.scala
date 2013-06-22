@@ -14,32 +14,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle.memory
+package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
+import org.sisioh.dddbase.core.lifecycle.AsyncRepository
+import org.sisioh.dddbase.core.lifecycle.memory.{AsyncOnMemoryRepositorySupport, OnMemoryRepository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * 汎用的な非同期型オンメモリ不変リポジトリ。
+ * 非同期型オンメモリ可変リポジトリのためのトレイト。
  *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-class GenericOnMemoryImmutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends OnMemoryImmutableRepository[GenericOnMemoryImmutableRepository[ID, T], ID, T]
+trait AsyncOnMemoryRepository
+[+AR <: AsyncRepository[_, ID, T],
+SR <: OnMemoryRepository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] {
 
-/**
- * コンパニオンオブジェクト。
- */
-object GenericOnMemoryImmutableRepository {
-
-  /**
-   * ファクトリメソッド。
-   *
-   * @tparam ID 識別子の型
-   * @tparam T エンティティの型
-   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemoryImmutableRepository]]
-   */
-  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]() =
-    new GenericOnMemoryImmutableRepository[ID, T]
+  protected def createInstance(state: SR): AR = this.asInstanceOf[AR]
 
 }
