@@ -164,7 +164,7 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityI
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
+trait AsyncEntityWriter[+R <: AsyncEntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityIO {
 
   /**
    * エンティティを保存する。
@@ -227,7 +227,7 @@ trait AsyncEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identity[_], T <
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncRepository[R <: AsyncRepository[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[R, ID, T]
+trait AsyncRepository[+R <: AsyncRepository[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReader[ID, T] with AsyncEntityWriter[R, ID, T]
 
 /**
  * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.AsyncEntityReader]]。

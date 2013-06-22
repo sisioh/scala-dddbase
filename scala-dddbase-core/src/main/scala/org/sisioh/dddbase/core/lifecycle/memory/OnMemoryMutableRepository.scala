@@ -16,9 +16,31 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import org.sisioh.dddbase.core._
-import scala.util.Try
+import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityReaderByOption, Repository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import scala.util.{Success, Try}
+
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryMutableRepository]]にOption型のサポートを追加するトレイト。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
+trait OnMemoryMutableRepositoryByOption
+[+R <: Repository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryMutableRepository[R, ID, T] with EntityReaderByOption[ID, T] {
+
+  def resolveOption(identity: ID): Try[Option[T]] = synchronized {
+    resolve(identity).map(Some(_)).recoverWith {
+      case ex: EntityNotFoundException =>
+        Success(None)
+    }
+  }
+
+}
 
 /**
  * オンメモリで動作する可変リポジトリの実装。
@@ -28,11 +50,14 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait OnMemoryMutableRepository
-[R <: OnMemoryMutableRepository[_, ID, T],
+[+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryRepository[R, ID, T] {
 
+  /**
+   * 内部で利用されるオンメモリリポジトリ
+   */
   protected var core: OnMemoryRepository[_, ID, T] =
     new GenericOnMemoryImmutableRepository[ID, T]()
 
@@ -60,7 +85,6 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     }
   }
 
-  def resolveOption(identity: ID): Try[Option[T]] = core.resolveOption(identity)
 
   def iterator: Iterator[T] = core.iterator
 

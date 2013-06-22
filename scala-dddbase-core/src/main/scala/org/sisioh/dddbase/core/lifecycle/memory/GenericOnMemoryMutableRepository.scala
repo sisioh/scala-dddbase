@@ -27,8 +27,19 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 class GenericOnMemoryMutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryMutableRepository[GenericOnMemoryMutableRepository[ID, T], ID, T]
 
+/**
+ * コンパニオンオブジェクト。
+ */
 object GenericOnMemoryMutableRepository {
 
+  /**
+   * ファクトリメソッド。
+   *
+   * @tparam ID 識別子の型
+   * @tparam T エンティティの型
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemoryMutableRepository]]
+   */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]() =
     new GenericOnMemoryMutableRepository[ID, T]
+
 }
