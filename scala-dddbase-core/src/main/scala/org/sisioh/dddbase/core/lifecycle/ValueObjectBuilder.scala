@@ -14,7 +14,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle
 
 import collection.mutable.ListBuffer
 
@@ -61,7 +61,7 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
   /**
    * ビルダを設定する関数を追加する。
    *
-   *  @param configure [[org.sisioh.dddbase.core.ValueObjectBuilder.Configure]]
+   *  @param configure `Configure`
    */
   protected def addConfigurator(configure: Configure): Unit = {
     configurators += configure
@@ -85,7 +85,7 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
   /**
    * ビルダの設定に基づいて値オブジェクトの新しいインスタンスを生成する。
    *
-   *  <p>`build`内でこのビルダに追加された[[org.sisioh.dddbase.core.ValueObjectBuilder.Configure]]を全て実行した後に、このメソッドが呼ばれる。<br>
+   *  <p>`build` 内でこのビルダに追加された `Configure` を全て実行した後に、このメソッドが呼ばれる。<br>
    *  その為、このビルダに対する変更を行うロジックはこのメソッド内に記述せず、目的となる値オブジェクトを生成し
    *  返すロジックを記述することが望まれる。</p>
    *

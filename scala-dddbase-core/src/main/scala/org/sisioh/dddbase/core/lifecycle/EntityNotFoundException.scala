@@ -14,12 +14,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle
+
+import org.sisioh.dddbase.core.BaseException
 
 /**
  * リポジトリにアクセスできなかった場合の例外。
  *
  * @author j5ik2o
  */
-case class RepositoryException(message: Option[String] = None, cause: Option[Throwable] = None)
+case class EntityNotFoundException(message: Option[String] = None, cause: Option[Throwable] = None)
   extends BaseException(message, cause)
+

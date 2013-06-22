@@ -1,4 +1,4 @@
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle
 
 import org.specs2.mutable._
 
@@ -6,30 +6,15 @@ class ValueObjectBuilderSpec extends Specification {
 
   case class PersonName(firstName: String, lastName: String)
 
-  /**
-   * [[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonName]]のための[[org.sisioh.dddbase.core.ValueObjectBuilder]]の実装。
-   */
   class PersonNameBuilder extends ValueObjectBuilder[PersonName, PersonNameBuilder] {
     private var firstName: String = _
     private var lastName: String = _
 
-    /**
-     * [[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonName]]に与える名前をビルダに設定する。
-     *
-     * @param firstName 名前
-     * @return [[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonNameBuilder]]
-     */
     def withFirstName(firstName: String) = {
       addConfigurator(_.firstName = firstName)
       getThis
     }
 
-    /**
-     * [[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonName]]に与える苗字をビルダに設定する。
-     *
-     * @param lastName 苗字
-     * @return [[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonNameBuilder]]
-     */
     def withLastName(lastName: String) = {
       addConfigurator(_.lastName = lastName)
       getThis
@@ -47,15 +32,8 @@ class ValueObjectBuilderSpec extends Specification {
     }
   }
 
-  /**
-   * [[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonNameBuilder]]のためのコンパニオンオブジェクト。
-   */
   object PersonNameBuilder {
 
-    /**
-     * 新しい[[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonNameBuilder]]を生成する。
-     * @return 新しい[[org.sisioh.dddbase.core.ValueObjectBuilderSpec.PersonNameBuilder]]
-     */
     def apply() = new PersonNameBuilder()
   }
 

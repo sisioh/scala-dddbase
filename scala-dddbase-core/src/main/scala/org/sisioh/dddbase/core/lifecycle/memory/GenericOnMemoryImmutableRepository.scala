@@ -14,13 +14,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.lifecycle.memory
+
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * リポジトリにアクセスできなかった場合の例外。
+ * 汎用的な非同期型オンメモリ不変リポジトリ。
  *
- * @author j5ik2o
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
  */
-case class EntityNotFoundException(message: Option[String] = None, cause: Option[Throwable] = None)
-  extends BaseException(message, cause)
+class GenericOnMemoryImmutableRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends OnMemoryImmutableRepository[GenericOnMemoryImmutableRepository[ID, T], ID, T]
 
+object GenericOnMemoryImmutableRepository {
+
+  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]() =
+    new GenericOnMemoryImmutableRepository[ID, T]
+
+}

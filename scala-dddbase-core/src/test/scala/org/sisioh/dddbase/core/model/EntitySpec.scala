@@ -1,4 +1,4 @@
-package org.sisioh.dddbase.core
+package org.sisioh.dddbase.core.model
 
 import java.io._
 import java.util.UUID
