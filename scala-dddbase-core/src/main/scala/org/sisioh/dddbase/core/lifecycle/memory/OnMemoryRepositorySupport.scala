@@ -23,17 +23,17 @@ import scala.collection.immutable.HashMap
 import scala.util.{Try, Success, Failure}
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryImmutableRepository]]にOption型のサポートを追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryImmutableRepositoryByOption
+trait OnMemoryRepositorySupportByOption
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends OnMemoryImmutableRepository[R, ID, T] with EntityReaderByOption[ID, T] {
+  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByOption[ID, T] {
 
   override def resolveOption(identity: ID) = synchronized {
     contains(identity).flatMap {
@@ -56,7 +56,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryImmutableRepository
+trait OnMemoryRepositorySupport
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
@@ -68,7 +68,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   protected[core] var entities = new HashMap[ID, T]()
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryImmutableRepository[_, _, _] =>
+    case that: OnMemoryRepositorySupport[_, _, _] =>
       this.entities == that.entities
     case _ => false
   }
@@ -76,7 +76,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   override def hashCode = 31 * entities.hashCode()
 
   override def clone: R = {
-    val result = super.clone.asInstanceOf[OnMemoryImmutableRepository[R, ID, T]]
+    val result = super.clone.asInstanceOf[OnMemoryRepositorySupport[R, ID, T]]
     val array = result.entities.toArray
     result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
     result.asInstanceOf[R]
@@ -96,7 +96,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 
 
   override def store(entity: T): Try[R] = {
-    val result = clone.asInstanceOf[OnMemoryImmutableRepository[R, ID, T]]
+    val result = clone.asInstanceOf[OnMemoryRepositorySupport[R, ID, T]]
     result.entities += (entity.identity -> entity)
     Success(result.asInstanceOf[R])
   }
@@ -105,7 +105,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     contains(identifier).flatMap {
       e =>
         if (e) {
-          val result = clone.asInstanceOf[OnMemoryImmutableRepository[R, ID, T]]
+          val result = clone.asInstanceOf[OnMemoryRepositorySupport[R, ID, T]]
           result.entities -= identifier
           Success(result.asInstanceOf[R])
         } else {
