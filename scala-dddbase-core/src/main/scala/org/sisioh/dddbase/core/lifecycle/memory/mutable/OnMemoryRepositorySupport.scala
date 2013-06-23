@@ -16,7 +16,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
-import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemoryRepository, OnMemoryRepository}
+import org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepository
+import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemoryRepository => GenericOnMemoryImmutableRepository}
 import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityReaderByOption, Repository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.util.{Success, Try}
@@ -56,11 +57,12 @@ ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends OnMemoryRepository[R, ID, T] {
 
+
   /**
    * 内部で利用されるオンメモリリポジトリ
    */
   protected var core: OnMemoryRepository[_, ID, T] =
-    new GenericOnMemoryRepository[ID, T]()
+    new GenericOnMemoryImmutableRepository[ID, T]()
 
   override def equals(obj: Any) = obj match {
     case that: OnMemoryRepositorySupport[_, _, _] =>
