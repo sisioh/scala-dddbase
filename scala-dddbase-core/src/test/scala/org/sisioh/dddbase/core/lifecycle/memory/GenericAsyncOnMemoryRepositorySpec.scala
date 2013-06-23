@@ -9,7 +9,7 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GenericAsyncOnMemoryImmutableRepositorySpec extends Specification with Mockito {
+class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
 
@@ -17,7 +17,7 @@ class GenericAsyncOnMemoryImmutableRepositorySpec extends Specification with Moc
 
   "The repository" should {
     "have stored entity" in {
-      val repository = new GenericAsyncOnMemoryImmutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       repository(entity.identity) = entity
       val future = repository.store(entity).flatMap {
@@ -32,7 +32,7 @@ class GenericAsyncOnMemoryImmutableRepositorySpec extends Specification with Moc
       future.value.get.get must_== true
     }
     "resolve entity by using a identity" in {
-      val repository = new GenericAsyncOnMemoryImmutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
         asyncRepos =>
@@ -46,7 +46,7 @@ class GenericAsyncOnMemoryImmutableRepositorySpec extends Specification with Moc
       future.value.get.get must_== entity
     }
     "delete entity by using a identity" in {
-      val repository = new GenericAsyncOnMemoryImmutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
         asyncRepos =>
@@ -63,14 +63,14 @@ class GenericAsyncOnMemoryImmutableRepositorySpec extends Specification with Moc
       future.value.get.get must_== false
     }
     "not resolve a entity by using a non-existent identity" in {
-      val repository = new GenericAsyncOnMemoryImmutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val future = repository.resolve(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]
     }
     "not delete a entity by using a non-existent identity" in {
-      val repository = new GenericAsyncOnMemoryImmutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val future = repository.delete(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true

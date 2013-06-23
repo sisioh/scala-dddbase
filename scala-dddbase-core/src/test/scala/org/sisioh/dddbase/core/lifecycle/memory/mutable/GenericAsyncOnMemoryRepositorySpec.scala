@@ -1,4 +1,4 @@
-package org.sisioh.dddbase.core.lifecycle.memory
+package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
@@ -9,7 +9,7 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-class GenericAsyncOnMemoryMutableRepositorySpec extends Specification with Mockito {
+class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
 
   sequential
 
@@ -19,7 +19,7 @@ class GenericAsyncOnMemoryMutableRepositorySpec extends Specification with Mocki
 
   "The repository" should {
     "have stored entity" in {
-      val repository = new GenericAsyncOnMemoryMutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -28,7 +28,7 @@ class GenericAsyncOnMemoryMutableRepositorySpec extends Specification with Mocki
       Await.result(repos.flatMap(_.contains(entity)), Duration.Inf) must_== true
     }
     "resolve a entity by using identity" in {
-      val repository = new GenericAsyncOnMemoryMutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -37,7 +37,7 @@ class GenericAsyncOnMemoryMutableRepositorySpec extends Specification with Mocki
       Await.result(repos.flatMap(_.resolve(id)), Duration.Inf) must_== entity
     }
     "delete a entity by using identity" in {
-      val repository = new GenericAsyncOnMemoryMutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -46,14 +46,14 @@ class GenericAsyncOnMemoryMutableRepositorySpec extends Specification with Mocki
       Await.result(repos.flatMap(_.delete(id)), Duration.Inf) must_!= repos
     }
     "fail to resolve a entity by a non-existent identity" in {
-      val repository = new GenericAsyncOnMemoryMutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       Await.result(repository.resolve(id).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true
       Await.result(repository.resolve(id), Duration.Inf) must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identity" in {
-      val repository = new GenericAsyncOnMemoryMutableRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       Await.result(repository.delete(id).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true

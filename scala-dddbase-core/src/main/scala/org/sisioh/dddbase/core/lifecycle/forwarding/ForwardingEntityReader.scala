@@ -1,5 +1,6 @@
-package org.sisioh.dddbase.core.lifecycle
+package org.sisioh.dddbase.core.lifecycle.forwarding
 
+import org.sisioh.dddbase.core.lifecycle.EntityReader
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
