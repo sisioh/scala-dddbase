@@ -7,12 +7,18 @@ class DummyValue
 
 class DummySerializableValue extends Serializable
 
-case class NotSerializableIdentity(value: DummyValue) extends Identity[DummyValue] with IdentitySerializable[DummyValue]
+case class NotSerializableIdentity(value: DummyValue) extends Identity[DummyValue] //with IdentitySerializable[DummyValue]
 
-case class SerializableIdentity(value: Long) extends Identity[Long] with IdentitySerializable[Long]
+case class SerializableIdentity(value: Long) extends Identity[Long] // with IdentitySerializable[Long]
 
 class IdentitySpec extends Specification {
   "Identity" should {
+
+    "throw EmptyIdentityException when get value" in {
+      val identity: Identity[Long] = Identity.empty
+      identity.value must throwA[EmptyIdentityException]
+    }
+
     "throw NotSerializableExcepption when serialization not serializable identity" in {
       val identity = Identity(new DummyValue)
       val oos = new ObjectOutputStream(new ByteArrayOutputStream)
@@ -44,5 +50,6 @@ class IdentitySpec extends Specification {
       val deserializedIdentity = ois.readObject.asInstanceOf[SerializableIdentity]
       identity must_== deserializedIdentity
     }
+
   }
 }
