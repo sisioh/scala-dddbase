@@ -16,7 +16,6 @@
  */
 package org.sisioh.dddbase.core.model
 
-
 /**
  * エンティティの識別子を表すトレイト。
  *
@@ -24,7 +23,7 @@ package org.sisioh.dddbase.core.model
  *
  * @tparam A 識別子の値を表す型
  */
-trait Identity[A] {
+trait Identity[+A] extends Serializable {
   /**
    * 識別子の値を取得する。
    *
@@ -33,8 +32,20 @@ trait Identity[A] {
   def value: A
 }
 
+/**
+ * 識別子の値が空だった場合の例外。
+ */
+case class EmptyIdentityException() extends Exception
+
+/**
+ * 空の識別子を表す値オブジェクト。
+ */
+object EmptyIdentity extends Identity[Nothing] {
+  def value = throw EmptyIdentityException()
+}
+
 private[core]
-class IdentityImpl[A](val value: A) extends Identity[A] with Serializable {
+class IdentityImpl[A](val value: A) extends Identity[A] {
 
   override def toString = s"Identity($value)"
 
@@ -62,6 +73,14 @@ object Identity {
   def apply[A](value: => A): Identity[A] = new IdentityImpl(value)
 
   /**
+   * 空の[[org.sisioh.dddbase.core.model.Identity]]を返す。
+   *
+   * @tparam A 識別子の値の型
+   * @return [[org.sisioh.dddbase.core.model.Identity]]
+   */
+  def empty[A]: Identity[A] = EmptyIdentity
+
+  /**
    * 抽出子メソッド。
    *
    * @param v [[org.sisioh.dddbase.core.model.Identity]]
@@ -72,11 +91,4 @@ object Identity {
 
 }
 
-/**
- * シリアライズに対応したIdentityを実装するためのトレイト。
- *
- * @author mtgto
- */
-trait IdentitySerializable[A] extends Identity[A] with Serializable {
-  this: Identity[A] =>
-}
+
