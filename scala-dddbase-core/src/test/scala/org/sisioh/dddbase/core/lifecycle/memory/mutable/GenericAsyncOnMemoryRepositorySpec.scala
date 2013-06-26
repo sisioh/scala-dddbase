@@ -2,7 +2,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.concurrent.Await
@@ -18,6 +18,15 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
   val id = Identity(UUID.randomUUID())
 
   "The repository" should {
+    "have stored entity with empty identity" in {
+      val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
+      val entity = spy(new EntityImpl(EmptyIdentity))
+      val repos = repository.store(entity)
+      there was atLeastOne(entity).identity
+      Await.ready(repos, Duration.Inf)
+      Await.result(repository.resolve(EmptyIdentity), Duration.Inf) must_== entity
+      Await.result(repos.flatMap(_.contains(entity)), Duration.Inf) must_== true
+    }
     "have stored entity" in {
       val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
