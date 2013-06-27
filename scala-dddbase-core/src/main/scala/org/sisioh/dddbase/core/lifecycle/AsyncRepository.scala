@@ -18,7 +18,6 @@ package org.sisioh.dddbase.core.lifecycle
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent._
-import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
@@ -88,12 +87,6 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
       }
       this
     }
-
-}
-
-trait AsyncEntityIterableResolver[ID <: Identity[_], T <: Entity[ID]]{
-
-  def toSeq(implicit executor: ExecutionContext) : Future[Seq[T]]
 
 }
 
@@ -305,4 +298,27 @@ trait AsyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]] {
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def resolveChunk(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
+
 }
+
+/**
+ * 非同期ですべてのエンティティを取得するためのトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncEntityReaderBySeq[ID <: Identity[_], T <: Entity[ID]] {
+  this: AsyncEntityReader[ID, T] =>
+
+  /**
+   * すべてのエンティティを取得する。
+   *
+   * @return Success:
+   *         エンティティの列
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def resolveAll(implicit executor: ExecutionContext): Future[Seq[T]]
+
+}
+

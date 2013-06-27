@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import org.sisioh.dddbase.core.lifecycle.{EntityReaderByOption, EntityIterableReader, Repository}
+import org.sisioh.dddbase.core.lifecycle.{EntityReaderByOption, EntityReaderByIterable, Repository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
@@ -27,6 +27,6 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 trait OnMemoryRepository[+R <: Repository[_, ID, T], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends Repository[R, ID, T] with EntityIterableReader[ID, T] with Cloneable
+  extends Repository[R, ID, T] with EntityReaderByIterable[ID, T] with Cloneable
 
 
