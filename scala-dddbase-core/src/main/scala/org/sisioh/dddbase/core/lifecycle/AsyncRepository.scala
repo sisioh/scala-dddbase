@@ -91,6 +91,12 @@ trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
 
 }
 
+trait AsyncEntityIterableResolver[ID <: Identity[_], T <: Entity[ID]]{
+
+  def toSeq(implicit executor: ExecutionContext) : Future[Seq[T]]
+
+}
+
 /**
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
  *
