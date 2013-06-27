@@ -173,7 +173,7 @@ trait EntityReaderByOption[ID <: Identity[_], T <: Entity[ID]] {
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait EntityIterableReader[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
+trait EntityReaderByIterable[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
   this: EntityReader[ID, T] =>
 
   def contains(identifier: ID): Try[Boolean] = Success(exists(_.identity == identifier))

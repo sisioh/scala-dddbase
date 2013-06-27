@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import org.sisioh.dddbase.core.lifecycle.{AsyncEntityReaderByOption, EntityReaderByOption, AsyncRepository}
+import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.concurrent._
 
@@ -37,6 +37,27 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 
   def resolveOption(identifier: ID)(implicit executor: ExecutionContext) = future {
     core.resolveOption(identifier).get
+  }
+
+}
+
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]に全件取得のための機能を追加するトレイト。
+ *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncOnMemoryRepositorySupportBySeq
+[+AR <: AsyncRepository[_, ID, T],
+SR <: OnMemoryRepository[_, ID, T] with EntityReaderByOption[ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] with AsyncEntityReaderBySeq[ID, T] {
+
+  def resolveAll(implicit executor: ExecutionContext): Future[Seq[T]] = future {
+    core.toSeq.map(_.asInstanceOf[T])
   }
 
 }
