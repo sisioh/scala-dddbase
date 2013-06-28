@@ -14,9 +14,11 @@ class ForwardingRepositorySpec extends Specification with Mockito {
     extends Entity[Identity[UUID]]
     with EntityCloneable[Identity[UUID], EntityImpl]
     with Ordered[EntityImpl] {
+
     def compare(that: ForwardingRepositorySpec.this.type#EntityImpl): Int = {
       identity.value.compareTo(that.identity.value)
     }
+
   }
 
   val id = Identity(UUID.randomUUID())
@@ -25,15 +27,14 @@ class ForwardingRepositorySpec extends Specification with Mockito {
   (protected val delegateRepository: Repository[_, Identity[UUID], EntityImpl])
     extends ForwardingRepository[TestRepForwardingRepositoryImpl, Identity[UUID], EntityImpl] {
 
-    protected def createInstance(state: Try[(EntityWriter[_, Identity[UUID], EntityImpl], Option[Identity[UUID]])]):
-    Try[(TestRepForwardingRepositoryImpl, Option[Identity[UUID]])] = {
+    protected def createInstance(state: Try[(EntityWriter[_, Identity[UUID], EntityImpl], Option[EntityImpl])]):
+    Try[(TestRepForwardingRepositoryImpl, Option[EntityImpl])] = {
       state.map {
         r =>
           val state = new TestRepForwardingRepositoryImpl(r._1.asInstanceOf[Repository[_, Identity[UUID], EntityImpl]])
           (state, r._2)
       }
     }
-
   }
 
   "The repository" should {

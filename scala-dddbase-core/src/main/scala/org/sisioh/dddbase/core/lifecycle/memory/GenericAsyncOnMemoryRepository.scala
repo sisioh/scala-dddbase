@@ -29,7 +29,7 @@ class GenericAsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with Ent
 (protected val core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]())
   extends AsyncOnMemoryRepositorySupport[GenericAsyncOnMemoryRepository[ID, T], GenericOnMemoryRepository[ID, T], ID, T] {
 
-  protected def createInstance(state: (GenericOnMemoryRepository[ID, T], Option[ID])): (GenericAsyncOnMemoryRepository[ID, T], Option[ID]) =
+  protected def createInstance(state: (GenericOnMemoryRepository[ID, T], Option[T])): (GenericAsyncOnMemoryRepository[ID, T], Option[T]) =
     (new GenericAsyncOnMemoryRepository[ID, T](state._1), state._2)
 }
 

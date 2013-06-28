@@ -8,9 +8,9 @@ trait ForwardingEntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T 
 
   protected val delegateEntityWriter: EntityWriter[_, ID, T]
 
-  protected def createInstance(state: Try[(EntityWriter[_, ID, T], Option[ID])]): Try[(R, Option[ID])]
+  protected def createInstance(state: Try[(EntityWriter[_, ID, T], Option[T])]): Try[(R, Option[T])]
 
-  def store(entity: T): Try[(R, ID)] = {
+  def store(entity: T): Try[(R, T)] = {
     createInstance(
       delegateEntityWriter.store(entity).map {
         e =>

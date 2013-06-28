@@ -9,9 +9,9 @@ trait AsyncForwardingEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identi
 
   protected val delegateAsyncEntityWriter: AsyncEntityWriter[_, ID, T]
 
-  protected def createInstance(state: Future[(AsyncEntityWriter[_, ID, T], Option[ID])]): Future[(R, Option[ID])]
+  protected def createInstance(state: Future[(AsyncEntityWriter[_, ID, T], Option[T])]): Future[(R, Option[T])]
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[(R, ID)] = {
+  def store(entity: T)(implicit executor: ExecutionContext): Future[(R, T)] = {
     val state = delegateAsyncEntityWriter.store(entity).map {
       result =>
         (result._1.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result._2))
