@@ -63,6 +63,27 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 }
 
 /**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]に[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]のための機能を追加するトレイト。
+ *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncOnMemoryRepositorySupportByChunk
+[+AR <: AsyncRepository[_, ID, T],
+SR <: OnMemoryRepository[_, ID, T] with EntityReaderByChunk[ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] with AsyncEntityReaderByChunk[ID, T] {
+
+  def resolveChunk(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]] = future {
+    core.resolveChunk(index, maxEntities).get
+  }
+
+}
+
+/**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
  *
  * `Future` の中で `core` に同期型のオンメモリリポジトリを利用することで非同期版として

@@ -17,10 +17,14 @@
 package org.sisioh.dddbase.core.lifecycle.memory
 
 import collection.Iterator
-import org.sisioh.dddbase.core.lifecycle.{EntityReaderByOption, Repository, EntityNotFoundException}
+import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.collection.immutable.HashMap
-import scala.util.{Try, Success, Failure}
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import scala.Some
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
@@ -32,7 +36,7 @@ import scala.util.{Try, Success, Failure}
 trait OnMemoryRepositorySupportByOption
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByOption[ID, T] {
 
   override def resolveOption(identity: ID) = synchronized {
@@ -49,6 +53,27 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 
 }
 
+
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]に[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]ための機能を追加するトレイト。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
+trait OnMemoryRepositorySupportByChunk
+[+R <: Repository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByChunk[ID, T] {
+
+  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]] = {
+    val subEntities = toList.slice(index * maxEntities, index * maxEntities + maxEntities)
+    Success(EntitiesChunk(index, subEntities))
+  }
+
+}
+
 /**
  * オンメモリで動作する不変リポジトリの実装。
  *
@@ -59,7 +84,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 trait OnMemoryRepositorySupport
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends OnMemoryRepository[R, ID, T] {
 
   /**
@@ -114,6 +139,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     }
   }
 
-  def iterator: Iterator[T] = entities.map(_._2.clone).iterator
+  def iterator: Iterator[T] =
+    entities.map(_._2.clone).toSeq.sorted.iterator
 
 }

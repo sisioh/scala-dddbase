@@ -10,7 +10,14 @@ import scala.util.Try
 
 class ForwardingRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
+  class EntityImpl(val identity: Identity[UUID])
+    extends Entity[Identity[UUID]]
+    with EntityCloneable[Identity[UUID], EntityImpl]
+    with Ordered[EntityImpl]{
+    def compare(that: ForwardingRepositorySpec.this.type#EntityImpl): Int = {
+      identity.value.compareTo(that.identity.value)
+    }
+  }
 
   val id = Identity(UUID.randomUUID())
 

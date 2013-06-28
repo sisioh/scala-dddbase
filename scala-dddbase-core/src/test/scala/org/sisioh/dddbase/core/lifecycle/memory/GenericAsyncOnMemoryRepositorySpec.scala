@@ -11,7 +11,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
+  class EntityImpl(val identity: Identity[UUID])
+    extends Entity[Identity[UUID]]
+    with EntityCloneable[Identity[UUID], EntityImpl]
+    with Ordered[EntityImpl] {
+
+    def compare(that: GenericAsyncOnMemoryRepositorySpec.this.type#EntityImpl): Int = {
+      identity.value.compareTo(that.identity.value)
+    }
+
+  }
 
   val id = Identity(UUID.randomUUID)
 

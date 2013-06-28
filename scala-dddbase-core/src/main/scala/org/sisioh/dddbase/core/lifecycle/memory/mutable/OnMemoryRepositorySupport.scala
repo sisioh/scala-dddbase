@@ -32,7 +32,7 @@ import scala.util.{Success, Try}
 trait OnMemoryRepositorySupportByOption
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByOption[ID, T] {
 
   def resolveOption(identity: ID): Try[Option[T]] = synchronized {
@@ -54,7 +54,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 trait OnMemoryRepositorySupport
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends OnMemoryRepository[R, ID, T] {
 
 

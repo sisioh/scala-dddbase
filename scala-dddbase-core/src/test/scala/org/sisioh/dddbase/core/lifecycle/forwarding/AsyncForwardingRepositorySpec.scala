@@ -12,7 +12,16 @@ import scala.concurrent.{Future, Await}
 
 class AsyncForwardingRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
+  class EntityImpl(val identity: Identity[UUID])
+    extends Entity[Identity[UUID]]
+    with EntityCloneable[Identity[UUID], EntityImpl]
+    with Ordered[EntityImpl] {
+
+    def compare(that: EntityImpl): Int = {
+      this.identity.value.compareTo(that.identity.value)
+    }
+
+  }
 
   val id = Identity(UUID.randomUUID)
 
@@ -20,7 +29,7 @@ class AsyncForwardingRepositorySpec extends Specification with Mockito {
   (protected val delegateAsyncRepository: AsyncRepository[_, Identity[UUID], EntityImpl])
     extends AsyncForwardingRepository[TestRepAsyncForwardingRepositoryImpl, Identity[UUID], EntityImpl] {
     protected def createInstance(state: Future[AsyncEntityWriter[_, Identity[UUID], AsyncForwardingRepositorySpec.this.type#EntityImpl]]): Future[AsyncForwardingRepositorySpec.this.type#TestRepAsyncForwardingRepositoryImpl] =
-     state.map(r => new TestRepAsyncForwardingRepositoryImpl(r.asInstanceOf[AsyncRepository[_, Identity[UUID], EntityImpl]]))
+      state.map(r => new TestRepAsyncForwardingRepositoryImpl(r.asInstanceOf[AsyncRepository[_, Identity[UUID], EntityImpl]]))
   }
 
   "repository" should {
