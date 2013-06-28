@@ -32,7 +32,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
       Await.result(repository.resolve(EmptyIdentity), Duration.Inf) must_== entity
-      Await.result(repos.flatMap(_.contains(entity)), Duration.Inf) must_== true
+      Await.result(repos.flatMap(_._1.contains(entity)), Duration.Inf) must_== true
     }
     "have stored entity" in {
       val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -41,7 +41,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
-      Await.result(repos.flatMap(_.contains(entity)), Duration.Inf) must_== true
+      Await.result(repos.flatMap(_._1.contains(entity)), Duration.Inf) must_== true
     }
     "resolve a entity by using identity" in {
       val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -50,7 +50,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
-      Await.result(repos.flatMap(_.resolve(id)), Duration.Inf) must_== entity
+      Await.result(repos.flatMap(_._1.resolve(id)), Duration.Inf) must_== entity
     }
     "delete a entity by using identity" in {
       val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -59,7 +59,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
-      Await.result(repos.flatMap(_.delete(id)), Duration.Inf) must_!= repos
+      Await.result(repos.flatMap(_._1.delete(id)), Duration.Inf) must_!= repos
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new GenericAsyncOnMemoryRepository[Identity[UUID], EntityImpl]()

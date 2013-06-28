@@ -9,12 +9,30 @@ trait AsyncForwardingEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identi
 
   protected val delegateAsyncEntityWriter: AsyncEntityWriter[_, ID, T]
 
-  protected def createInstance(state: Future[AsyncEntityWriter[_, ID, T]]): Future[R]
+  protected def createInstance(state: Future[(AsyncEntityWriter[_, ID, T], Option[ID])]): Future[(R, Option[ID])]
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[R] =
-    createInstance(delegateAsyncEntityWriter.store(entity).map(_.asInstanceOf[AsyncEntityWriter[R, ID, T]]))
+  def store(entity: T)(implicit executor: ExecutionContext): Future[(R, ID)] = {
+    val state = delegateAsyncEntityWriter.store(entity).map {
+      result =>
+        (result._1.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result._2))
+    }
+    val instance = createInstance(state)
+    instance.map {
+      e =>
+        (e._1, e._2.get)
+    }
+  }
 
-  def delete(identity: ID)(implicit executor: ExecutionContext): Future[R] =
-    createInstance(delegateAsyncEntityWriter.delete(identity).map(_.asInstanceOf[AsyncEntityWriter[R, ID, T]]))
+  def delete(identity: ID)(implicit executor: ExecutionContext): Future[R] = {
+    val state = delegateAsyncEntityWriter.delete(identity).map {
+      result =>
+        (result.asInstanceOf[AsyncEntityWriter[R, ID, T]], None)
+    }
+    val instance = createInstance(state)
+    instance.map {
+      e =>
+        e._1
+    }
+  }
 
 }

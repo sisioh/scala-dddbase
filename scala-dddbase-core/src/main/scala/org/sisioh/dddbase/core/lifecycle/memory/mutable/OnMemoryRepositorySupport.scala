@@ -72,11 +72,11 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
   override def hashCode = 31 * core.hashCode()
 
-  def store(entity: T): Try[R] = {
+  def store(entity: T): Try[(R, ID)] = {
     core.store(entity).map {
       result =>
-        core = result.asInstanceOf[OnMemoryRepository[_, ID, T]]
-        this.asInstanceOf[R]
+        core = result._1.asInstanceOf[OnMemoryRepository[_, ID, T]]
+        (this.asInstanceOf[R], result._2)
     }
   }
 

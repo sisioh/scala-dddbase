@@ -29,9 +29,8 @@ class GenericAsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with Ent
 (protected val core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]())
   extends AsyncOnMemoryRepositorySupport[GenericAsyncOnMemoryRepository[ID, T], GenericOnMemoryRepository[ID, T], ID, T] {
 
-  protected def createInstance(state: GenericOnMemoryRepository[ID, T]): GenericAsyncOnMemoryRepository[ID, T] =
-    new GenericAsyncOnMemoryRepository[ID, T](state)
-
+  protected def createInstance(state: (GenericOnMemoryRepository[ID, T], Option[ID])): (GenericAsyncOnMemoryRepository[ID, T], Option[ID]) =
+    (new GenericAsyncOnMemoryRepository[ID, T](state._1), state._2)
 }
 
 /**
@@ -60,7 +59,7 @@ object GenericAsyncOnMemoryRepository {
    * @return 構成要素
    */
   def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (repository: GenericAsyncOnMemoryRepository[ID, T]) : Option[GenericOnMemoryRepository[ID, T]] =
+  (repository: GenericAsyncOnMemoryRepository[ID, T]): Option[GenericOnMemoryRepository[ID, T]] =
     Some(repository.core)
 
 }

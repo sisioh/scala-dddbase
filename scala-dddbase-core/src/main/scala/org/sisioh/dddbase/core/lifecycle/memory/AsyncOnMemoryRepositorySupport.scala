@@ -113,7 +113,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
    * @param state 新しい同期型リポジトリ
    * @return 新しい非同期型のリポジトリ
    */
-  protected def createInstance(state: SR): AR
+  protected def createInstance(state: (SR, Option[ID])): (AR, Option[ID])
 
   override def equals(obj: Any) = obj match {
     case that: AsyncOnMemoryRepositorySupport[_, _, _, _] =>
@@ -131,12 +131,18 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     core.contains(identifier).get
   }
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[AR] = future {
-    createInstance(core.store(entity).get.asInstanceOf[SR])
+  def store(entity: T)(implicit executor: ExecutionContext): Future[(AR, ID)] = future {
+    val result = core.store(entity).get
+    val t = (result._1.asInstanceOf[SR], Some(result._2))
+    val instance  = createInstance(t)
+    (instance._1, instance._2.get)
   }
 
   def delete(identity: ID)(implicit executor: ExecutionContext): Future[AR] = future {
-    createInstance(core.delete(identity).get.asInstanceOf[SR])
+    val result = core.delete(identity).get
+    val t = (result.asInstanceOf[SR], None)
+    val instance = createInstance(t)
+    instance._1
   }
 
 }

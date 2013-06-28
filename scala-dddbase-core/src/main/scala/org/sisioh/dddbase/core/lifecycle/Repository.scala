@@ -199,7 +199,7 @@ trait EntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): Try[R]
+  def store(entity: T): Try[(R,ID)]
 
   /**
    * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]] `store` へのショートカット。

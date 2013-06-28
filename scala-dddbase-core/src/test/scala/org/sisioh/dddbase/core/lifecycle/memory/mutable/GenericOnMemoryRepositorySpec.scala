@@ -5,6 +5,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
+import scala.util.Failure
 
 class GenericOnMemoryRepositorySpec extends Specification with Mockito {
 
@@ -28,7 +29,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(EmptyIdentity).get must_== entity
-      repos.flatMap(_.contains(entity)).getOrElse(false) must_== true
+      repos.flatMap(_._1.contains(entity)).getOrElse(false) must_== true
     }
     "have stored entity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -36,7 +37,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      repos.flatMap(_.contains(entity)).getOrElse(false) must_== true
+      repos.flatMap(_._1.contains(entity)).getOrElse(false) must_== true
     }
     "resolve a entity by using identity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -44,7 +45,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      repos.flatMap(_.resolve(id)).get must_== entity
+      repos.flatMap(_._1.resolve(id)).get must_== entity
     }
     "resolveOption a entity by using identity" in {
       class TestRepository extends GenericOnMemoryRepository[Identity[UUID], EntityImpl]
@@ -54,7 +55,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolveOption(id).get must_== Some(entity)
-      repos.flatMap(_.resolveOption(id)).get must_== Some(entity)
+      repos.flatMap(_._1.resolveOption(id)).get must_== Some(entity)
     }
     "delete a entity by using identity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -62,7 +63,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      repos.flatMap(_.delete(id)).get must_!= repos
+      repos.flatMap(_._1.delete(id)).get must_!= repos
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()

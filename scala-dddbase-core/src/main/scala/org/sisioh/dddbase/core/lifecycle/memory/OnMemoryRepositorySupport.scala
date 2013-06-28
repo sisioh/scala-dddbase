@@ -120,10 +120,10 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   }
 
 
-  override def store(entity: T): Try[R] = {
+  override def store(entity: T): Try[(R, ID)] = {
     val result = clone.asInstanceOf[OnMemoryRepositorySupport[R, ID, T]]
     result.entities += (entity.identity -> entity)
-    Success(result.asInstanceOf[R])
+    Success(result.asInstanceOf[R], entity.identity)
   }
 
   override def delete(identifier: ID): Try[R] = synchronized {
