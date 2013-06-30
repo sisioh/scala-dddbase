@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding
 
-import org.sisioh.dddbase.core.lifecycle.EntityWriter
+import org.sisioh.dddbase.core.lifecycle.{StateWithEntity, EntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -10,13 +10,13 @@ trait ForwardingEntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T 
 
   protected def createInstance(state: Try[(EntityWriter[_, ID, T], Option[T])]): Try[(R, Option[T])]
 
-  def store(entity: T): Try[(R, T)] = {
+  def store(entity: T): Try[StateWithEntity[R, T]] = {
     createInstance(
       delegateEntityWriter.store(entity).map {
         e =>
-          (e._1.asInstanceOf[R], Some(e._2))
+          (e.state.asInstanceOf[R], Some(e.entity))
       }
-    ).map(e => (e._1, e._2.get))
+    ).map(e => StateWithEntity(e._1, e._2.get))
   }
 
   def delete(identity: ID): Try[R] = {

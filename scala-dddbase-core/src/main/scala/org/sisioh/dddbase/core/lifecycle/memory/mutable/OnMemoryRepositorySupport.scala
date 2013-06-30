@@ -18,7 +18,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
 import org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepository
 import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemoryRepository => GenericOnMemoryImmutableRepository}
-import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityReaderByOption, Repository}
+import org.sisioh.dddbase.core.lifecycle.{StateWithEntity, EntityNotFoundException, EntityReaderByOption, Repository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.util.{Success, Try}
 
@@ -72,11 +72,11 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
   override def hashCode = 31 * core.hashCode()
 
-  def store(entity: T): Try[(R, T)] = {
+  def store(entity: T): Try[StateWithEntity[R, T]] = {
     core.store(entity).map {
       result =>
-        core = result._1.asInstanceOf[OnMemoryRepository[_, ID, T]]
-        (this.asInstanceOf[R], result._2)
+        core = result.state.asInstanceOf[OnMemoryRepository[_, ID, T]]
+        StateWithEntity(this.asInstanceOf[R], result.entity)
     }
   }
 

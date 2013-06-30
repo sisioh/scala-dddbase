@@ -131,11 +131,11 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     core.contains(identifier).get
   }
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[(AR, T)] = future {
+  def store(entity: T)(implicit executor: ExecutionContext): Future[StateWithEntity[AR, T]] = future {
     val result = core.store(entity).get
-    val t = (result._1.asInstanceOf[SR], Some(result._2))
+    val t = (result.state.asInstanceOf[SR], Some(result.entity))
     val instance  = createInstance(t)
-    (instance._1, instance._2.get)
+    StateWithEntity(instance._1, instance._2.get)
   }
 
   def delete(identity: ID)(implicit executor: ExecutionContext): Future[AR] = future {

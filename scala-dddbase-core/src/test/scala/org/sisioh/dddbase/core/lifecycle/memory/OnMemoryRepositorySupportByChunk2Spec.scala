@@ -24,7 +24,7 @@ class OnMemoryRepositorySupportByChunk2Spec extends Specification with Mockito {
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(IntIdentity(i))
-        repository = repository.store(entity).get._1
+        repository = repository.store(entity).get.state
       }
 
       val chunk = repository.resolveChunk(0, 5).get

@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding
 
-import org.sisioh.dddbase.core.lifecycle.AsyncEntityWriter
+import org.sisioh.dddbase.core.lifecycle.{StateWithEntity, AsyncEntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.{Future, ExecutionContext}
 
@@ -11,15 +11,15 @@ trait AsyncForwardingEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identi
 
   protected def createInstance(state: Future[(AsyncEntityWriter[_, ID, T], Option[T])]): Future[(R, Option[T])]
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[(R, T)] = {
+  def store(entity: T)(implicit executor: ExecutionContext): Future[StateWithEntity[R, T]] = {
     val state = delegateAsyncEntityWriter.store(entity).map {
       result =>
-        (result._1.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result._2))
+        (result.state.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result.entity))
     }
     val instance = createInstance(state)
     instance.map {
       e =>
-        (e._1, e._2.get)
+        StateWithEntity(e._1, e._2.get)
     }
   }
 

@@ -29,7 +29,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(EmptyIdentity).get must_== entity
-      repos.flatMap(_._1.contains(entity)).getOrElse(false) must_== true
+      repos.flatMap(_.state.contains(entity)).getOrElse(false) must_== true
     }
     "have stored entity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -37,7 +37,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      repos.flatMap(_._1.contains(entity)).getOrElse(false) must_== true
+      repos.flatMap(_.state.contains(entity)).getOrElse(false) must_== true
     }
     "resolve a entity by using identity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -45,7 +45,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      repos.flatMap(_._1.resolve(id)).get must_== entity
+      repos.flatMap(_.state.resolve(id)).get must_== entity
     }
     "resolveOption a entity by using identity" in {
       class TestRepository extends GenericOnMemoryRepository[Identity[UUID], EntityImpl]
@@ -55,7 +55,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolveOption(id).get must_== Some(entity)
-      repos.flatMap(_._1.resolveOption(id)).get must_== Some(entity)
+      repos.flatMap(_.state.resolveOption(id)).get must_== Some(entity)
     }
     "delete a entity by using identity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
@@ -63,7 +63,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      repos.flatMap(_._1.delete(id)).get must_!= repos
+      repos.flatMap(_.state.delete(id)).get must_!= repos
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
