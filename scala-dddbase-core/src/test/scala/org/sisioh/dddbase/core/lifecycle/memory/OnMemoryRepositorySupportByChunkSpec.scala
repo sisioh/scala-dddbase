@@ -30,15 +30,15 @@ class OnMemoryRepositorySupportByChunkSpec extends Specification with Mockito {
         repository = repository.store(entity).get.state
       }
 
-      val chunk = repository.resolveChunk(0, 5).get
+      val chunk = repository.resolveChunk(1, 5).get
 
-      chunk.index must_== 0
+      chunk.index must_== 1
       chunk.entities.size must_== 5
-      chunk.entities(0) must_== new EntityImpl(Identity[Int](1))
-      chunk.entities(1) must_== new EntityImpl(Identity[Int](2))
-      chunk.entities(2) must_== new EntityImpl(Identity[Int](3))
-      chunk.entities(3) must_== new EntityImpl(Identity[Int](4))
-      chunk.entities(4) must_== new EntityImpl(Identity[Int](5))
+      chunk.entities(0).identity.value must_== 6
+      chunk.entities(1).identity.value must_== 7
+      chunk.entities(2).identity.value must_== 8
+      chunk.entities(3).identity.value must_== 9
+      chunk.entities(4).identity.value must_== 10
     }
   }
 
