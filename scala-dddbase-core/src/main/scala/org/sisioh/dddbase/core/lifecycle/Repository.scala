@@ -180,7 +180,15 @@ trait EntityReaderByIterable[ID <: Identity[_], T <: Entity[ID]] extends Iterabl
 
 }
 
-case class StateWithEntity[+A, T](state: A, entity: T)
+/**
+ * リポジトリの新しい状態とエンティティを保持する値オブジェクト。
+ *
+ * @param state リポジトリの新しい状態
+ * @param entity エンティティ
+ * @tparam R リポジトリの型
+ * @tparam T エンティティの型
+ */
+case class StateWithEntity[+R, T](state: R, entity: T)
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
