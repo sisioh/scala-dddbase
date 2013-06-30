@@ -24,12 +24,38 @@ package org.sisioh.dddbase.core.model
  * @tparam A 識別子の値を表す型
  */
 trait Identity[+A] extends Serializable {
+
   /**
    * 識別子の値を取得する。
    *
    * @return 識別子の値
    */
   def value: A
+
+}
+
+/**
+ * 順序をサポートした[[org.sisioh.dddbase.core.model.Identity]]。
+ *
+ * @tparam A 識別子の値を表す型
+ * @tparam ID 識別子の型
+ */
+trait OrderedIdentity[A, ID <: Identity[A]]
+  extends Identity[A] with Ordered[ID]
+
+/**
+ * [[org.sisioh.dddbase.core.model.OrderedIdentity]]の骨格実装。
+ *
+ * @tparam A 識別子の値を表す型
+ * @tparam ID 識別子の型
+ */
+abstract class AbstractOrderedIdentity[A <% Ordered[A], ID <: Identity[A]]
+  extends OrderedIdentity[A, ID] {
+
+  def compare(that: ID): Int = {
+    value compare that.value
+  }
+
 }
 
 /**
@@ -40,22 +66,39 @@ case class EmptyIdentityException() extends Exception
 /**
  * 空の識別子を表す値オブジェクト。
  */
-object EmptyIdentity extends Identity[Nothing] {
+private[core]
+class EmptyIdentity
+  extends Identity[Nothing] {
+
   def value = throw EmptyIdentityException()
+
+  override def equals(obj: Any): Boolean = obj match {
+    case that: EmptyIdentity => this eq that
+    case _ => false
+  }
+
+  override def hashCode(): Int = 31 * 1
+
+  override def toString = "EmptyIdentity"
 }
 
-private[core]
-class IdentityImpl[A](val value: A) extends Identity[A] {
+object EmptyIdentity extends EmptyIdentity
 
-  override def toString = s"Identity($value)"
+private[core]
+class IdentityImpl[A](val value: A)
+  extends Identity[A] {
 
   override def equals(obj: Any) = obj match {
+    case that: EmptyIdentity => false
     case that: Identity[_] =>
       value == that.value
     case _ => false
   }
 
   override def hashCode = 31 * value.##
+
+  override def toString = s"Identity($value)"
+
 }
 
 /**
@@ -70,12 +113,11 @@ object Identity {
    * @tparam A 識別子の値の型
    * @return [[org.sisioh.dddbase.core.model.Identity]]
    */
-  def apply[A](value: => A): Identity[A] = new IdentityImpl(value)
+  def apply[A](value: A): Identity[A] = new IdentityImpl(value)
 
   /**
    * 空の[[org.sisioh.dddbase.core.model.Identity]]を返す。
    *
-   * @tparam A 識別子の値の型
    * @return [[org.sisioh.dddbase.core.model.Identity]]
    */
   def empty[A]: Identity[A] = EmptyIdentity
@@ -90,5 +132,6 @@ object Identity {
   def unapply[A](v: Identity[A]): Option[A] = Some(v.value)
 
 }
+
 
 
