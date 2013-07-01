@@ -183,12 +183,12 @@ trait EntityReaderByIterable[ID <: Identity[_], T <: Entity[ID]] extends Iterabl
 /**
  * リポジトリの新しい状態とエンティティを保持する値オブジェクト。
  *
- * @param state リポジトリの新しい状態
+ * @param repository リポジトリの新しい状態
  * @param entity エンティティ
  * @tparam R リポジトリの型
  * @tparam T エンティティの型
  */
-case class RepositoryWithEntity[+R, T](state: R, entity: T)
+case class RepositoryWithEntity[+R, T](repository: R, entity: T)
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]

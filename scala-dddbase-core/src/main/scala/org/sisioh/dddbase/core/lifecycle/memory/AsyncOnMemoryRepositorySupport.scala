@@ -133,7 +133,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 
   def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[AR, T]] = future {
     val result = core.store(entity).get
-    val t = (result.state.asInstanceOf[SR], Some(result.entity))
+    val t = (result.repository.asInstanceOf[SR], Some(result.entity))
     val instance  = createInstance(t)
     RepositoryWithEntity(instance._1, instance._2.get)
   }

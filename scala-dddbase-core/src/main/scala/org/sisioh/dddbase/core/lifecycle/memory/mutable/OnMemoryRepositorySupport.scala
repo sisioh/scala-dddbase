@@ -75,7 +75,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
     core.store(entity).map {
       result =>
-        core = result.state.asInstanceOf[OnMemoryRepository[_, ID, T]]
+        core = result.repository.asInstanceOf[OnMemoryRepository[_, ID, T]]
         RepositoryWithEntity(this.asInstanceOf[R], result.entity)
     }
   }
