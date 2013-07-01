@@ -188,7 +188,7 @@ trait EntityReaderByIterable[ID <: Identity[_], T <: Entity[ID]] extends Iterabl
  * @tparam R リポジトリの型
  * @tparam T エンティティの型
  */
-case class StateWithEntity[+R, T](state: R, entity: T)
+case class RepositoryWithEntity[+R, T](state: R, entity: T)
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
@@ -208,7 +208,7 @@ trait EntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): Try[StateWithEntity[R, T]]
+  def store(entity: T): Try[RepositoryWithEntity[R, T]]
 
   /**
    * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]] `store` へのショートカット。

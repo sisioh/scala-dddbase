@@ -32,7 +32,7 @@ trait AsyncOnMemoryRepository
 [+AR <: AsyncRepository[_, ID, T],
 SR <: OnMemoryRepository[_, ID, T],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] {
 
   protected def createInstance(state: (SR, Option[T])): (AR, Option[T]) =
