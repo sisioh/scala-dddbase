@@ -14,7 +14,7 @@ trait ForwardingEntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T 
     createInstance(
       delegateEntityWriter.store(entity).map {
         e =>
-          (e.state.asInstanceOf[R], Some(e.entity))
+          (e.repository.asInstanceOf[R], Some(e.entity))
       }
     ).map(e => RepositoryWithEntity(e._1, e._2.get))
   }

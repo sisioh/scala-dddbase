@@ -14,7 +14,7 @@ trait AsyncForwardingEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identi
   def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[R, T]] = {
     val state = delegateAsyncEntityWriter.store(entity).map {
       result =>
-        (result.state.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result.entity))
+        (result.repository.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result.entity))
     }
     val instance = createInstance(state)
     instance.map {
