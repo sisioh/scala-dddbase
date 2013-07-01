@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding
 
-import org.sisioh.dddbase.core.lifecycle.AsyncEntityWriter
+import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, AsyncEntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.{Future, ExecutionContext}
 
@@ -9,12 +9,30 @@ trait AsyncForwardingEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identi
 
   protected val delegateAsyncEntityWriter: AsyncEntityWriter[_, ID, T]
 
-  protected def createInstance(state: Future[AsyncEntityWriter[_, ID, T]]): Future[R]
+  protected def createInstance(state: Future[(AsyncEntityWriter[_, ID, T], Option[T])]): Future[(R, Option[T])]
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[R] =
-    createInstance(delegateAsyncEntityWriter.store(entity).map(_.asInstanceOf[AsyncEntityWriter[R, ID, T]]))
+  def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[R, T]] = {
+    val state = delegateAsyncEntityWriter.store(entity).map {
+      result =>
+        (result.repository.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result.entity))
+    }
+    val instance = createInstance(state)
+    instance.map {
+      e =>
+        RepositoryWithEntity(e._1, e._2.get)
+    }
+  }
 
-  def delete(identity: ID)(implicit executor: ExecutionContext): Future[R] =
-    createInstance(delegateAsyncEntityWriter.delete(identity).map(_.asInstanceOf[AsyncEntityWriter[R, ID, T]]))
+  def delete(identity: ID)(implicit executor: ExecutionContext): Future[R] = {
+    val state = delegateAsyncEntityWriter.delete(identity).map {
+      result =>
+        (result.asInstanceOf[AsyncEntityWriter[R, ID, T]], None)
+    }
+    val instance = createInstance(state)
+    instance.map {
+      e =>
+        e._1
+    }
+  }
 
 }

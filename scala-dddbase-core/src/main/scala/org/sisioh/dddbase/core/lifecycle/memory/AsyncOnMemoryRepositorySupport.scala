@@ -63,6 +63,27 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 }
 
 /**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]に[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]のための機能を追加するトレイト。
+ *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncOnMemoryRepositorySupportByChunk
+[+AR <: AsyncRepository[_, ID, T],
+SR <: OnMemoryRepository[_, ID, T] with EntityReaderByChunk[ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] with AsyncEntityReaderByChunk[ID, T] {
+
+  def resolveChunk(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]] = future {
+    core.resolveChunk(index, maxEntities).get
+  }
+
+}
+
+/**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
  *
  * `Future` の中で `core` に同期型のオンメモリリポジトリを利用することで非同期版として
@@ -92,7 +113,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
    * @param state 新しい同期型リポジトリ
    * @return 新しい非同期型のリポジトリ
    */
-  protected def createInstance(state: SR): AR
+  protected def createInstance(state: (SR, Option[T])): (AR, Option[T])
 
   override def equals(obj: Any) = obj match {
     case that: AsyncOnMemoryRepositorySupport[_, _, _, _] =>
@@ -110,12 +131,18 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     core.contains(identifier).get
   }
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[AR] = future {
-    createInstance(core.store(entity).get.asInstanceOf[SR])
+  def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[AR, T]] = future {
+    val result = core.store(entity).get
+    val t = (result.repository.asInstanceOf[SR], Some(result.entity))
+    val instance  = createInstance(t)
+    RepositoryWithEntity(instance._1, instance._2.get)
   }
 
   def delete(identity: ID)(implicit executor: ExecutionContext): Future[AR] = future {
-    createInstance(core.delete(identity).get.asInstanceOf[SR])
+    val result = core.delete(identity).get
+    val t = (result.asInstanceOf[SR], None)
+    val instance = createInstance(t)
+    instance._1
   }
 
 }

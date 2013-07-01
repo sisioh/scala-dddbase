@@ -10,15 +10,31 @@ import scala.util.Try
 
 class ForwardingRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
+  class EntityImpl(val identity: Identity[UUID])
+    extends Entity[Identity[UUID]]
+    with EntityCloneable[Identity[UUID], EntityImpl]
+    with Ordered[EntityImpl] {
+
+    def compare(that: ForwardingRepositorySpec.this.type#EntityImpl): Int = {
+      identity.value.compareTo(that.identity.value)
+    }
+
+  }
 
   val id = Identity(UUID.randomUUID())
 
   class TestRepForwardingRepositoryImpl
   (protected val delegateRepository: Repository[_, Identity[UUID], EntityImpl])
     extends ForwardingRepository[TestRepForwardingRepositoryImpl, Identity[UUID], EntityImpl] {
-    protected def createInstance(state: Try[EntityWriter[_, Identity[UUID], EntityImpl]]): Try[TestRepForwardingRepositoryImpl] =
-      state.map(r => new TestRepForwardingRepositoryImpl(r.asInstanceOf[Repository[_, Identity[UUID], EntityImpl]]))
+
+    protected def createInstance(state: Try[(EntityWriter[_, Identity[UUID], EntityImpl], Option[EntityImpl])]):
+    Try[(TestRepForwardingRepositoryImpl, Option[EntityImpl])] = {
+      state.map {
+        r =>
+          val state = new TestRepForwardingRepositoryImpl(r._1.asInstanceOf[Repository[_, Identity[UUID], EntityImpl]])
+          (state, r._2)
+      }
+    }
   }
 
   "The repository" should {
@@ -30,7 +46,7 @@ class ForwardingRepositorySpec extends Specification with Mockito {
       repository.resolve(id).isFailure must_== true
       repos.flatMap {
         r =>
-          val tr = new TestRepForwardingRepositoryImpl(r)
+          val tr = new TestRepForwardingRepositoryImpl(r.repository)
           tr.contains(entity)
       }.getOrElse(false) must_== true
     }
@@ -42,7 +58,7 @@ class ForwardingRepositorySpec extends Specification with Mockito {
       repository.resolve(id).isFailure must_== true
       repos.flatMap {
         r =>
-          val tr = new TestRepForwardingRepositoryImpl(r)
+          val tr = new TestRepForwardingRepositoryImpl(r.repository)
           tr.resolve(id)
       }.get must_== entity
     }
@@ -52,9 +68,9 @@ class ForwardingRepositorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).isFailure must_== true
-      repos.flatMap{
+      repos.flatMap {
         r =>
-          val tr = new TestRepForwardingRepositoryImpl(r)
+          val tr = new TestRepForwardingRepositoryImpl(r.repository)
           tr.delete(id)
       }.get must_!= repos
     }

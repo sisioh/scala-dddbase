@@ -24,7 +24,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-class GenericOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+class GenericOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends OnMemoryRepositorySupport[GenericOnMemoryRepository[ID, T], ID, T]
 
 /**
@@ -39,7 +39,7 @@ object GenericOnMemoryRepository {
    * @tparam T エンティティの型
    * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemoryRepository]]
    */
-  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]() =
+  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]() =
     new GenericOnMemoryRepository[ID, T]
 
 }

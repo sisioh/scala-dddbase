@@ -180,6 +180,15 @@ trait EntityReaderByIterable[ID <: Identity[_], T <: Entity[ID]] extends Iterabl
 
 }
 
+/**
+ * リポジトリの新しい状態とエンティティを保持する値オブジェクト。
+ *
+ * @param repository リポジトリの新しい状態
+ * @param entity エンティティ
+ * @tparam R リポジトリの型
+ * @tparam T エンティティの型
+ */
+case class RepositoryWithEntity[+R, T](repository: R, entity: T)
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
@@ -196,10 +205,10 @@ trait EntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[
    * @param entity 保存する対象のエンティティ
    * @return Success:
    *         リポジトリインスタンス
-   *         Failure:
+   *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): Try[R]
+  def store(entity: T): Try[RepositoryWithEntity[R, T]]
 
   /**
    * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]] `store` へのショートカット。

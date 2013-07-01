@@ -25,13 +25,12 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-class GenericAsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+class GenericAsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 (protected val core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]())
   extends AsyncOnMemoryRepositorySupport[GenericAsyncOnMemoryRepository[ID, T], GenericOnMemoryRepository[ID, T], ID, T] {
 
-  protected def createInstance(state: GenericOnMemoryRepository[ID, T]): GenericAsyncOnMemoryRepository[ID, T] =
-    new GenericAsyncOnMemoryRepository[ID, T](state)
-
+  protected def createInstance(state: (GenericOnMemoryRepository[ID, T], Option[T])): (GenericAsyncOnMemoryRepository[ID, T], Option[T]) =
+    (new GenericAsyncOnMemoryRepository[ID, T](state._1), state._2)
 }
 
 /**
@@ -47,7 +46,7 @@ object GenericAsyncOnMemoryRepository {
    * @tparam T エンティティの型
    * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryRepository]]
    */
-  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   (core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]()) =
     new GenericAsyncOnMemoryRepository(core)
 
@@ -59,8 +58,8 @@ object GenericAsyncOnMemoryRepository {
    * @tparam T エンティティの型
    * @return 構成要素
    */
-  def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  (repository: GenericAsyncOnMemoryRepository[ID, T]) : Option[GenericOnMemoryRepository[ID, T]] =
+  def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  (repository: GenericAsyncOnMemoryRepository[ID, T]): Option[GenericOnMemoryRepository[ID, T]] =
     Some(repository.core)
 
 }

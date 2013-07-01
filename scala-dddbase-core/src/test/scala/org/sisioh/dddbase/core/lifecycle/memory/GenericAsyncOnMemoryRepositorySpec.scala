@@ -11,7 +11,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID]) extends Entity[Identity[UUID]] with EntityCloneable[Identity[UUID], EntityImpl]
+  class EntityImpl(val identity: Identity[UUID])
+    extends Entity[Identity[UUID]]
+    with EntityCloneable[Identity[UUID], EntityImpl]
+    with Ordered[EntityImpl] {
+
+    def compare(that: GenericAsyncOnMemoryRepositorySpec.this.type#EntityImpl): Int = {
+      identity.value.compareTo(that.identity.value)
+    }
+
+  }
 
   val id = Identity(UUID.randomUUID)
 
@@ -23,7 +32,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       repository(entity.identity) = entity
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.contains(EmptyIdentity)
+          asyncRepos.repository.contains(EmptyIdentity)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
@@ -39,7 +48,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       repository(entity.identity) = entity
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.contains(id)
+          asyncRepos.repository.contains(id)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
@@ -53,7 +62,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.resolve(id)
+          asyncRepos.repository.resolve(id)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
@@ -67,7 +76,7 @@ class GenericAsyncOnMemoryRepositorySpec extends Specification with Mockito {
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.delete(id).flatMap {
+          asyncRepos.repository.delete(id).flatMap {
             asyncRepos =>
               asyncRepos.contains(id)
           }

@@ -177,7 +177,7 @@ trait AsyncEntityWriter[+R <: AsyncEntityWriter[_, ID, T], ID <: Identity[_], T 
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: T)(implicit executor: ExecutionContext): Future[R]
+  def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[R,T]]
 
   /**
    * [[org.sisioh.dddbase.core.lifecycle.AsyncRepository]] `store`へのショートカット。
