@@ -18,9 +18,11 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
 import org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepository
 import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemoryRepository => GenericOnMemoryImmutableRepository}
-import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, EntityNotFoundException, EntityReaderByOption, Repository}
+import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
-import scala.util.{Success, Try}
+import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import scala.util.{Try, Success}
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
@@ -45,6 +47,27 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 }
 
 /**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]ための機能を追加するトレイト。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
+trait OnMemoryRepositorySupportByChunk
+[+R <: Repository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByChunk[ID, T] {
+
+  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]] = {
+    val subEntities = toList.slice(index * maxEntities, index * maxEntities + maxEntities)
+    Success(EntitiesChunk(index, subEntities))
+  }
+
+}
+
+/**
  * オンメモリで動作する可変リポジトリの実装。
  *
  * @tparam R 当該リポジトリを実装する派生型
@@ -56,7 +79,6 @@ trait OnMemoryRepositorySupport
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends OnMemoryRepository[R, ID, T] {
-
 
   /**
    * 内部で利用されるオンメモリリポジトリ
@@ -70,7 +92,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
     case _ => false
   }
 
-  override def hashCode = 31 * core.hashCode()
+  override def hashCode = 31 * core.##
 
   def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
     core.store(entity).map {
@@ -87,7 +109,6 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
         this.asInstanceOf[R]
     }
   }
-
 
   def iterator: Iterator[T] = core.iterator
 
