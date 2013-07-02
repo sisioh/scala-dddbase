@@ -53,9 +53,9 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
 }
 
-
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]に[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]ための機能を追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]ための機能を追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
