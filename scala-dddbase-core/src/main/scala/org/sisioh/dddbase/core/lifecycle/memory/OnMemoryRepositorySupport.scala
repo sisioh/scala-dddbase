@@ -37,7 +37,8 @@ trait OnMemoryRepositorySupportByOption
 [+R <: Repository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByOption[ID, T] {
+  extends OnMemoryRepositorySupport[R, ID, T]
+  with EntityReaderByOption[ID, T] {
 
   override def resolveOption(identity: ID) = synchronized {
     contains(identity).flatMap {
@@ -52,6 +53,36 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   }
 
 }
+
+
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate]]ための機能を追加するトレイト。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
+trait OnMemoryRepositorySupportByPredicate
+[+R <: Repository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  extends OnMemoryRepositorySupport[R, ID, T]
+  with EntityReaderByPredicate[ID, T] {
+
+  def filterByPredicate
+  (predicate: (T) => Boolean,
+   indexOpt: Option[Int] = None,
+   maxEntitiesOpt: Option[Int] = None): Try[EntitiesChunk[ID, T]] = {
+    val filteredSubEntities = toList.filter(predicate)
+    val index = indexOpt.getOrElse(0)
+    val maxEntities = maxEntitiesOpt.getOrElse(filteredSubEntities.size)
+    val subEntities = filteredSubEntities.slice(index * maxEntities, index * maxEntities + maxEntities)
+    Success(EntitiesChunk(index, subEntities))
+  }
+
+}
+
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]に
