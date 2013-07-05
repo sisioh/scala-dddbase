@@ -19,6 +19,9 @@ package org.sisioh.dddbase.core.lifecycle.memory
 import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.concurrent._
+import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
+import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import scala.Some
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
@@ -63,7 +66,33 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 }
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]に[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]のための機能を追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.AsyncEntityReaderByPredicate]]ための機能を追加するトレイト。
+ *
+ * @tparam AR 当該リポジトリを実装する派生型
+ * @tparam SR 内部で利用する同期型リポジトリの型
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait AsyncOnMemoryRepositorySupportByPredicate
+[+AR <: AsyncRepository[_, ID, T],
+SR <: OnMemoryRepository[_, ID, T] with EntityReaderByPredicate[ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T]
+  with AsyncEntityReaderByPredicate[ID, T] {
+
+  def filterByPredicate
+  (predicate: (T) => Boolean, index: Option[Int], maxEntities: Option[Int])
+  (implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]] = future {
+    core.filterByPredicate(predicate, index, maxEntities).get
+  }
+
+}
+
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.AsyncOnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]のための機能を追加するトレイト。
  *
  * @tparam AR 当該リポジトリを実装する派生型
  * @tparam SR 内部で利用する同期型リポジトリの型

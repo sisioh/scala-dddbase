@@ -20,9 +20,12 @@ import org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepository
 import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemoryRepository => GenericOnMemoryImmutableRepository}
 import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
+import scala.util.Success
+import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import scala.util.{Try, Success}
+import scala.Some
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
@@ -42,6 +45,31 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
       case ex: EntityNotFoundException =>
         Success(None)
     }
+  }
+
+}
+
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate]]ための機能を追加するトレイト。
+ *
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
+trait OnMemoryRepositorySupportByPredicate
+[+R <: Repository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByPredicate[ID, T] {
+
+  def filterByPredicate
+  (predicate: (T) => Boolean, indexOpt: Option[Int], maxEntitiesOpt: Option[Int]): Try[EntitiesChunk[ID, T]] = {
+    val filteredSubEntities = toList.filter(predicate)
+    val index = indexOpt.getOrElse(0)
+    val maxEntities = maxEntitiesOpt.getOrElse(filteredSubEntities.size)
+    val subEntities = filteredSubEntities.slice(index * maxEntities, index * maxEntities + maxEntities)
+    Success(EntitiesChunk(index, subEntities))
   }
 
 }

@@ -273,7 +273,9 @@ trait AsyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]] {
    *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def filterByPredicate(predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
+  def filterByPredicate
+  (predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
+  (implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
 
 }
 
