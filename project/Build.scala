@@ -9,7 +9,7 @@ object DDDBaseBuild extends Build {
 
   lazy val commonSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.sisioh",
-    version := "0.1.14",
+    version := "0.1.15",
     scalaVersion := "2.10.2",
     libraryDependencies ++= Seq(junit, scalaTest, mockito, scalaTest, specs2),
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
@@ -20,19 +20,30 @@ object DDDBaseBuild extends Build {
     test in fork := false
   )
 
-  lazy val root: Project = Project("scala-dddbase",
-    file("."),
+  val root = Project(
+    id = "scala-dddbase",
+    base = file("."),
     settings = commonSettings,
-    aggregate = Seq(core, spec))
+    aggregate = Seq(core, spec)
+  )
 
-  val core: Project = Project("scala-dddbase-core",
-    file("scala-dddbase-core"),
-    settings = commonSettings)
+  val core = Project(
+    id = "scala-dddbase-core",
+    base = file("scala-dddbase-core"),
+    settings = commonSettings
+  )
 
-  val spec: Project = Project("scala-dddbase-spec",
-    file("scala-dddbase-spec"),
-    settings = commonSettings) dependsOn(core)
+  val spec = Project(
+    id = "scala-dddbase-spec",
+    base = file("scala-dddbase-spec"),
+    settings = commonSettings
+  ) dependsOn(core)
 
+  val event = Project(
+    id = "scala-dddbase-event",
+    base = file("scala-dddbase-event"),
+    settings = commonSettings
+  ) dependsOn(core)
 
   def projectId(state: State) = extracted(state).currentProject.id
 
