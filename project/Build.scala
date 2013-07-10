@@ -24,7 +24,7 @@ object DDDBaseBuild extends Build {
     id = "scala-dddbase",
     base = file("."),
     settings = commonSettings,
-    aggregate = Seq(core, spec)
+    aggregate = Seq(core, spec, event)
   )
 
   val core = Project(
