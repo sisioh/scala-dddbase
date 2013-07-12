@@ -16,12 +16,9 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
-import org.sisioh.dddbase.core.lifecycle.memory.mutable._
+import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericOnMemorySyncRepository
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.concurrent.ExecutionContext
-import scala.Some
-import scala.Some
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericOnMemorySyncRepository
 
 /**
  * 汎用的な非同期型オンメモリ可変リポジトリ。
@@ -47,7 +44,7 @@ object GenericOnMemoryAsyncRepository {
    * @param core 内部で利用するオンメモリ可変リポジトリ。
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
-   * @return [[async.GenericOnMemoryAsyncRepository]]
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericOnMemoryAsyncRepository]]
    */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   (core: GenericOnMemorySyncRepository[ID, T] = GenericOnMemorySyncRepository[ID, T]())
@@ -57,7 +54,7 @@ object GenericOnMemoryAsyncRepository {
   /**
    * エクストラクタメソッド。
    *
-   * @param repository [[async.GenericOnMemoryAsyncRepository]]
+   * @param repository [[org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericOnMemoryAsyncRepository]]
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
    * @return 構成要素
