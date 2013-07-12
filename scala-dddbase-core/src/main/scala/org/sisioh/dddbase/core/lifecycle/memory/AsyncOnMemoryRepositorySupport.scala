@@ -33,7 +33,7 @@ import scala.Some
  */
 trait AsyncOnMemoryRepositorySupportByOption
 [+AR <: AsyncRepository[_, ID, T],
-SR <: OnMemoryRepository[_, ID, T] with EntityReaderByOption[ID, T],
+SR <: OnMemorySyncRepository[_, ID, T] with SyncEntityReaderByOption[ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] with AsyncEntityReaderByOption[ID, T] {
@@ -54,7 +54,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
  */
 trait AsyncOnMemoryRepositorySupportBySeq
 [+AR <: AsyncRepository[_, ID, T],
-SR <: OnMemoryRepository[_, ID, T] with EntityReaderByOption[ID, T],
+SR <: OnMemorySyncRepository[_, ID, T] with SyncEntityReaderByOption[ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] with AsyncEntityReaderBySeq[ID, T] {
@@ -76,7 +76,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
  */
 trait AsyncOnMemoryRepositorySupportByPredicate
 [+AR <: AsyncRepository[_, ID, T],
-SR <: OnMemoryRepository[_, ID, T] with EntityReaderByPredicate[ID, T],
+SR <: OnMemorySyncRepository[_, ID, T] with SyncEntityReaderByPredicate[ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T]
@@ -101,7 +101,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
  */
 trait AsyncOnMemoryRepositorySupportByChunk
 [+AR <: AsyncRepository[_, ID, T],
-SR <: OnMemoryRepository[_, ID, T] with EntityReaderByChunk[ID, T],
+SR <: OnMemorySyncRepository[_, ID, T] with SyncEntityReaderByChunk[ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncOnMemoryRepositorySupport[AR, SR, ID, T] with AsyncEntityReaderByChunk[ID, T] {
@@ -126,7 +126,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
  */
 trait AsyncOnMemoryRepositorySupport
 [+AR <: AsyncRepository[_, ID, T],
-SR <: OnMemoryRepository[_, ID, T],
+SR <: OnMemorySyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncOnMemoryRepository[AR, ID, T] {
@@ -152,22 +152,22 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
 
   override def hashCode = 31 * core.hashCode()
 
-  def resolve(identifier: ID)(implicit executor: ExecutionContext) = future {
+  def resolve(identifier: ID) = future {
     core.resolve(identifier).get
   }
 
-  def contains(identifier: ID)(implicit executor: ExecutionContext) = future {
+  def contains(identifier: ID) = future {
     core.contains(identifier).get
   }
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[AR, T]] = future {
+  def store(entity: T): Future[RepositoryWithEntity[AR, T]] = future {
     val result = core.store(entity).get
     val t = (result.repository.asInstanceOf[SR], Some(result.entity))
     val instance  = createInstance(t)
     RepositoryWithEntity(instance._1, instance._2.get)
   }
 
-  def delete(identity: ID)(implicit executor: ExecutionContext): Future[AR] = future {
+  def delete(identity: ID): Future[AR] = future {
     val result = core.delete(identity).get
     val t = (result.asInstanceOf[SR], None)
     val instance = createInstance(t)

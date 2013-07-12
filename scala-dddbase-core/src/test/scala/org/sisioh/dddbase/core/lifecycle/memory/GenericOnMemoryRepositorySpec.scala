@@ -21,7 +21,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
 
   "The repository" should {
     "have stored enitty with empty identity" in {
-      val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentity))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -29,7 +29,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       repos.flatMap(_.repository.contains(entity)).getOrElse(false) must_== true
     }
     "have stored entity" in {
-      val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -37,7 +37,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       repos.flatMap(_.repository.contains(entity)).getOrElse(false) must_== true
     }
     "resolve a entity by using identity" in {
-      val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -45,9 +45,9 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       repos.flatMap(_.repository.resolve(id)).get must_== entity
     }
     "resolveOption a entity by using identity" in {
-      class TestRepository extends GenericOnMemoryRepository[Identity[UUID], EntityImpl]
-      with OnMemoryRepositorySupportByOption[TestRepository, Identity[UUID], EntityImpl]
-      val repository = new TestRepository
+      class TestSyncRepository extends GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]
+      with OnMemorySyncRepositorySupportByOptionSyncSync[TestSyncRepository, Identity[UUID], EntityImpl]
+      val repository = new TestSyncRepository
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -59,7 +59,7 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       resolveOptionTry.get.get must_== entity
     }
     "delete a entity by using identity" in {
-      val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -67,19 +67,19 @@ class GenericOnMemoryRepositorySpec extends Specification with Mockito {
       repos.flatMap(_.repository.delete(id)).get must_!= repos
     }
     "fail to resolve a entity by a non-existent identity" in {
-      val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]()
       repository.resolve(id).isFailure must_== true
       repository.resolve(id).get must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identity" in {
-      val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
+      val repository = new GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]()
       repository.delete(id).isFailure must_== true
       repository.delete(id).get must throwA[EntityNotFoundException]
     }
   }
 
   "The cloned repository" should {
-    val repository = new GenericOnMemoryRepository[Identity[UUID], EntityImpl]()
+    val repository = new GenericOnMemorySyncRepository[Identity[UUID], EntityImpl]()
     "equals the repository before clone" in {
       repository must_== repository.clone
     }

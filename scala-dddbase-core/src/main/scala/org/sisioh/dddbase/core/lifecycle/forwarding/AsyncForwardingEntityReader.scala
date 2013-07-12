@@ -8,10 +8,10 @@ trait AsyncForwardingEntityReader[ID <: Identity[_], T <: Entity[ID]] extends As
 
   protected val delegateAsyncEntityReader: AsyncEntityReader[ID, T]
 
-  def resolve(identity: ID)(implicit executor: ExecutionContext) =
+  def resolve(identity: ID) =
     delegateAsyncEntityReader.resolve(identity)
 
-  def contains(identity: ID)(implicit executor: ExecutionContext): Future[Boolean] =
+  def contains(identity: ID): Future[Boolean] =
     delegateAsyncEntityReader.contains(identity)
 
 }

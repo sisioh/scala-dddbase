@@ -11,7 +11,7 @@ trait AsyncForwardingEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identi
 
   protected def createInstance(state: Future[(AsyncEntityWriter[_, ID, T], Option[T])]): Future[(R, Option[T])]
 
-  def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[R, T]] = {
+  def store(entity: T): Future[RepositoryWithEntity[R, T]] = {
     val state = delegateAsyncEntityWriter.store(entity).map {
       result =>
         (result.repository.asInstanceOf[AsyncEntityWriter[R, ID, T]], Some(result.entity))
@@ -23,7 +23,7 @@ trait AsyncForwardingEntityWriter[R <: AsyncEntityWriter[_, ID, T], ID <: Identi
     }
   }
 
-  def delete(identity: ID)(implicit executor: ExecutionContext): Future[R] = {
+  def delete(identity: ID): Future[R] = {
     val state = delegateAsyncEntityWriter.delete(identity).map {
       result =>
         (result.asInstanceOf[AsyncEntityWriter[R, ID, T]], None)

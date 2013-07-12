@@ -14,32 +14,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle.memory.mutable
+package org.sisioh.dddbase.core.lifecycle.memory
 
+import org.sisioh.dddbase.core.lifecycle.{SyncEntityReaderByOption, SyncEntityReaderByIterable, SyncRepository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * 汎用的な同期型オンメモリ可変リポジトリ。
+ * オンメモリリポジトリを表すトレイト。
  *
- * @tparam ID 識別子の型
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-class GenericOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[GenericOnMemoryRepository[ID, T], ID, T]
+trait OnMemorySyncRepository[+R <: SyncRepository[_, ID, T], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends SyncRepository[R, ID, T] with SyncEntityReaderByIterable[ID, T] with Cloneable
 
-/**
- * コンパニオンオブジェクト。
- */
-object GenericOnMemoryRepository {
 
-  /**
-   * ファクトリメソッド。
-   *
-   * @tparam ID 識別子の型
-   * @tparam T エンティティの型
-   * @return [[org.sisioh.dddbase.core.lifecycle.memory.mutable.GenericOnMemoryRepository]]
-   */
-  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]() =
-    new GenericOnMemoryRepository[ID, T]
-
-}

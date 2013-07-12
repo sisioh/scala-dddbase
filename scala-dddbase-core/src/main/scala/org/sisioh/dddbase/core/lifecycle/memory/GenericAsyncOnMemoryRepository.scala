@@ -17,6 +17,7 @@
 package org.sisioh.dddbase.core.lifecycle.memory
 
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import scala.concurrent.ExecutionContext
 
 /**
  * 汎用的な非同期型オンメモリ不変リポジトリ。
@@ -26,11 +27,13 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam T エンティティの型
  */
 class GenericAsyncOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-(protected val core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]())
-  extends AsyncOnMemoryRepositorySupport[GenericAsyncOnMemoryRepository[ID, T], GenericOnMemoryRepository[ID, T], ID, T] {
+(protected val core: GenericOnMemorySyncRepository[ID, T] = GenericOnMemorySyncRepository[ID, T]())
+(implicit val executor: ExecutionContext)
+  extends AsyncOnMemoryRepositorySupport[GenericAsyncOnMemoryRepository[ID, T], GenericOnMemorySyncRepository[ID, T], ID, T] {
 
-  protected def createInstance(state: (GenericOnMemoryRepository[ID, T], Option[T])): (GenericAsyncOnMemoryRepository[ID, T], Option[T]) =
+  protected def createInstance(state: (GenericOnMemorySyncRepository[ID, T], Option[T])): (GenericAsyncOnMemoryRepository[ID, T], Option[T]) =
     (new GenericAsyncOnMemoryRepository[ID, T](state._1), state._2)
+
 }
 
 /**
@@ -47,7 +50,8 @@ object GenericAsyncOnMemoryRepository {
    * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericAsyncOnMemoryRepository]]
    */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (core: GenericOnMemoryRepository[ID, T] = GenericOnMemoryRepository[ID, T]()) =
+  (core: GenericOnMemorySyncRepository[ID, T] = GenericOnMemorySyncRepository[ID, T]())
+  (implicit executor: ExecutionContext) =
     new GenericAsyncOnMemoryRepository(core)
 
   /**
@@ -59,7 +63,7 @@ object GenericAsyncOnMemoryRepository {
    * @return 構成要素
    */
   def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (repository: GenericAsyncOnMemoryRepository[ID, T]): Option[GenericOnMemoryRepository[ID, T]] =
+  (repository: GenericAsyncOnMemoryRepository[ID, T]): Option[GenericOnMemorySyncRepository[ID, T]] =
     Some(repository.core)
 
 }

@@ -14,32 +14,32 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle.memory
+package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * 汎用的な非同期型オンメモリ不変リポジトリ。
+ * 汎用的な同期型オンメモリ可変リポジトリ。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-class GenericOnMemoryRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[GenericOnMemoryRepository[ID, T], ID, T]
+class GenericOnMemorySyncRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  extends OnMemorySyncRepositorySupport[GenericOnMemorySyncRepository[ID, T], ID, T]
 
 /**
  * コンパニオンオブジェクト。
  */
-object GenericOnMemoryRepository {
+object GenericOnMemorySyncRepository {
 
   /**
    * ファクトリメソッド。
    *
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
-   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemoryRepository]]
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.mutable.GenericOnMemorySyncRepository]]
    */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]() =
-    new GenericOnMemoryRepository[ID, T]
+    new GenericOnMemorySyncRepository[ID, T]
 
 }

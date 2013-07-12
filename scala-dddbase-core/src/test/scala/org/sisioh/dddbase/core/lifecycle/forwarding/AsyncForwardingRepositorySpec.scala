@@ -8,7 +8,7 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Future, Await}
+import scala.concurrent.{ExecutionContext, Future, Await}
 
 class AsyncForwardingRepositorySpec extends Specification with Mockito {
 
@@ -27,7 +27,10 @@ class AsyncForwardingRepositorySpec extends Specification with Mockito {
 
   class TestRepAsyncForwardingRepositoryImpl
   (protected val delegateAsyncRepository: AsyncRepository[_, Identity[UUID], EntityImpl])
+  (implicit _executor: ExecutionContext)
     extends AsyncForwardingRepository[TestRepAsyncForwardingRepositoryImpl, Identity[UUID], EntityImpl] {
+
+    implicit val executor: ExecutionContext = _executor
 
     protected def createInstance
     (state: Future[(AsyncEntityWriter[_, Identity[UUID], EntityImpl], Option[EntityImpl])]): Future[(TestRepAsyncForwardingRepositoryImpl, Option[EntityImpl])] = {
@@ -37,6 +40,7 @@ class AsyncForwardingRepositorySpec extends Specification with Mockito {
           (state, r._2)
       }
     }
+
   }
 
   "repository" should {

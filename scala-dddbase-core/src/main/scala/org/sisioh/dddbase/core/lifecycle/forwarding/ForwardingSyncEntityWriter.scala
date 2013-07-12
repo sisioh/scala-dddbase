@@ -1,14 +1,14 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding
 
-import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, EntityWriter}
+import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, SyncEntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
-trait ForwardingEntityWriter[+R <: EntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends EntityWriter[R, ID, T] {
+trait ForwardingSyncEntityWriter[+R <: SyncEntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]] extends SyncEntityWriter[R, ID, T] {
 
-  protected val delegateEntityWriter: EntityWriter[_, ID, T]
+  protected val delegateEntityWriter: SyncEntityWriter[_, ID, T]
 
-  protected def createInstance(state: Try[(EntityWriter[_, ID, T], Option[T])]): Try[(R, Option[T])]
+  protected def createInstance(state: Try[(SyncEntityWriter[_, ID, T], Option[T])]): Try[(R, Option[T])]
 
   def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
     createInstance(
