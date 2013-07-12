@@ -51,7 +51,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
   override def hashCode = 31 * entities.hashCode()
 
-  override def clone: R = {
+  override def clone: R = synchronized {
     val result = super.clone.asInstanceOf[OnMemorySyncRepositorySupport[R, ID, T]]
     val array = result.entities.toArray
     result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
@@ -71,7 +71,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   }
 
 
-  override def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
+  override def store(entity: T): Try[RepositoryWithEntity[R, T]] = synchronized {
     val result = clone.asInstanceOf[OnMemorySyncRepositorySupport[R, ID, T]]
     result.entities += (entity.identity -> entity)
     Success(RepositoryWithEntity(result.asInstanceOf[R], entity))
