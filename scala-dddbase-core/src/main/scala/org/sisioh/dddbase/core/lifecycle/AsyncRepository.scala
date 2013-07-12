@@ -16,7 +16,6 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import scala.collection.mutable.ListBuffer
 import scala.concurrent._
 import org.sisioh.dddbase.core.model.{Identity, Entity}
 
@@ -24,71 +23,6 @@ import org.sisioh.dddbase.core.model.{Identity, Entity}
  * 非同期にエンティティをIOするためのトレイト。
  */
 trait AsyncEntityIO
-
-/**
- * 非同期にエンティティのIOイベントを管理するためのトレイト。
- *
- * @tparam ID 識別子の型
- * @tparam T エンティティの型
- */
-trait AsyncEntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
-  this: AsyncEntityIO =>
-
-  /**
-   * イベントハンドラ型
-   */
-  type EventHandler = (T, EventType.Value) => Unit
-
-  /**
-   * イベントハンドラのリスト
-   */
-  protected val eventHandlers = new ListBuffer[Future[EventHandler]]()
-
-  /**
-   * イベントハンドラを登録する。
-   *
-   * @param eventHandler イベントハンドラ
-   * @param executor [[scala.concurrent.ExecutionContext]]
-   * @return `Future` にラップされた `this`
-   */
-  def addEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
-    eventHandlers += Future.successful(eventHandler)
-    this
-  }
-
-  /**
-   * イベントハンドラを削除する。
-   *
-   * @param eventHandler イベントハンドラ
-   * @param executor [[scala.concurrent.ExecutionContext]]
-   * @return `Future` にラップされた `this`
-   */
-  def removeEventHandler(eventHandler: EventHandler)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] = future {
-    eventHandlers -= Future.successful(eventHandler)
-    this
-  }
-
-  /**
-   * イベントハンドラにイベントを送信する。
-   *
-   * @param entity エンティティ
-   * @param eventType イベントタイプ
-   * @param executor [[scala.concurrent.ExecutionContext]]
-   * @return
-   */
-  protected def submitToEventHandlers(entity: T, eventType: EventType.Value)(implicit executor: ExecutionContext): Future[AsyncEntityIOEventSubmitter[ID, T]] =
-    future {
-      eventHandlers.par.foreach {
-        eventHandlerFuture =>
-          eventHandlerFuture.foreach {
-            eventHandler =>
-              eventHandler(entity, eventType)
-          }
-      }
-      this
-    }
-
-}
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
@@ -177,7 +111,7 @@ trait AsyncEntityWriter[+R <: AsyncEntityWriter[_, ID, T], ID <: Identity[_], T 
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[R,T]]
+  def store(entity: T)(implicit executor: ExecutionContext): Future[RepositoryWithEntity[R, T]]
 
   /**
    * [[org.sisioh.dddbase.core.lifecycle.AsyncRepository]] `store`へのショートカット。

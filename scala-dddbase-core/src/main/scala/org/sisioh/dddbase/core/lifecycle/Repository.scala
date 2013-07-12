@@ -20,72 +20,13 @@ import org.sisioh.dddbase.core.model.{Identity, Entity}
 import scala.collection.mutable.ListBuffer
 import scala.util._
 
-/**
- * イベントタイプ。
- */
-object EventType extends Enumeration {
-  val Resolve, Store, Delete = Value
-}
+
 
 /**
  * エンティティをIOするためのトレイト。
  */
 trait EntityIO
 
-/**
- * エンティティのIOイベントを管理するためのトレイト。
- *
- * @tparam ID 識別子の型
- * @tparam T エンティティの型
- */
-trait EntityIOEventSubmitter[ID <: Identity[_], T <: Entity[ID]] {
-  this: EntityIO =>
-
-  /**
-   * イベントハンドラ。
-   */
-  type EventHandler = (T, EventType.Value) => Unit
-
-  /**
-   * イベントハンドラのリスト。
-   */
-  protected val eventHandlers = new ListBuffer[EventHandler]()
-
-  /**
-   * イベントハンドラを登録する。
-   *
-   * @param eventHandler イベントハンドラ
-   * @return `Try` にラップされた `this`
-   */
-  def addEventHandler(eventHandler: EventHandler): Try[EntityIOEventSubmitter[ID, T]] = {
-    eventHandlers += eventHandler
-    Success(this)
-  }
-
-  /**
-   * イベントハンドラを削除する。
-   *
-   * @param eventHandler イベントハンドラ
-   * @return `Try` にラップされた `this`
-   */
-  def removeEventHandler(eventHandler: EventHandler): Try[EntityIOEventSubmitter[ID, T]] = {
-    eventHandlers -= eventHandler
-    Success(this)
-  }
-
-  /**
-   * イベントハンドラにイベントを送信する。
-   *
-   * @param entity エンティティ
-   * @param eventType イベントタイプ
-   * @return `Try` にラップされた `this`
-   */
-  protected def submitToEventHandlers(entity: T, eventType: EventType.Value): Try[EntityIOEventSubmitter[ID, T]] = {
-    eventHandlers.foreach(_(entity, eventType))
-    Success(this)
-  }
-
-}
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
