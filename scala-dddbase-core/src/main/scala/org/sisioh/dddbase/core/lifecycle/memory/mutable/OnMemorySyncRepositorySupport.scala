@@ -16,8 +16,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable
 
-import org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepository
-import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemoryRepository => GenericOnMemoryImmutableRepository}
+import org.sisioh.dddbase.core.lifecycle.memory.OnMemorySyncRepository
+import org.sisioh.dddbase.core.lifecycle.memory.{GenericOnMemorySyncRepository => GenericOnMemoryImmutableRepository}
 import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.util.Try
@@ -28,17 +28,17 @@ import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import scala.Some
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemorySyncRepositorySupport]]にOption型のサポートを追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupportByOption
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupportByOptionSyncSync
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByOption[ID, T] {
+  extends OnMemorySyncRepositorySupport[R, ID, T] with SyncEntityReaderByOption[ID, T] {
 
   def resolveOption(identity: ID): Try[Option[T]] = synchronized {
     resolve(identity).map(Some(_)).recoverWith {
@@ -50,18 +50,18 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 }
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]に
- * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate]]ための機能を追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemorySyncRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.SyncEntityReaderByPredicate]]ための機能を追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupportByPredicate
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupportByPredicateSyncSync
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByPredicate[ID, T] {
+  extends OnMemorySyncRepositorySupport[R, ID, T] with SyncEntityReaderByPredicate[ID, T] {
 
   def filterByPredicate
   (predicate: (T) => Boolean, indexOpt: Option[Int], maxEntitiesOpt: Option[Int]): Try[EntitiesChunk[ID, T]] = {
@@ -75,18 +75,18 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 }
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.OnMemorySyncRepositorySupport]]に
  * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]ための機能を追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupportByChunk
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupportByChunkSyncSync
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByChunk[ID, T] {
+  extends OnMemorySyncRepositorySupport[R, ID, T] with SyncEntityReaderByChunk[ID, T] {
 
   def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]] = {
     val subEntities = toList.slice(index * maxEntities, index * maxEntities + maxEntities)
@@ -102,20 +102,20 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupport
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupport
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepository[R, ID, T] {
+  extends OnMemorySyncRepository[R, ID, T] {
 
   /**
    * 内部で利用されるオンメモリリポジトリ
    */
-  protected var core: OnMemoryRepository[_, ID, T] =
+  protected var core: OnMemorySyncRepository[_, ID, T] =
     new GenericOnMemoryImmutableRepository[ID, T]()
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryRepositorySupport[_, _, _] =>
+    case that: OnMemorySyncRepositorySupport[_, _, _] =>
       this.core == that.core
     case _ => false
   }
@@ -125,7 +125,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
     core.store(entity).map {
       result =>
-        core = result.repository.asInstanceOf[OnMemoryRepository[_, ID, T]]
+        core = result.repository.asInstanceOf[OnMemorySyncRepository[_, ID, T]]
         RepositoryWithEntity(this.asInstanceOf[R], result.entity)
     }
   }
@@ -133,7 +133,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   def delete(identity: ID): Try[R] = {
     core.delete(identity).map {
       result =>
-        core = result.asInstanceOf[OnMemoryRepository[_, ID, T]]
+        core = result.asInstanceOf[OnMemorySyncRepository[_, ID, T]]
         this.asInstanceOf[R]
     }
   }

@@ -17,14 +17,14 @@ class GenericOnMemoryRepositoryByPredicateSpec extends Specification with Mockit
     }
   }
 
-  class TestRepository
-    extends GenericOnMemoryRepository[Identity[Int], EntityImpl]
-    with OnMemoryRepositorySupportByPredicate[TestRepository, Identity[Int], EntityImpl]
+  class TestSyncRepository
+    extends GenericOnMemorySyncRepository[Identity[Int], EntityImpl]
+    with OnMemorySyncRepositorySupportByPredicateSyncSync[TestSyncRepository, Identity[Int], EntityImpl]
 
   "The repository" should {
     "have stored entities" in {
 
-      val repository = new TestRepository
+      val repository = new TestSyncRepository
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(Identity[Int](i))

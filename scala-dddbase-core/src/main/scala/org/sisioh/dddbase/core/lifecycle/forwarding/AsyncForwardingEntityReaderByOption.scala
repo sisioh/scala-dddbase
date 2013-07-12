@@ -10,7 +10,7 @@ trait AsyncForwardingEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]]
 
   protected val delegateAsyncEntityReaderByOption: AsyncEntityReaderByOption[ID, T]
 
-  def resolveOption(identity: ID)(implicit executor: ExecutionContext): Future[Option[T]] =
+  def resolveOption(identity: ID): Future[Option[T]] =
     delegateAsyncEntityReaderByOption.resolveOption(identity)
 
 }

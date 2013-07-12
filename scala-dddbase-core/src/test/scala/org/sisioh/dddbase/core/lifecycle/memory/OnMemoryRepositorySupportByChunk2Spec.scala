@@ -14,14 +14,14 @@ class OnMemoryRepositorySupportByChunk2Spec extends Specification with Mockito {
     with EntityCloneable[IntIdentity, EntityImpl]
     with EntityOrdered[Int, IntIdentity, EntityImpl]
 
-  class TestRepository
-    extends GenericOnMemoryRepository[IntIdentity, EntityImpl]()
-    with OnMemoryRepositorySupportByChunk[TestRepository, IntIdentity, EntityImpl]
+  class TestSyncRepository
+    extends GenericOnMemorySyncRepository[IntIdentity, EntityImpl]()
+    with OnMemorySyncRepositorySupportByChunkSyncSync[TestSyncRepository, IntIdentity, EntityImpl]
 
   "The repository" should {
     "have stored entities" in {
 
-      var repository = new TestRepository
+      var repository = new TestSyncRepository
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(IntIdentity(i))

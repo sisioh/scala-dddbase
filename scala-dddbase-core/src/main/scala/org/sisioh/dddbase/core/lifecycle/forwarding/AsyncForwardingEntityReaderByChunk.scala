@@ -9,7 +9,7 @@ trait AsyncForwardingEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]] ext
 
   protected val delegateAsyncEntityReaderByChunk: AsyncEntityReaderByChunk[ID, T]
 
-  def resolveChunk(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]] =
+  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, T]] =
     delegateAsyncEntityReaderByChunk.resolveChunk(index, maxEntities)
 
 }

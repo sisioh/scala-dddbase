@@ -10,7 +10,7 @@ trait AsyncForwardingEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]]
 
   protected val delegateAsyncEntityReaderByPredicate: AsyncEntityReaderByPredicate[ID, T]
 
-  def filterByPredicate(predicate: (T) => Boolean, index: Option[Int], maxEntities: Option[Int])(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]] =
+  def filterByPredicate(predicate: (T) => Boolean, index: Option[Int], maxEntities: Option[Int]): Future[EntitiesChunk[ID, T]] =
     delegateAsyncEntityReaderByPredicate.filterByPredicate(predicate, index, maxEntities)
 
 }

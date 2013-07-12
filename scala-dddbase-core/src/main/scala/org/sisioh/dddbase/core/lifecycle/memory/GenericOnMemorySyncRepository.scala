@@ -16,17 +16,30 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory
 
-import org.sisioh.dddbase.core.lifecycle.{EntityReaderByOption, EntityReaderByIterable, Repository}
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * オンメモリリポジトリを表すトレイト。
+ * 汎用的な非同期型オンメモリ不変リポジトリ。
  *
- * @tparam R 当該リポジトリを実装する派生型
- * @tparam ID エンティティの識別子の型
+ * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepository[+R <: Repository[_, ID, T], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends Repository[R, ID, T] with EntityReaderByIterable[ID, T] with Cloneable
+class GenericOnMemorySyncRepository[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  extends OnMemorySyncRepositorySupport[GenericOnMemorySyncRepository[ID, T], ID, T]
 
+/**
+ * コンパニオンオブジェクト。
+ */
+object GenericOnMemorySyncRepository {
 
+  /**
+   * ファクトリメソッド。
+   *
+   * @tparam ID 識別子の型
+   * @tparam T エンティティの型
+   * @return [[org.sisioh.dddbase.core.lifecycle.memory.GenericOnMemorySyncRepository]]
+   */
+  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]() =
+    new GenericOnMemorySyncRepository[ID, T]
+
+}

@@ -27,18 +27,18 @@ import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import scala.Some
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]にOption型のサポートを追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemorySyncRepositorySupport]]にOption型のサポートを追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupportByOption
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupportByOptionSyncSync
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[R, ID, T]
-  with EntityReaderByOption[ID, T] {
+  extends OnMemorySyncRepositorySupport[R, ID, T]
+  with SyncEntityReaderByOption[ID, T] {
 
   override def resolveOption(identity: ID) = synchronized {
     contains(identity).flatMap {
@@ -56,19 +56,19 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]に
- * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate]]ための機能を追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemorySyncRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.SyncEntityReaderByPredicate]]ための機能を追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupportByPredicate
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupportByPredicateSyncSync
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[R, ID, T]
-  with EntityReaderByPredicate[ID, T] {
+  extends OnMemorySyncRepositorySupport[R, ID, T]
+  with SyncEntityReaderByPredicate[ID, T] {
 
   def filterByPredicate
   (predicate: (T) => Boolean,
@@ -85,18 +85,18 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemoryRepositorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.memory.OnMemorySyncRepositorySupport]]に
  * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]ための機能を追加するトレイト。
  *
  * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupportByChunk
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupportByChunkSyncSync
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepositorySupport[R, ID, T] with EntityReaderByChunk[ID, T] {
+  extends OnMemorySyncRepositorySupport[R, ID, T] with SyncEntityReaderByChunk[ID, T] {
 
   def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]] = {
     val subEntities = toList.slice(index * maxEntities, index * maxEntities + maxEntities)
@@ -112,11 +112,11 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-trait OnMemoryRepositorySupport
-[+R <: Repository[_, ID, T],
+trait OnMemorySyncRepositorySupport
+[+R <: SyncRepository[_, ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends OnMemoryRepository[R, ID, T] {
+  extends OnMemorySyncRepository[R, ID, T] {
 
   /**
    * エンティティを保存するためのマップ。
@@ -124,7 +124,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   protected[core] var entities = new HashMap[ID, T]()
 
   override def equals(obj: Any) = obj match {
-    case that: OnMemoryRepositorySupport[_, _, _] =>
+    case that: OnMemorySyncRepositorySupport[_, _, _] =>
       this.entities == that.entities
     case _ => false
   }
@@ -132,7 +132,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   override def hashCode = 31 * entities.hashCode()
 
   override def clone: R = {
-    val result = super.clone.asInstanceOf[OnMemoryRepositorySupport[R, ID, T]]
+    val result = super.clone.asInstanceOf[OnMemorySyncRepositorySupport[R, ID, T]]
     val array = result.entities.toArray
     result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
     result.asInstanceOf[R]
@@ -152,7 +152,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
 
   override def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
-    val result = clone.asInstanceOf[OnMemoryRepositorySupport[R, ID, T]]
+    val result = clone.asInstanceOf[OnMemorySyncRepositorySupport[R, ID, T]]
     result.entities += (entity.identity -> entity)
     Success(RepositoryWithEntity(result.asInstanceOf[R], entity))
   }
@@ -161,7 +161,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
     contains(identifier).flatMap {
       e =>
         if (e) {
-          val result = clone.asInstanceOf[OnMemoryRepositorySupport[R, ID, T]]
+          val result = clone.asInstanceOf[OnMemorySyncRepositorySupport[R, ID, T]]
           result.entities -= identifier
           Success(result.asInstanceOf[R])
         } else {
