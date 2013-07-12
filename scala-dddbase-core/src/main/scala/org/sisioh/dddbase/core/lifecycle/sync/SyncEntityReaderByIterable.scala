@@ -13,14 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle
+package org.sisioh.dddbase.core.lifecycle.sync
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
+import scala.util.{Success, Try}
 
-trait EntityReaderByOption[ID <: Identity[_], T <: Entity[ID], M[+A]] {
-  this: EntityReader[ID, T, M] =>
+/**
+ * `scala.collection.Iterable`を実装するためのトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait SyncEntityReaderByIterable[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
+  this: SyncEntityReader[ID, T] =>
 
-  def resolveOption(identity: ID): M[Option[T]]
+  def contains(identifier: ID): Try[Boolean] = Success(exists(_.identity == identifier))
 
 }
