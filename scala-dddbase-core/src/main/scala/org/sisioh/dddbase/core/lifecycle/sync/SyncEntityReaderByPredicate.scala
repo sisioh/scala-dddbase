@@ -1,5 +1,6 @@
 /*
- * Copyright 2011-2013 Sisioh Project and others. (http://www.sisioh.org/)
+ * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +14,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle
+package org.sisioh.dddbase.core.lifecycle.sync
 
-import scala.language.higherKinds
+import org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate
 import org.sisioh.dddbase.core.model.{Entity, Identity}
+import scala.util.Try
 
-trait EntityReaderByOption[ID <: Identity[_], T <: Entity[ID], M[+A]] {
-  this: EntityReader[ID, T, M] =>
-
-  def resolveOption(identity: ID): M[Option[T]]
+/**
+ * 述語関数に該当したエンティティを検索することができるトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
+trait SyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]]
+  extends EntityReaderByPredicate[ID, T, Try] {
+  this: SyncEntityReader[ID, T] =>
 
 }

@@ -13,14 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle
+package org.sisioh.dddbase.core.lifecycle.memory.sync
+
+import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReaderByIterable, SyncRepository}
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * リポジトリの新しい状態とエンティティを保持する値オブジェクト。
+ * オンメモリリポジトリを表すトレイト。
  *
- * @param repository リポジトリの新しい状態
- * @param entity エンティティ
- * @tparam R リポジトリの型
+ * @tparam R 当該リポジトリを実装する派生型
+ * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-case class RepositoryWithEntity[+R, T](repository: R, entity: T)
+trait OnMemorySyncRepository
+[+R <: SyncRepository[_, ID, T], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends SyncRepository[R, ID, T] with SyncEntityReaderByIterable[ID, T] with Cloneable
+
+

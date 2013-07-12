@@ -1,6 +1,5 @@
 /*
- * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
- * Copyright 2013 Sisioh Project and others. (http://www.sisioh.org/)
+ * Copyright 2011-2013 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
