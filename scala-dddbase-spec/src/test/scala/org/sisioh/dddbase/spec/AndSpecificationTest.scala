@@ -38,9 +38,9 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val and = new AndSpecification[Unit](mock1, mock2)
-    assert(and.isSatisfiedBy(null.asInstanceOf[Unit]) == false)
+    assert(and.isSatisfiedBy(()) == false)
 
-    verify(mock1).isSatisfiedBy(null.asInstanceOf[Unit])
+    verify(mock1).isSatisfiedBy(())
     //		verify(mock2, never()).isSatisfiedBy(null);
   }
 
@@ -59,9 +59,9 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val and = new AndSpecification[Unit](mock1, mock2)
-    assert(and.isSatisfiedBy(null) == false)
+    assert(and.isSatisfiedBy(()) == false)
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
     //		verify(mock2, never()).isSatisfiedBy(null);
   }
 
@@ -80,10 +80,10 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val nandot = new AndSpecification[Unit](mock1, mock2)
-    assert(nandot.isSatisfiedBy(null) == false)
+    assert(nandot.isSatisfiedBy(()) == false)
 
-    verify(mock1).isSatisfiedBy(null)
-    verify(mock2).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
+    verify(mock2).isSatisfiedBy(())
   }
 
   /**
@@ -101,9 +101,9 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val and = new AndSpecification[Unit](mock1, mock2)
-    assert(and.isSatisfiedBy(null) == true)
+    assert(and.isSatisfiedBy(()) == true)
 
-    verify(mock1).isSatisfiedBy(null)
-    verify(mock2).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
+    verify(mock2).isSatisfiedBy(())
   }
 }

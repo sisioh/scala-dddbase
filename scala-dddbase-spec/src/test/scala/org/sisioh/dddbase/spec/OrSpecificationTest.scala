@@ -37,10 +37,10 @@ class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val or = new OrSpecification[Unit](mock1, mock2)
-    assert(or.isSatisfiedBy(null) == false)
+    assert(or.isSatisfiedBy(()) == false)
 
-    verify(mock1).isSatisfiedBy(null)
-    verify(mock2).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
+    verify(mock2).isSatisfiedBy(())
   }
 
   /**
@@ -57,10 +57,10 @@ class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val or = new OrSpecification[Unit](mock1, mock2)
-    assert(or.isSatisfiedBy(null) == true)
+    assert(or.isSatisfiedBy(()) == true)
 
-    verify(mock1).isSatisfiedBy(null);
-    verify(mock2).isSatisfiedBy(null);
+    verify(mock1).isSatisfiedBy(())
+    verify(mock2).isSatisfiedBy(())
   }
 
   /**
@@ -77,9 +77,9 @@ class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val or = new OrSpecification[Unit](mock1, mock2)
-    assert(or.isSatisfiedBy(null) == true)
+    assert(or.isSatisfiedBy(()) == true)
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
     //		verify(mock2, never()).isSatisfiedBy(null);
   }
 
@@ -97,9 +97,10 @@ class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val or = new OrSpecification[Unit](mock1, mock2)
-    assert(or.isSatisfiedBy(null) == true)
+    assert(or.isSatisfiedBy(()) == true)
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
     //		verify(mock2, never()).isSatisfiedBy(null);
   }
+
 }
