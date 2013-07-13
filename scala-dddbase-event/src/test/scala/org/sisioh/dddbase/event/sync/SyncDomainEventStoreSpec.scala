@@ -24,7 +24,12 @@ class SyncDomainEventStoreSpec extends Specification {
       val target = new SyncDomainEventStore[GenericOnMemorySyncRepository[Identity[UUID], TestDomainEvent], Identity[UUID], TestDomainEvent](repos)
       val publisher = SyncDomainEventPublisher[TestDomainEvent, RepositoryWithEntity[_, TestDomainEvent]]()
       val event = new TestDomainEvent(Identity(UUID.randomUUID()))
-      publisher.subscribe(target).publish(event)
+     val results =  publisher.subscribe(target).publish(event)
+      results.map{
+        r =>
+          r.get.repository
+      }
+
       repos.size must_== 1
       repos.toList(0).identity must_== event.identity
     }

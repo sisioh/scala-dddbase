@@ -1,5 +1,7 @@
 package org.sisioh.dddbase.event
 
+import scala.language.higherKinds
+
 /**
  * ドメインイベントを通知するためのトレイト。
  */

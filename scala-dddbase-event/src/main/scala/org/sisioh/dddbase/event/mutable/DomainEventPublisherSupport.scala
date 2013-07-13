@@ -1,5 +1,6 @@
 package org.sisioh.dddbase.event.mutable
 
+import scala.language.higherKinds
 import org.sisioh.dddbase.event._
 import scala.collection.mutable.ArrayBuffer
 
