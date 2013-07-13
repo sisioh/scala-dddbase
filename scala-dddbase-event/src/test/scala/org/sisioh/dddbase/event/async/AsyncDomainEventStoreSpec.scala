@@ -1,13 +1,11 @@
 package org.sisioh.dddbase.event.async
 
-import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
 import java.util.UUID
-import org.sisioh.dddbase.event.DomainEvent
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericOnMemorySyncRepository
-import org.sisioh.dddbase.event.sync.{SyncDomainEventPublisher, SyncDomainEventStore}
 import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericOnMemoryAsyncRepository
+import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
+import org.sisioh.dddbase.event.DomainEvent
+import org.specs2.mutable.Specification
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,19 +23,21 @@ class AsyncDomainEventStoreSpec extends Specification {
 
   "domain event store" should {
     "get saved event" in {
-      val repos = new GenericOnMemoryAsyncRepository[Identity[UUID], TestDomainEvent]
-      val target = new AsyncDomainEventStore[GenericOnMemoryAsyncRepository[Identity[UUID], TestDomainEvent], Identity[UUID], TestDomainEvent](repos)
-      val publisher = AsyncDomainEventPublisher[TestDomainEvent, RepositoryWithEntity[_, TestDomainEvent]]()
+      type REPOS = GenericOnMemoryAsyncRepository[Identity[UUID], TestDomainEvent]
+      type ID = Identity[UUID]
+      type E = TestDomainEvent
+
+      val repos = new REPOS
+      val target = new AsyncDomainEventStore[REPOS, ID, E](repos)
+      val publisher = AsyncDomainEventPublisher[E, RepositoryWithEntity[REPOS, E]]()
       val event = new TestDomainEvent(Identity(UUID.randomUUID()))
       val futures = publisher.subscribe(target).publish(event)
       futures.map {
         f =>
           val result = Await.result(f, Duration.Inf)
-          result.repository
+          val contains = Await.result(result.repository.contains(event.identity), Duration.Inf)
+          contains must_== true
       }
-      true must_== true
-      //repos.size must_== 1
-      //repos.toList(0).identity must_== event.identity
     }
   }
 

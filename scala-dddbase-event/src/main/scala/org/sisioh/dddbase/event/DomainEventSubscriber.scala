@@ -1,9 +1,11 @@
 package org.sisioh.dddbase.event
 
+import scala.language.higherKinds
+
 /**
  * イベントの通知をハンドリングするためのトレイト。
  */
-trait DomainEventSubscriber[DE <: DomainEvent[_], M[+A], R] {
+trait DomainEventSubscriber[DE <: DomainEvent[_], M[+A], +R] {
 
   /**
    * [[org.sisioh.dddbase.event.DomainEvent]]を処理するためのメソッド。

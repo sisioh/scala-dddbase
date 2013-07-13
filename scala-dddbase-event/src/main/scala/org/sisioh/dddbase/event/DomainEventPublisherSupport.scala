@@ -1,5 +1,8 @@
 package org.sisioh.dddbase.event
 
+import scala.language.higherKinds
+
+
 trait DomainEventPublisherSupport
 [+DEP <: DomainEventPublisher[_, A, M, R], A <: DomainEvent[_], M[+B], R]
   extends DomainEventPublisher[DEP, A, M, R] {
