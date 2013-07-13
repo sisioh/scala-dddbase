@@ -35,9 +35,9 @@ class NotSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val not = new NotSpecification[Unit](mock1)
-    assert(not.isSatisfiedBy(null) == true)
+    assert(not.isSatisfiedBy() == true)
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
   }
 
   /**
@@ -52,8 +52,8 @@ class NotSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val not = new NotSpecification[Unit](mock1)
-    assert(not.isSatisfiedBy(null) == false)
+    assert(not.isSatisfiedBy(()) == false)
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
   }
 }
