@@ -2,7 +2,7 @@ package org.sisioh.dddbase.event.async
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericOnMemoryAsyncRepository
+import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
@@ -23,7 +23,7 @@ class AsyncDomainEventStoreSpec extends Specification {
 
   "domain event store" should {
     "get saved event" in {
-      type REPOS = GenericOnMemoryAsyncRepository[Identity[UUID], TestDomainEvent]
+      type REPOS = GenericAsyncRepositoryOnMemory[Identity[UUID], TestDomainEvent]
       type ID = Identity[UUID]
       type E = TestDomainEvent
 

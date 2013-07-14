@@ -14,39 +14,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.model
+package org.sisioh.dddbase.core.lifecycle.memory.async
+
+import org.sisioh.dddbase.core.lifecycle.async._
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
- * エンティティを表すトレイト。
+ * オンメモリで動作する[[org.sisioh.dddbase.core.lifecycle.async.AsyncRepository]]。
  *
+ * @tparam AR 当該リポジトリを実装する派生型
  * @tparam ID 識別子の型
+ * @tparam T エンティティの型
  */
-trait Entity[ID <: Identity[_]] {
-
-  /** エンティティの識別子。 */
-  val identity: ID
-
-  /**
-   * ハッシュコードを返す。
-   *
-   * @return ハッシュコード
-   */
-  override final def hashCode: Int = identity.##
-
-  /**
-   * 指定されたオブジェクトと等価であるかを判定する。
-   *
-   * @param that オブジェクト
-   * @return 等価である場合はtrue
-   */
-  override final def equals(that: Any): Boolean = that match {
-    case that: Entity[_] => identity == that.identity
-    case _ => false
-  }
-
-}
-
-
-
-
-
+trait AsyncRepositoryOnMemory
+[+AR <: AsyncRepository[_, ID, T],
+ID <: Identity[_],
+T <: Entity[ID] with EntityCloneable[ID, T]]
+  extends AsyncRepository[AR, ID, T]
