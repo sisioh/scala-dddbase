@@ -18,9 +18,27 @@ package org.sisioh.dddbase.core.lifecycle
 import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 
+/**
+ * [[org.sisioh.dddbase.core.model.Identity]]を用いて
+ * [[org.sisioh.dddbase.core.model.Entity]]
+ * を書き込むための責務を表すインターフェイス。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ * @tparam M モナド
+ */
 trait EntityWriter[+R <: EntityWriter[_, ID, T, M], ID <: Identity[_], T <: Entity[ID], M[+A]]
   extends EntityIO {
 
+  /**
+   * エンティティを保存する。
+   *
+   * @param entity 保存する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンス
+   *         Failure
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
   def store(entity: T): M[RepositoryWithEntity[R, T]]
 
   def update(identity: ID, entity: T) = store(entity)

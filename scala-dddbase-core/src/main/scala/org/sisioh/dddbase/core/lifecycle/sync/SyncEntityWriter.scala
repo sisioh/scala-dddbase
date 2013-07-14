@@ -21,7 +21,8 @@ import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, EntityWriter}
 
 /**
- * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
+ * [[org.sisioh.dddbase.core.model.Identity]]を用いて
+ * [[org.sisioh.dddbase.core.model.Entity]]
  * を書き込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型

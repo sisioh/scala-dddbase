@@ -15,6 +15,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
+import org.sisioh.dddbase.core.model.Entity
+
 /**
  * リポジトリの新しい状態とエンティティを保持する値オブジェクト。
  *
@@ -23,4 +25,4 @@ package org.sisioh.dddbase.core.lifecycle
  * @tparam R リポジトリの型
  * @tparam T エンティティの型
  */
-case class RepositoryWithEntity[+R, T](repository: R, entity: T)
+case class RepositoryWithEntity[+R, T <: Entity[_]](repository: R, entity: T)

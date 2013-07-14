@@ -18,6 +18,12 @@ package org.sisioh.dddbase.core.lifecycle
 import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 
+/**
+ * 述語関数に該当したエンティティを検索することができるトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
 trait EntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID], M[+A]] {
 
   def filterByPredicate(predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None): M[EntitiesChunk[ID, T]]

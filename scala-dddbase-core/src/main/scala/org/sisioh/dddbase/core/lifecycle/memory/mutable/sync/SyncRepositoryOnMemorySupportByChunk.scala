@@ -1,7 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
-import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
 import org.sisioh.dddbase.core.lifecycle.sync._
 import org.sisioh.dddbase.core.model._
 import scala.util._

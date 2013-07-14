@@ -15,9 +15,18 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
+import scala.language.higherKinds
 
+/**
+ * [[org.sisioh.dddbase.core.model.Identity]]を用いて
+ * [[org.sisioh.dddbase.core.model.Entity]]
+ * を読み込むための責務を表すトレイト。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ * @tparam M モナド
+ */
 trait EntityReader[ID <: Identity[_], T <: Entity[ID], M[+A]]
   extends EntityIO {
 

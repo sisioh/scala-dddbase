@@ -16,12 +16,12 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate
+import org.sisioh.dddbase.core.lifecycle.{EntitiesChunk, EntityReaderByPredicate}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
 /**
- * 述語関数に該当したエンティティを検索することができるトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate]]のTry版。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -29,5 +29,14 @@ import scala.util.Try
 trait SyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]]
   extends EntityReaderByPredicate[ID, T, Try] {
   this: SyncEntityReader[ID, T] =>
+
+  /**
+   * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   *         Faliure: [[org.sisioh.dddbase.core.lifecycle.RepositoryException]]
+   */
+  def filterByPredicate
+  (predicate: T => Boolean,
+   index: Option[Int] = None,
+   maxEntities: Option[Int] = None): Try[EntitiesChunk[ID, T]]
 
 }
