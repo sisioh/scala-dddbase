@@ -1,5 +1,9 @@
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
+import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
+import org.sisioh.dddbase.core.model.Identity
+import java.util.UUID
+
 /**
  * Created with IntelliJ IDEA.
  * User: junichi

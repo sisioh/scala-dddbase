@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
 /**
- * エンティティをOptionでラップして返すための[[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]。
+ * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByOption[]]のTry版。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -30,14 +30,8 @@ trait SyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]]
   this: SyncEntityReader[ID, T] =>
 
   /**
-   * 識別子に該当するエンティティを解決する。
-   *
-   * @param identity 識別子
-   * @return Success:
-   *         Some: エンティティが存在する場合
-   *         None: エンティティが存在しない場合
-   *         Failure:
-   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
+   *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
    */
   def resolveOption(identity: ID): Try[Option[T]]
 

@@ -15,9 +15,22 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
+import scala.language.higherKinds
 
+/**
+ * 基本的なリポジトリのトレイト。
+ * リポジトリとして、基本的に必要な機能を定義するトレイト。
+ *
+ * リポジトリの状態を変更するメソッドの戻り値としては、
+ * Immutableなリポジトリは新しいリポジトリインスタンスを返し、
+ * Mutableなリポジトリは同一インスタンスを返すこと、を推奨する。
+ *
+ * @tparam R リポジトリの型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ * @tparam M モナドの型
+ */
 trait Repository[+R <: Repository[_, ID, T, M], ID <: Identity[_], T <: Entity[ID], M[+A]]
   extends EntityReader[ID, T, M] with EntityWriter[R, ID, T, M]
 

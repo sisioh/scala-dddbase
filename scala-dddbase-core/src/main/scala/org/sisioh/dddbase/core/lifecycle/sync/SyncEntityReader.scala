@@ -26,16 +26,15 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait SyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityReader[ID, T, Try] {
+trait SyncEntityReader[ID <: Identity[_], T <: Entity[ID]]
+  extends EntityReader[ID, T, Try] {
 
   /**
    * 識別子に該当するエンティティを解決する。
    *
    * @param identity 識別子
-   * @return Success:
-   *         エンティティ
-   *         Failure:
-   *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
+   * @return Success: エンティティ
+   *         Failure: EntityNotFoundExceptionは、エンティティが見つからなかった場合、
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def resolve(identity: ID): Try[T]
@@ -44,10 +43,8 @@ trait SyncEntityReader[ID <: Identity[_], T <: Entity[ID]] extends EntityReader[
    * 指定した識別子のエンティティが存在するかを返す。
    *
    * @param identity 識別子
-   * @return Success:
-   *         存在する場合はtrue
-   *         Failure:
-   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   * @return Success: 存在する場合はtrue
+   *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def contains(identity: ID): Try[Boolean]
 

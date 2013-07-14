@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
 /**
- * ページングによる検索を行うためのトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByChunk]]のTry版。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -30,14 +30,8 @@ trait SyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]]
   this: SyncEntityReader[ID, T] =>
 
   /**
-   * エンティティをチャンク単位で検索する。
-   *
-   * @param index 検索するチャンクのインデックス
-   * @param maxEntities 1チャンクの件数
-   * @return Success:
-   *         チャンク
-   *         Failure:
-   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
   def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]]
 

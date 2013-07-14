@@ -18,9 +18,23 @@ package org.sisioh.dddbase.core.lifecycle
 import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 
+/**
+ * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
+ *
+ * @tparam ID 識別子の型
+ * @tparam T エンティティの型
+ */
 trait EntityReaderByOption[ID <: Identity[_], T <: Entity[ID], M[+A]] {
   this: EntityReader[ID, T, M] =>
 
+  /**
+   * 識別子に該当するエンティティを解決する。
+   *
+   * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
+   *
+   * @param identity 識別子
+   * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
+   */
   def resolveOption(identity: ID): M[Option[T]]
 
 }
