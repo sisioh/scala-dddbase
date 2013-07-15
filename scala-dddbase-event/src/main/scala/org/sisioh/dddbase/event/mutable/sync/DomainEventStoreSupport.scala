@@ -1,0 +1,26 @@
+package org.sisioh.dddbase.event.mutable.sync
+
+import org.sisioh.dddbase.core.lifecycle.Repository
+import org.sisioh.dddbase.core.model.Identity
+import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
+import scala.util.Try
+
+/**
+ * [[org.sisioh.dddbase.event.DomainEventStore]]のための骨格実装。
+ *
+ * @tparam R リポジトリの型
+ * @tparam ID エンティティの識別子の型
+ * @tparam T エンティティの型
+ */
+trait DomainEventStoreSupport
+[+R <: Repository[R, ID, T, Try],
+ID <: Identity[_],
+T <: DomainEvent[ID]]
+  extends DomainEventStore[R, ID, T, Try, Unit] {
+
+  protected val eventRepository: R
+
+  def handleEvent(event: T): Try[Unit] =
+    eventRepository.store(event).map(_ => ())
+
+}

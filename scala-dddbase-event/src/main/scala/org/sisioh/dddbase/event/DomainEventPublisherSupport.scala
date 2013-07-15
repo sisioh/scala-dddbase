@@ -3,10 +3,10 @@ package org.sisioh.dddbase.event
 import scala.language.higherKinds
 
 /**
- * [[org.sisioh.dddbase.event.DomainEventPublisher]]の骨格実装。
+ * [[org.sisioh.dddbase.event.DomainEventPublisher]]のための骨格実装。
  *
- * @tparam DEP 実装クラスの派生型
- * @tparam A [[org.sisioh.dddbase.event.DomainEvent]]の型
+ * @tparam DEP 派生型
+ * @tparam A ドメインイベントの型
  * @tparam M モナドの型
  * @tparam R モナドの要素型
  */
