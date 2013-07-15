@@ -28,11 +28,9 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
 
   class TestRepForwardingRepositoryImplAsync
   (protected val delegateAsyncRepository: AsyncRepository[Identity[UUID], EntityImpl])
-  (implicit _executor: ExecutionContext)
+  (implicit val executor: ExecutionContext)
     extends ForwardingAsyncRepository[Identity[UUID], EntityImpl] {
     type R = TestRepForwardingRepositoryImplAsync
-
-    implicit val executor: ExecutionContext = _executor
 
     protected def createInstance
     (state: Future[(R, Option[EntityImpl])]): Future[(TestRepForwardingRepositoryImplAsync, Option[EntityImpl])] = {

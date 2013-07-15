@@ -7,10 +7,10 @@ import scala.concurrent.ExecutionContext
 
 class TestAsyncRepositoryOnMemory
 (protected val core: GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity] = GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity]())
-(implicit _executor: ExecutionContext)
+(implicit val executor: ExecutionContext)
   extends TestAsyncRepository
   with AsyncRepositoryOnMemory[GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity], Identity[UUID], TestEntity] {
+
   override type R = TestAsyncRepositoryOnMemory
-  implicit val executor: ExecutionContext = _executor
 
 }
