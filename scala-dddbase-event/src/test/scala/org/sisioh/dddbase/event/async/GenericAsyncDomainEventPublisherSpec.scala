@@ -8,12 +8,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-class AsyncDomainEventPublisherSpec extends Specification {
+class GenericAsyncDomainEventPublisherSpec extends Specification {
 
   class TestDomainEvent(val identity: Identity[UUID])
     extends DomainEvent[Identity[UUID]]
 
-  var publisher = AsyncDomainEventPublisher[TestDomainEvent, Unit]()
+  var publisher = GenericAsyncDomainEventPublisher[TestDomainEvent, Unit]()
 
   "dep" should {
     "publish" in {

@@ -10,7 +10,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AsyncDomainEventStoreSpec extends Specification {
+class GenericAsyncDomainEventStoreSpec extends Specification {
 
   class TestDomainEvent(val identity: Identity[UUID])
     extends DomainEvent[Identity[UUID]]
@@ -28,8 +28,8 @@ class AsyncDomainEventStoreSpec extends Specification {
       type E = TestDomainEvent
 
       val repos = new REPOS
-      val target = new AsyncDomainEventStore[REPOS, ID, E](repos)
-      val publisher = AsyncDomainEventPublisher[E, RepositoryWithEntity[REPOS, E]]()
+      val target = new GenericAsyncDomainEventStore[REPOS, ID, E](repos)
+      val publisher = GenericAsyncDomainEventPublisher[E, RepositoryWithEntity[REPOS, E]]()
       val event = new TestDomainEvent(Identity(UUID.randomUUID()))
       val futures = publisher.subscribe(target).publish(event)
       futures.map {

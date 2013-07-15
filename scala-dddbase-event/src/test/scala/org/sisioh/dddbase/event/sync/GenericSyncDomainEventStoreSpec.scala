@@ -7,7 +7,7 @@ import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
 
-class SyncDomainEventStoreSpec extends Specification {
+class GenericSyncDomainEventStoreSpec extends Specification {
 
   class TestDomainEvent(val identity: Identity[UUID])
     extends DomainEvent[Identity[UUID]]
@@ -21,8 +21,8 @@ class SyncDomainEventStoreSpec extends Specification {
   "domain event store" should {
     "get saved event" in {
       val repos = new GenericSyncRepositoryOnMemory[Identity[UUID], TestDomainEvent]
-      val target = new SyncDomainEventStore[GenericSyncRepositoryOnMemory[Identity[UUID], TestDomainEvent], Identity[UUID], TestDomainEvent](repos)
-      val publisher = SyncDomainEventPublisher[TestDomainEvent, RepositoryWithEntity[_, TestDomainEvent]]()
+      val target = new GenericSyncDomainEventStore[GenericSyncRepositoryOnMemory[Identity[UUID], TestDomainEvent], Identity[UUID], TestDomainEvent](repos)
+      val publisher = GenericSyncDomainEventPublisher[TestDomainEvent, RepositoryWithEntity[_, TestDomainEvent]]()
       val event = new TestDomainEvent(Identity(UUID.randomUUID()))
      val results =  publisher.subscribe(target).publish(event)
       results.map{
