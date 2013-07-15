@@ -30,10 +30,14 @@ import scala.util._
  * @tparam T エンティティの型
  * @tparam ID エンティティの識別子の型
  */
-trait SyncRepository[+R <: SyncRepository[_, ID, T], ID <: Identity[_], T <: Entity[ID]]
-  extends Repository[R, ID, T, Try]
+trait SyncRepository[ID <: Identity[_], T <: Entity[ID]]
+  extends Repository[ID, T, Try]
   with SyncEntityReader[ID, T]
-  with SyncEntityWriter[R, ID, T]
+  with SyncEntityWriter[ID, T] {
+
+  type R <: SyncRepository[ID, T]
+
+}
 
 
 

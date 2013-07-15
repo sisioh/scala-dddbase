@@ -28,8 +28,10 @@ import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, EntityWriter}
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait SyncEntityWriter[+R <: SyncEntityWriter[_, ID, T], ID <: Identity[_], T <: Entity[ID]]
-  extends EntityWriter[R, ID, T, Try] {
+trait SyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
+  extends EntityWriter[ID, T, Try] {
+
+  type R <: SyncEntityWriter[ID, T]
 
   /**
    * エンティティを保存する。
