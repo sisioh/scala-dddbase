@@ -13,7 +13,7 @@ import scala.concurrent.Future
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-case class GenericAsyncDomainEventStore[+R <: Repository[R, ID, T, Future], ID <: Identity[_], T <: DomainEvent[ID]]
+case class GenericAsyncDomainEventStore[+R <: Repository[ID, T, Future], ID <: Identity[_], T <: DomainEvent[ID]]
 (protected val eventRepository: R)
   extends DomainEventStoreSupport[R, ID, T, Future] {
 

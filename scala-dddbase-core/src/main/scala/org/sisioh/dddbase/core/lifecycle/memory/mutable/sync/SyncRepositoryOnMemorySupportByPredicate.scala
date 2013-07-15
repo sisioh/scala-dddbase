@@ -9,15 +9,13 @@ import scala.util._
  * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.SyncRepositoryOnMemorySupport]]に
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReaderByPredicate]]ための機能を追加するトレイト。
  *
- * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
 trait SyncRepositoryOnMemorySupportByPredicate
-[+R <: SyncRepository[_, ID, T],
-ID <: Identity[_],
+[ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends SyncRepositoryOnMemorySupport[R, ID, T]
+  extends SyncRepositoryOnMemorySupport[ID, T]
   with SyncEntityReaderByPredicate[ID, T] {
 
   def filterByPredicate

@@ -13,7 +13,7 @@ import scala.util.Try
  * @tparam T エンティティの型
  */
 trait DomainEventStoreSupport
-[+R <: Repository[R, ID, T, Try],
+[+R <: Repository[ID, T, Try],
 ID <: Identity[_],
 T <: DomainEvent[ID]]
   extends DomainEventStore[R, ID, T, Try, Unit] {

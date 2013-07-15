@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
+import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
 import org.sisioh.dddbase.core.model.Identity
-import java.util.UUID
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,6 +12,5 @@ import java.util.UUID
  * To change this template use File | Settings | File Templates.
  */
 trait TestAsyncRepository
-  extends AsyncRepository[TestAsyncRepository, Identity[UUID], TestEntity] {
-
+  extends AsyncRepository[Identity[UUID], TestEntity] {
 }

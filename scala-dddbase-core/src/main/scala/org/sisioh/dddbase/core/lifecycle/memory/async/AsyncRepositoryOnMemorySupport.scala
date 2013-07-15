@@ -28,17 +28,15 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  * 実装を提供する。リポジトリの状態変更を起こすメソッドを呼び出した際に、新しいインスタンス
  * を生成するか `this` を返すかは `createInstance` メソッドの振る舞いによって決定する。
  *
- * @tparam AR 当該リポジトリを実装する派生型
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
 trait AsyncRepositoryOnMemorySupport
-[+AR <: AsyncRepository[_, ID, T],
-SR <: SyncRepositoryOnMemory[_, ID, T],
+[SR <: SyncRepositoryOnMemory[ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepositoryOnMemory[AR, ID, T] {
+  extends AsyncRepositoryOnMemory[ID, T] {
 
   /**
    * 内部で利用する同期型リポジトリ。
@@ -51,10 +49,10 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
    * @param state 新しい同期型リポジトリ
    * @return 新しい非同期型のリポジトリ
    */
-  protected def createInstance(state: (SR, Option[T])): (AR, Option[T])
+  protected def createInstance(state: (SR, Option[T])): (R, Option[T])
 
   override def equals(obj: Any) = obj match {
-    case that: AsyncRepositoryOnMemorySupport[_, _, _, _] =>
+    case that: AsyncRepositoryOnMemorySupport[_, _, _] =>
       this.core == that.core
     case _ => false
   }
@@ -69,14 +67,14 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     core.contains(identifier).get
   }
 
-  def store(entity: T): Future[RepositoryWithEntity[AR, T]] = future {
+  def store(entity: T): Future[RepositoryWithEntity[R, T]] = future {
     val result = core.store(entity).get
     val t = (result.repository.asInstanceOf[SR], Some(result.entity))
     val instance = createInstance(t)
     RepositoryWithEntity(instance._1, instance._2.get)
   }
 
-  def delete(identity: ID): Future[AR] = future {
+  def delete(identity: ID): Future[R] = future {
     val result = core.delete(identity).get
     val t = (result.asInstanceOf[SR], None)
     val instance = createInstance(t)

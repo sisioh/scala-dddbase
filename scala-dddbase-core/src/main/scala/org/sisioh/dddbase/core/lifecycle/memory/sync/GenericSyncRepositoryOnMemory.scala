@@ -17,7 +17,6 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
-import org.sisioh.dddbase.core.lifecycle.memory.sync
 
 /**
  * 汎用的な非同期型オンメモリ不変リポジトリ。
@@ -26,7 +25,11 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync
  * @tparam T エンティティの型
  */
 class GenericSyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends SyncRepositoryOnMemorySupport[GenericSyncRepositoryOnMemory[ID, T], ID, T]
+  extends SyncRepositoryOnMemorySupport[ID, T] {
+
+  override type R = GenericSyncRepositoryOnMemory[ID, T]
+
+}
 
 /**
  * コンパニオンオブジェクト。

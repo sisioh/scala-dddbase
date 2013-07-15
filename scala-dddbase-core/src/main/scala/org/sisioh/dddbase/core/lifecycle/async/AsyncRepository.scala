@@ -16,9 +16,9 @@
  */
 package org.sisioh.dddbase.core.lifecycle.async
 
-import scala.concurrent._
-import org.sisioh.dddbase.core.model.{Identity, Entity}
 import org.sisioh.dddbase.core.lifecycle.Repository
+import org.sisioh.dddbase.core.model.{Identity, Entity}
+import scala.concurrent._
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.Repository]]。
@@ -28,10 +28,14 @@ import org.sisioh.dddbase.core.lifecycle.Repository
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncRepository[+R <: AsyncRepository[_, ID, T], ID <: Identity[_], T <: Entity[ID]]
-  extends Repository[R, ID, T, Future]
+trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]]
+  extends Repository[ID, T, Future]
   with AsyncEntityReader[ID, T]
-  with AsyncEntityWriter[R, ID, T]
+  with AsyncEntityWriter[ID, T] {
+
+  type R <: AsyncRepository[ID, T]
+
+}
 
 
 
