@@ -20,18 +20,24 @@ class GenericSyncDomainEventStoreSpec extends Specification {
 
   "domain event store" should {
     "get saved event" in {
-      val repos = new GenericSyncRepositoryOnMemory[Identity[UUID], TestDomainEvent]
-      val target = new GenericSyncDomainEventStore[GenericSyncRepositoryOnMemory[Identity[UUID], TestDomainEvent], Identity[UUID], TestDomainEvent](repos)
-      val publisher = GenericSyncDomainEventPublisher[TestDomainEvent, RepositoryWithEntity[_, TestDomainEvent]]()
-      val event = new TestDomainEvent(Identity(UUID.randomUUID()))
-     val results =  publisher.subscribe(target).publish(event)
-      results.map{
-        r =>
-          r.get.repository
-      }
+      type ID = Identity[UUID]
+      type E = TestDomainEvent
+      type REPOS = GenericSyncRepositoryOnMemory[ID, E]
 
-      repos.size must_== 1
-      repos.toList(0).identity must_== event.identity
+      val repos = new REPOS
+      val target = new GenericSyncDomainEventStore[REPOS, ID, E](repos)
+      val publisher = GenericSyncDomainEventPublisher[E, RepositoryWithEntity[REPOS, E]]()
+      val event = new E(Identity(UUID.randomUUID()))
+      val resultTrys = publisher.subscribe(target).publish(event)
+
+      resultTrys.map{
+        resultTry =>
+          resultTry.map {
+            result =>
+              result.repository.size must_== 1
+              result.repository.toList(0).identity must_== event.identity
+          }.get
+      }
     }
   }
 
