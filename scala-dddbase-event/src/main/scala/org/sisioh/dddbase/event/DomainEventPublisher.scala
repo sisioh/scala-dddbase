@@ -4,6 +4,11 @@ import scala.language.higherKinds
 
 /**
  * ドメインイベントを通知するためのトレイト。
+ *
+ * @tparam DEP 派生型
+ * @tparam A ドメインイベントの型
+ * @tparam M モナドの型
+ * @tparam R モナドの値の型
  */
 trait DomainEventPublisher
 [+DEP <: DomainEventPublisher[_, A, M, R],

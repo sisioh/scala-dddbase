@@ -11,7 +11,7 @@ class GenericSyncDomainEventPublisherSpec extends Specification {
   class TestDomainEvent(val identity: Identity[UUID])
     extends DomainEvent[Identity[UUID]]
 
-  val publisher = GenericSyncDomainEventPublisher[TestDomainEvent, Unit]()
+  val publisher = GenericSyncDomainEventPublisher[TestDomainEvent]()
 
   "dep" should {
     "publish" in {

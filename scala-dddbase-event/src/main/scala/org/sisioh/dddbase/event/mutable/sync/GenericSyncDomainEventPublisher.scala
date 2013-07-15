@@ -5,9 +5,14 @@ import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 
-case class GenericSyncDomainEventPublisher[A <: DomainEvent[_], R]()
-  extends DomainEventPublisherSupport[GenericSyncDomainEventPublisher[A, R], A, Try, R] {
+/**
+ * 汎用的な[[org.sisioh.dddbase.event.DomainEventPublisher]]の同期型実装。
+ *
+ * @tparam A [[org.sisioh.dddbase.event.DomainEvent]]の型
+ */
+case class GenericSyncDomainEventPublisher[A <: DomainEvent[_]]()
+  extends DomainEventPublisherSupport[GenericSyncDomainEventPublisher[A], A, Try, Unit] {
 
-  protected lazy val subscribers = ArrayBuffer[DomainEventSubscriber[A, Try, R]]()
+  protected lazy val subscribers = ArrayBuffer[DomainEventSubscriber[A, Try, Unit]]()
 
 }

@@ -4,7 +4,7 @@ import org.sisioh.dddbase.event.{DomainEventPublisherSupport, DomainEventSubscri
 import scala.concurrent.Future
 
 /**
- * [[org.sisioh.dddbase.event.DomainEventPublisher]]の非同期実装。
+ * 汎用的な[[org.sisioh.dddbase.event.DomainEventPublisher]]の非同期型実装。
  *
  * @param subscribers [[org.sisioh.dddbase.event.DomainEventSubscriber]]
  * @tparam A [[org.sisioh.dddbase.event.DomainEvent]]の型
