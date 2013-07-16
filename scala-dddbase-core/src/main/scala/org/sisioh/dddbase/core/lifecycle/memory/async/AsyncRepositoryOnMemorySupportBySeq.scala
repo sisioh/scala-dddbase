@@ -21,7 +21,7 @@ ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncRepositoryOnMemorySupport[AR, SR, ID, T] with AsyncEntityReaderBySeq[ID, T] {
 
-  def resolveAll(implicit executor: ExecutionContext): Future[Seq[T]] = future {
+  def resolveAll: Future[Seq[T]] = future {
     core.toSeq.map(_.asInstanceOf[T])
   }
 

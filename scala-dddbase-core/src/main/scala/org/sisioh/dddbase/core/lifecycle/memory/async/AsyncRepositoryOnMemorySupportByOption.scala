@@ -22,7 +22,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncRepositoryOnMemorySupport[AR, SR, ID, T]
   with AsyncEntityReaderByOption[ID, T] {
 
-  def resolveOption(identifier: ID)(implicit executor: ExecutionContext) = future {
+  def resolveOption(identifier: ID) = future {
     core.resolveOption(identifier).get
   }
 

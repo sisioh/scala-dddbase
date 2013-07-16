@@ -24,7 +24,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncRepositoryOnMemorySupport[AR, SR, ID, T]
   with AsyncEntityReaderByChunk[ID, T] {
 
-  def resolveChunk(index: Int, maxEntities: Int)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]] = future {
+  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, T]] = future {
     core.resolveChunk(index, maxEntities).get
   }
 

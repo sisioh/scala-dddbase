@@ -25,8 +25,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
   with AsyncEntityReaderByPredicate[ID, T] {
 
   def filterByPredicate
-  (predicate: (T) => Boolean, index: Option[Int], maxEntities: Option[Int])
-  (implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]] = future {
+  (predicate: (T) => Boolean, index: Option[Int], maxEntities: Option[Int]): Future[EntitiesChunk[ID, T]] = future {
     core.filterByPredicate(predicate, index, maxEntities).get
   }
 
