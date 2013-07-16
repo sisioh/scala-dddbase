@@ -13,7 +13,7 @@ import scala.concurrent.{Future, ExecutionContext}
  * @tparam T エンティティの型
  */
 trait DomainEventStoreSupport
-[+R <: Repository[R, ID, T, Future],
+[+R <: Repository[ID, T, Future],
 ID <: Identity[_],
 T <: DomainEvent[ID]]
   extends DomainEventStore[R, ID, T, Future, Unit] {

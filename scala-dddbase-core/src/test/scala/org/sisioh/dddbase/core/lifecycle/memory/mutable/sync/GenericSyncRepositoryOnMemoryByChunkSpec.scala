@@ -19,8 +19,10 @@ class GenericSyncRepositoryOnMemoryByChunkSpec extends Specification with Mockit
   }
 
   class TestSyncRepository
-    extends GenericSyncRepositoryOnMemory[Identity[Int], EntityImpl]
-    with SyncRepositoryOnMemorySupportByChunk[TestSyncRepository, Identity[Int], EntityImpl]
+    extends SyncRepositoryOnMemorySupport[Identity[Int], EntityImpl]
+    with SyncRepositoryOnMemorySupportByChunk[Identity[Int], EntityImpl] {
+    override type R = TestSyncRepository
+  }
 
   "The repository" should {
     "have stored entities" in {
