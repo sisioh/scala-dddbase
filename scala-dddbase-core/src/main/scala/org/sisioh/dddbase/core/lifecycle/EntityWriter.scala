@@ -27,8 +27,10 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
  * @tparam T エンティティの型
  * @tparam M モナド
  */
-trait EntityWriter[+R <: EntityWriter[_, ID, T, M], ID <: Identity[_], T <: Entity[ID], M[+A]]
+trait EntityWriter[ID <: Identity[_], T <: Entity[ID], M[+A]]
   extends EntityIO {
+
+  type R <: EntityWriter[ID, T, M]
 
   /**
    * エンティティを保存する。

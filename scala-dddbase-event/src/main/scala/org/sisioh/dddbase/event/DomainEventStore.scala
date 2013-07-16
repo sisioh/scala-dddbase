@@ -13,6 +13,6 @@ import org.sisioh.dddbase.core.model.Identity
  * @tparam M モナドの型
  * @tparam MR モナドの値の型
  */
-trait DomainEventStore[+R <: Repository[R, ID, T, M], ID <: Identity[_], T <: DomainEvent[ID], M[+A], +MR]
+trait DomainEventStore[+R <: Repository[ID, T, M], ID <: Identity[_], T <: DomainEvent[ID], M[+A], +MR]
   extends DomainEventSubscriber[T, M, MR]
 

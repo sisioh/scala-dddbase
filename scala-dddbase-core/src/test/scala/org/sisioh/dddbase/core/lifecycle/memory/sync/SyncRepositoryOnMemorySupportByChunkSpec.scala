@@ -1,6 +1,5 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
-import org.sisioh.dddbase.core.lifecycle.memory.sync._
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
@@ -19,8 +18,10 @@ class SyncRepositoryOnMemorySupportByChunkSpec extends Specification with Mockit
   }
 
   class TestSyncRepository
-    extends GenericSyncRepositoryOnMemory[Identity[Int], EntityImpl]()
-    with SyncRepositoryOnMemorySupportByChunk[TestSyncRepository, Identity[Int], EntityImpl]
+    extends SyncRepositoryOnMemorySupport[Identity[Int], EntityImpl]()
+    with SyncRepositoryOnMemorySupportByChunk[Identity[Int], EntityImpl] {
+    override type R = TestSyncRepository
+  }
 
   "The repository" should {
     "have stored entities" in {

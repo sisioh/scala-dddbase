@@ -16,27 +16,24 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
-import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
 import org.sisioh.dddbase.core.lifecycle.memory.async.AsyncRepositoryOnMemorySupport
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
+import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 
 /**
  * 非同期型オンメモリ可変リポジトリのためのトレイト。
  *
- * @tparam AR 当該リポジトリを実装する派生型
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
 trait AsyncRepositoryOnMemory
-[+AR <: AsyncRepository[_, ID, T],
-SR <: SyncRepositoryOnMemory[_, ID, T],
+[SR <: SyncRepositoryOnMemory[ID, T],
 ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends AsyncRepositoryOnMemorySupport[AR, SR, ID, T] {
+  extends AsyncRepositoryOnMemorySupport[SR, ID, T] {
 
-  protected def createInstance(state: (SR, Option[T])): (AR, Option[T]) =
-    (this.asInstanceOf[AR], state._2)
+  protected def createInstance(state: (SR, Option[T])): (R, Option[T]) =
+    (this.asInstanceOf[R], state._2)
 
 }

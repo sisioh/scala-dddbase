@@ -26,11 +26,14 @@ import scala.language.higherKinds
  * Immutableなリポジトリは新しいリポジトリインスタンスを返し、
  * Mutableなリポジトリは同一インスタンスを返すこと、を推奨する。
  *
- * @tparam R リポジトリの型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  * @tparam M モナドの型
  */
-trait Repository[+R <: Repository[_, ID, T, M], ID <: Identity[_], T <: Entity[ID], M[+A]]
-  extends EntityReader[ID, T, M] with EntityWriter[R, ID, T, M]
+trait Repository[ID <: Identity[_], T <: Entity[ID], M[+A]]
+  extends EntityReader[ID, T, M] with EntityWriter[ID, T, M] {
+
+  type R <: Repository[ID, T, M]
+
+}
 
