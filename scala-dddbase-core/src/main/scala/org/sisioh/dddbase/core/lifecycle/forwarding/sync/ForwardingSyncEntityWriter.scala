@@ -12,13 +12,13 @@ trait ForwardingSyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
 
   protected val delegateEntityWriter: SyncEntityWriter[ID, T]
 
-  protected def createInstance(state: Try[(R, Option[T])]): Try[(R, Option[T])]
+  protected def createInstance(state: Try[(SyncEntityWriter[ID, T]#R, Option[T])]): Try[(R, Option[T])]
 
   def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
     createInstance(
       delegateEntityWriter.store(entity).map {
         e =>
-          (e.repository.asInstanceOf[R], Some(e.entity))
+          (e.repository, Some(e.entity))
       }
     ).map(e => RepositoryWithEntity(e._1, e._2.get))
   }
@@ -27,7 +27,7 @@ trait ForwardingSyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
     createInstance(
       delegateEntityWriter.delete(identity).map {
         e =>
-          (e.asInstanceOf[R], None)
+          (e, None)
       }
     ).map(e => e._1)
   }

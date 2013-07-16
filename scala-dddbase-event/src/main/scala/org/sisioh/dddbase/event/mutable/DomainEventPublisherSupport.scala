@@ -5,9 +5,8 @@ import org.sisioh.dddbase.event._
 import scala.collection.mutable.ArrayBuffer
 
 trait DomainEventPublisherSupport
-[+DEP <: DomainEventPublisher[_, A, M, R],
-A <: DomainEvent[_], M[+B], R]
-  extends DomainEventPublisher[DEP, A, M, R] {
+[A <: DomainEvent[_], M[+B], R]
+  extends DomainEventPublisher[A, M, R] {
 
   protected val subscribers: ArrayBuffer[DomainEventSubscriber[A, M, R]]
 

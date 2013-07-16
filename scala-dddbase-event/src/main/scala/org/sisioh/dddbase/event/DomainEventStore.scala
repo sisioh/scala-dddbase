@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.event
 
-import scala.language.higherKinds
-import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, Repository}
+import org.sisioh.dddbase.core.lifecycle.Repository
 import org.sisioh.dddbase.core.model.Identity
+import scala.language.higherKinds
 
 /**
  * イベントを永続化するための[[org.sisioh.dddbase.event.DomainEventSubscriber]]。

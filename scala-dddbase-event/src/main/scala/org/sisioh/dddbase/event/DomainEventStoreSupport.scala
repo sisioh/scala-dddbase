@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.event
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.model.Identity
+import scala.language.higherKinds
 
 /**
  * [[org.sisioh.dddbase.event.DomainEventStore]]のための骨格実装。

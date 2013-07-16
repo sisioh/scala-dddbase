@@ -11,7 +11,9 @@ import scala.collection.mutable.ArrayBuffer
  * @tparam A [[org.sisioh.dddbase.event.DomainEvent]]の型
  */
 case class GenericAsyncDomainEventPublisher[A <: DomainEvent[_]]()
-  extends DomainEventPublisherSupport[GenericAsyncDomainEventPublisher[A], A, Future, Unit] {
+  extends DomainEventPublisherSupport[A, Future, Unit] {
+
+  type DEP = GenericAsyncDomainEventPublisher[A]
 
   protected val subscribers =  ArrayBuffer[DomainEventSubscriber[A, Future, Unit]]()
 
