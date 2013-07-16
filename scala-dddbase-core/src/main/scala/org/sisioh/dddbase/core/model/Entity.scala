@@ -46,49 +46,7 @@ trait Entity[ID <: Identity[_]] {
 
 }
 
-/**
- * クローンに対応したエンティティを実装するためのトレイト。
- *
- * @tparam ID 識別子の型
- * @tparam T エンティティの型
- */
-trait EntityCloneable[ID <: Identity[_], T <: Entity[ID]] extends Cloneable {
-  this: Entity[ID] =>
 
-  /**
-   * クローンを生成する。
-   *
-   * @return クローンしたインスタンス
-   */
-  override def clone: T =
-    super.clone.asInstanceOf[T]
 
-}
 
-/**
- * 順序に対応したエンティティを実装するためのトレイト。
- *
- * @tparam ID 識別子の型
- * @tparam T エンティティの型
- */
-trait EntityOrdered[A, ID <: OrderedIdentity[A, ID], T <: Entity[ID]]
-  extends Ordered[T] {
-  this: Entity[ID] =>
 
-  def compare(that: T): Int = {
-    identity compare that.identity
-  }
-
-}
-
-/**
- * シリアライズに対応したエンティティを実装するためのトレイト。
- *
- * @tparam ID 識別子の型
- * @tparam T エンティティの型
- */
-trait EntitySerializable[ID <: Identity[_ <: java.io.Serializable], T <: Entity[ID]]
-  extends Serializable {
-  this: Entity[ID] =>
-
-}

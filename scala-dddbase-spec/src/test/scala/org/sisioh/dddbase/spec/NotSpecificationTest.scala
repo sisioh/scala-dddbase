@@ -24,36 +24,36 @@ import org.scalatest.mock.MockitoSugar
 
 class NotSpecificationTest extends AssertionsForJUnit with MockitoSugar {
   /**
-   * NOT {@code false} が {@code true} となること。
+   * NOT `false` が `true` となること。
    *
    * @throws Exception 例外が発生した場合
    */
   @Test
-  def test01_false_To_true {
+  def test01_false_To_true() {
     val mock1 = mock[Specification[Unit]]
 
     when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val not = new NotSpecification[Unit](mock1)
-    assert(not.isSatisfiedBy(null) == true)
+    assert(not.isSatisfiedBy())
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
   }
 
   /**
-   * NOT {@code true} が {@code false} となること。
+   * NOT `true` が `false` となること。
    *
    * @throws Exception 例外が発生した場合
    */
   @Test
-  def test01_true_To_false {
+  def test01_true_To_false() {
     val mock1 = mock[Specification[Unit]]
 
     when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val not = new NotSpecification[Unit](mock1)
-    assert(not.isSatisfiedBy(null) == false)
+    assert(!not.isSatisfiedBy(()))
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
   }
 }

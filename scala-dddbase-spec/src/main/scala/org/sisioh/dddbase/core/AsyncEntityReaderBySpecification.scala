@@ -1,17 +1,19 @@
 package org.sisioh.dddbase.core
 
-import org.sisioh.dddbase.spec.Specification
-import scala.concurrent.{Future, ExecutionContext}
-import org.sisioh.dddbase.core.lifecycle.{EntitiesChunk, AsyncEntityReader}
+import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
 import org.sisioh.dddbase.core.model.{Identity, Entity}
+import org.sisioh.dddbase.spec.Specification
+import scala.concurrent.Future
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.EntityReaderBySpecification]]。
+ * 非同期版[[org.sisioh.dddbase.core.SyncEntityReaderBySpecification]]。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait AsyncEntityReaderBySpecification[ID <: Identity[_], T <: Entity[ID]] {
+trait AsyncEntityReaderBySpecification[ID <: Identity[_], T <: Entity[ID]]
+  extends EntityReaderBySpecification[ID, T, Future] {
   this: AsyncEntityReader[ID, T] =>
 
   /**
@@ -26,6 +28,8 @@ trait AsyncEntityReaderBySpecification[ID <: Identity[_], T <: Entity[ID]] {
    *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def filterBySpecification(specification: Specification[T], index: Option[Int] = None, maxEntities: Option[Int] = None)(implicit executor: ExecutionContext): Future[EntitiesChunk[ID, T]]
+  def filterBySpecification
+  (specification: Specification[T], index: Option[Int] = None, maxEntities: Option[Int] = None)
+  : Future[EntitiesChunk[ID, T]]
 
 }
