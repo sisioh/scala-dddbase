@@ -30,7 +30,9 @@ import scala.concurrent.ExecutionContext
 class GenericAsyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 (protected val core: GenericSyncRepositoryOnMemory[ID, T] = GenericSyncRepositoryOnMemory[ID, T]())
 (implicit val executor: ExecutionContext)
-  extends AsyncRepositoryOnMemorySupport[GenericAsyncRepositoryOnMemory[ID, T], GenericSyncRepositoryOnMemory[ID, T], ID, T] {
+  extends AsyncRepositoryOnMemorySupport[GenericSyncRepositoryOnMemory[ID, T], ID, T] {
+
+  type R = GenericAsyncRepositoryOnMemory[ID, T]
 
   protected def createInstance(state: (GenericSyncRepositoryOnMemory[ID, T], Option[T])): (GenericAsyncRepositoryOnMemory[ID, T], Option[T]) =
     (new GenericAsyncRepositoryOnMemory[ID, T](state._1), state._2)

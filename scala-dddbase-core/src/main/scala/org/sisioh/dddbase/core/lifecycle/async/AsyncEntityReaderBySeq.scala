@@ -20,6 +20,6 @@ trait AsyncEntityReaderBySeq[ID <: Identity[_], T <: Entity[ID]] {
     *         Failure:
     *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
     */
-   def resolveAll(implicit executor: ExecutionContext): Future[Seq[T]]
+   def resolveAll: Future[Seq[T]]
 
  }

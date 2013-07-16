@@ -18,8 +18,10 @@ class GenericSyncRepositoryOnMemoryByPredicateSpec extends Specification with Mo
   }
 
   class TestSyncRepository
-    extends GenericSyncRepositoryOnMemory[Identity[Int], EntityImpl]
-    with SyncRepositoryOnMemorySupportByPredicate[TestSyncRepository, Identity[Int], EntityImpl]
+    extends SyncRepositoryOnMemorySupport[Identity[Int], EntityImpl]
+    with SyncRepositoryOnMemorySupportByPredicate[Identity[Int], EntityImpl] {
+    override type R = TestSyncRepository
+  }
 
   "The repository" should {
     "have stored entities" in {

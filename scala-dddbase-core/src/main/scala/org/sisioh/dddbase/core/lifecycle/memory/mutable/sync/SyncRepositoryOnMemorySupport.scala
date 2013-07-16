@@ -26,24 +26,22 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 /**
  * オンメモリで動作する可変リポジトリの実装。
  *
- * @tparam R 当該リポジトリを実装する派生型
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
 trait SyncRepositoryOnMemorySupport
-[+R <: SyncRepository[_, ID, T],
-ID <: Identity[_],
+[ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends SyncRepositoryOnMemory[R, ID, T] {
+  extends SyncRepositoryOnMemory[ID, T] {
 
   /**
    * 内部で利用されるオンメモリリポジトリ
    */
-  protected var core: SyncRepositoryOnMemory[_, ID, T] =
+  protected var core: SyncRepositoryOnMemory[ID, T] =
     new org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory[ID, T]()
 
   override def equals(obj: Any) = obj match {
-    case that: SyncRepositoryOnMemorySupport[_, _, _] =>
+    case that: SyncRepositoryOnMemorySupport[_, _] =>
       this.core == that.core
     case _ => false
   }
@@ -53,7 +51,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   def store(entity: T): Try[RepositoryWithEntity[R, T]] = {
     core.store(entity).map {
       result =>
-        core = result.repository.asInstanceOf[SyncRepositoryOnMemory[_, ID, T]]
+        core = result.repository.asInstanceOf[SyncRepositoryOnMemory[ID, T]]
         RepositoryWithEntity(this.asInstanceOf[R], result.entity)
     }
   }
@@ -61,7 +59,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   def delete(identity: ID): Try[R] = {
     core.delete(identity).map {
       result =>
-        core = result.asInstanceOf[SyncRepositoryOnMemory[_, ID, T]]
+        core = result.asInstanceOf[SyncRepositoryOnMemory[ID, T]]
         this.asInstanceOf[R]
     }
   }
