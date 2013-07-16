@@ -10,11 +10,13 @@ import scala.util._
  * @tparam A [[org.sisioh.dddbase.event.DomainEvent]]の型
  * @tparam R `handleEvent`の戻り値であるモナドの要素型
  */
-case class GenericSyncDomainEventPublisher[A <: DomainEvent[_],R]
+case class GenericSyncDomainEventPublisher[A <: DomainEvent[_], R]
 (subscribers: Seq[DomainEventSubscriber[A, Try, R]] = Seq.empty[DomainEventSubscriber[A, Try, R]])
-  extends DomainEventPublisherSupport[GenericSyncDomainEventPublisher[A, R], A, Try, R] {
+  extends DomainEventPublisherSupport[A, Try, R] {
 
-  protected def createInstance(subscribers: Seq[DomainEventSubscriber[A, Try, R]]): GenericSyncDomainEventPublisher[A, R] =
+  type DEP = GenericSyncDomainEventPublisher[A, R]
+
+  protected def createInstance(subscribers: Seq[DomainEventSubscriber[A, Try, R]]): DEP =
     GenericSyncDomainEventPublisher(subscribers)
 
 }

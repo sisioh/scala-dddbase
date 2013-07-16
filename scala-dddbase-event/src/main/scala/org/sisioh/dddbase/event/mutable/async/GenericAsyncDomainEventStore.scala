@@ -15,5 +15,5 @@ import scala.concurrent.{ExecutionContext, Future}
  * @tparam T エンティティの型
  */
 case class GenericAsyncDomainEventStore[+R <: Repository[ID, T, Future], ID <: Identity[_], T <: DomainEvent[ID]]
-(protected val eventRepository: R)(implicit val executor : ExecutionContext)
+(protected val eventRepository: R)(implicit val executor: ExecutionContext)
   extends DomainEventStoreSupport[R, ID, T]

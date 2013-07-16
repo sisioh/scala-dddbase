@@ -11,7 +11,9 @@ import scala.util.Try
  * @tparam A [[org.sisioh.dddbase.event.DomainEvent]]の型
  */
 case class GenericSyncDomainEventPublisher[A <: DomainEvent[_]]()
-  extends DomainEventPublisherSupport[GenericSyncDomainEventPublisher[A], A, Try, Unit] {
+  extends DomainEventPublisherSupport[A, Try, Unit] {
+
+  type DEP = GenericSyncDomainEventPublisher[A]
 
   protected lazy val subscribers = ArrayBuffer[DomainEventSubscriber[A, Try, Unit]]()
 
