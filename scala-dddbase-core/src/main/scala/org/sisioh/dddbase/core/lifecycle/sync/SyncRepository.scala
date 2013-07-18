@@ -35,7 +35,7 @@ trait SyncRepository[ID <: Identity[_], T <: Entity[ID]]
   with SyncEntityReader[ID, T]
   with SyncEntityWriter[ID, T] {
 
-  type R <: SyncRepository[ID, T]
+  type This <: SyncRepository[ID, T]
 
 }
 

@@ -17,7 +17,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
 
   implicit val executor: ExecutionContext
 
-  type R <: AsyncEntityWriter[ID, T]
+  type This <: AsyncEntityWriter[ID, T]
 
   /**
    * エンティティを保存する。
@@ -31,7 +31,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: T): Future[RepositoryWithEntity[R, T]]
+  def store(entity: T): Future[RepositoryWithEntity[This, T]]
 
   /**
    * 識別子を指定してエンティティを削除する。
@@ -43,6 +43,6 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def delete(identity: ID): Future[R]
+  def delete(identity: ID): Future[This]
 
 }

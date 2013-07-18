@@ -50,7 +50,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       class TestSyncRepository
         extends SyncRepositoryOnMemorySupport[Identity[UUID], EntityImpl]
         with SyncRepositoryOnMemorySupportByOption[Identity[UUID], EntityImpl] {
-        override type R = TestSyncRepository
+        type This = TestSyncRepository
       }
 
       val repository = new TestSyncRepository

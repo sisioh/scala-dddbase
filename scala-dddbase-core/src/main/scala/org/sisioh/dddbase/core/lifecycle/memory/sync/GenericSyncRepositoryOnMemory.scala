@@ -28,7 +28,7 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync
 class GenericSyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends SyncRepositoryOnMemorySupport[ID, T] {
 
-  override type R = GenericSyncRepositoryOnMemory[ID, T]
+  type This = GenericSyncRepositoryOnMemory[ID, T]
 
 }
 

@@ -11,6 +11,6 @@ class TestAsyncRepositoryOnMemory
   extends TestAsyncRepository
   with AsyncRepositoryOnMemory[GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity], Identity[UUID], TestEntity] {
 
-  override type R = TestAsyncRepositoryOnMemory
+  type This = TestAsyncRepositoryOnMemory
 
 }

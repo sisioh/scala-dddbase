@@ -17,7 +17,7 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
   class TestSyncRepository
     extends SyncRepositoryOnMemorySupport[IntIdentity, EntityImpl]()
     with SyncRepositoryOnMemorySupportByChunk[IntIdentity, EntityImpl] {
-    override type R = TestSyncRepository
+    type This = TestSyncRepository
   }
 
   "The repository" should {

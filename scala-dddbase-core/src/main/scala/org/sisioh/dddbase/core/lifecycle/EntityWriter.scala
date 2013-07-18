@@ -30,7 +30,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 trait EntityWriter[ID <: Identity[_], T <: Entity[ID], M[+A]]
   extends EntityIO {
 
-  type R <: EntityWriter[ID, T, M]
+  type This <: EntityWriter[ID, T, M]
 
   /**
    * エンティティを保存する。
@@ -41,13 +41,13 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID], M[+A]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): M[RepositoryWithEntity[R, T]]
+  def store(entity: T): M[RepositoryWithEntity[This, T]]
 
   def update(identity: ID, entity: T) = store(entity)
 
-  def delete(identity: ID): M[R]
+  def delete(identity: ID): M[This]
 
-  def delete(entity: T): M[R] = delete(entity.identity)
+  def delete(entity: T): M[This] = delete(entity.identity)
 
 }
 

@@ -32,7 +32,7 @@ class GenericAsyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with Ent
 (implicit val executor: ExecutionContext)
   extends AsyncRepositoryOnMemorySupport[GenericSyncRepositoryOnMemory[ID, T], ID, T] {
 
-  type R = GenericAsyncRepositoryOnMemory[ID, T]
+  type This = GenericAsyncRepositoryOnMemory[ID, T]
 
   protected def createInstance(state: (GenericSyncRepositoryOnMemory[ID, T], Option[T])): (GenericAsyncRepositoryOnMemory[ID, T], Option[T]) =
     (new GenericAsyncRepositoryOnMemory[ID, T](state._1), state._2)

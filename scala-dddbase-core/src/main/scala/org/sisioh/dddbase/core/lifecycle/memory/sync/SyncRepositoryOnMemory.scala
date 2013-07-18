@@ -28,7 +28,7 @@ trait SyncRepositoryOnMemory
 [ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
   extends SyncRepository[ID, T] with SyncEntityReaderByIterable[ID, T] with Cloneable {
 
-  type R <: SyncRepositoryOnMemory[ID, T]
+  type This <: SyncRepositoryOnMemory[ID, T]
 
 }
 
