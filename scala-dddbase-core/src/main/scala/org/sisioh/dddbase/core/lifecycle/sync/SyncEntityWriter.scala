@@ -31,7 +31,7 @@ import org.sisioh.dddbase.core.lifecycle.{RepositoryWithEntity, EntityWriter}
 trait SyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
   extends EntityWriter[ID, T, Try] {
 
-  type R <: SyncEntityWriter[ID, T]
+  type This <: SyncEntityWriter[ID, T]
 
   /**
    * エンティティを保存する。
@@ -42,7 +42,7 @@ trait SyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): Try[RepositoryWithEntity[R, T]]
+  def store(entity: T): Try[RepositoryWithEntity[This, T]]
 
   /**
    * 指定した識別子のエンティティを削除する。
@@ -53,6 +53,6 @@ trait SyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: ID): Try[R]
+  def delete(identity: ID): Try[This]
 
 }

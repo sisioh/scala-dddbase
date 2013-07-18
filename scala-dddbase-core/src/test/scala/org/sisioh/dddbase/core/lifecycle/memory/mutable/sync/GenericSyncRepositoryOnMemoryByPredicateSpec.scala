@@ -20,7 +20,9 @@ class GenericSyncRepositoryOnMemoryByPredicateSpec extends Specification with Mo
   class TestSyncRepository
     extends SyncRepositoryOnMemorySupport[Identity[Int], EntityImpl]
     with SyncRepositoryOnMemorySupportByPredicate[Identity[Int], EntityImpl] {
-    override type R = TestSyncRepository
+
+    type This = TestSyncRepository
+
   }
 
   "The repository" should {

@@ -33,7 +33,7 @@ import scala.language.higherKinds
 trait Repository[ID <: Identity[_], T <: Entity[ID], M[+A]]
   extends EntityReader[ID, T, M] with EntityWriter[ID, T, M] {
 
-  type R <: Repository[ID, T, M]
+  type This <: Repository[ID, T, M]
 
 }
 

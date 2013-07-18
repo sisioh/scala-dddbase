@@ -33,7 +33,7 @@ trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]]
   with AsyncEntityReader[ID, T]
   with AsyncEntityWriter[ID, T] {
 
-  type R <: AsyncRepository[ID, T]
+  type This <: AsyncRepository[ID, T]
 
 }
 

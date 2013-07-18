@@ -32,7 +32,7 @@ class GenericAsyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with Ent
 (implicit val executor: ExecutionContext)
   extends AsyncRepositoryOnMemory[GenericSyncRepositoryOnMemory[ID, T], ID, T] {
 
-  type R = GenericAsyncRepositoryOnMemory[ID, T]
+  type This = GenericAsyncRepositoryOnMemory[ID, T]
 
 }
 

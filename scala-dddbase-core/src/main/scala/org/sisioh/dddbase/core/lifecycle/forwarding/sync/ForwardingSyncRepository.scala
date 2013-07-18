@@ -8,7 +8,7 @@ trait ForwardingSyncRepository[ID <: Identity[_], T <: Entity[ID]]
   with ForwardingSyncEntityWriter[ID, T]
   with SyncRepository[ID, T] {
 
-  type R <: ForwardingSyncRepository[ID, T]
+  type This <: ForwardingSyncRepository[ID, T]
 
   protected val delegateRepository: SyncRepository[ID, T]
   protected val delegateEntityReader: SyncEntityReader[ID, T] = delegateRepository

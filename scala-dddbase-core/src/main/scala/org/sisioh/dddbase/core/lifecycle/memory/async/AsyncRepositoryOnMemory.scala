@@ -30,6 +30,6 @@ trait AsyncRepositoryOnMemory
 T <: Entity[ID] with EntityCloneable[ID, T]]
   extends AsyncRepository[ID, T] {
 
-  type R <: AsyncRepositoryOnMemory[ID, T]
+  type This <: AsyncRepositoryOnMemory[ID, T]
 
 }

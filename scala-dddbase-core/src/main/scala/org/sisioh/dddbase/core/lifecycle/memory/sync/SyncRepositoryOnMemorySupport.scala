@@ -49,11 +49,11 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
   override def hashCode = 31 * entities.hashCode()
 
-  override def clone: R = synchronized {
+  override def clone: This = synchronized {
     val result = super.clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, T]]
     val array = result.entities.toArray
     result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
-    result.asInstanceOf[R]
+    result.asInstanceOf[This]
   }
 
   override def resolve(identity: ID) = synchronized {
@@ -69,19 +69,19 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   }
 
 
-  override def store(entity: T): Try[RepositoryWithEntity[R, T]] = synchronized {
+  override def store(entity: T): Try[RepositoryWithEntity[This, T]] = synchronized {
     val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, T]]
     result.entities += (entity.identity -> entity)
-    Success(RepositoryWithEntity(result.asInstanceOf[R], entity))
+    Success(RepositoryWithEntity(result.asInstanceOf[This], entity))
   }
 
-  override def delete(identifier: ID): Try[R] = synchronized {
+  override def delete(identifier: ID): Try[This] = synchronized {
     contains(identifier).flatMap {
       e =>
         if (e) {
           val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, T]]
           result.entities -= identifier
-          Success(result.asInstanceOf[R])
+          Success(result.asInstanceOf[This])
         } else {
           Failure(new EntityNotFoundException())
         }

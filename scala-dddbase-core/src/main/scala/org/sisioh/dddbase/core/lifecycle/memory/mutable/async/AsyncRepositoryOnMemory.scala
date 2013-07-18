@@ -34,7 +34,7 @@ ID <: Identity[_],
 T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   extends AsyncRepositoryOnMemorySupport[SR, ID, T] {
 
-  protected def createInstance(state: (SR, Option[T])): (R, Option[T]) =
-    (this.asInstanceOf[R], state._2)
+  protected def createInstance(state: (SR, Option[T])): (This, Option[T]) =
+    (this.asInstanceOf[This], state._2)
 
 }
