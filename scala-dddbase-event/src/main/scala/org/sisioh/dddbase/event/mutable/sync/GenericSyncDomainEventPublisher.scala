@@ -13,7 +13,7 @@ import scala.util.Try
 case class GenericSyncDomainEventPublisher[A <: DomainEvent[_]]()
   extends DomainEventPublisherSupport[A, Try, Unit] {
 
-  type DEP = GenericSyncDomainEventPublisher[A]
+  type This = GenericSyncDomainEventPublisher[A]
 
   protected lazy val subscribers = ArrayBuffer[DomainEventSubscriber[A, Try, Unit]]()
 

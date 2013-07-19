@@ -13,20 +13,28 @@ trait DomainEventPublisherSupport
 [A <: DomainEvent[_], M[+B], R]
   extends DomainEventPublisher[A, M, R] {
 
+  /**
+   * [[org.sisioh.dddbase.event.DomainEventSubscriber]]の集合
+   */
   protected val subscribers: Seq[DomainEventSubscriber[A, M, R]]
 
-  protected def createInstance(subscribers: Seq[DomainEventSubscriber[A, M, R]]): DEP
-
+  /**
+   * 新しいインスタンスを作成する。
+   *
+   * @param subscribers [[org.sisioh.dddbase.event.DomainEventSubscriber]]の列。
+   * @return 新しいインスタンス
+   */
+  protected def createInstance(subscribers: Seq[DomainEventSubscriber[A, M, R]]): This
 
   def publish(event: A): Seq[M[R]] = {
     subscribers.map(_.handleEvent(event))
   }
 
-  def subscribe(subscriber: DomainEventSubscriber[A, M, R]): DEP = {
+  def subscribe(subscriber: DomainEventSubscriber[A, M, R]): This = {
     createInstance(subscribers :+ subscriber)
   }
 
-  def unsubscribe(subscriber: DomainEventSubscriber[A, M, R]): DEP = {
+  def unsubscribe(subscriber: DomainEventSubscriber[A, M, R]): This = {
     createInstance(subscribers.filterNot(_ == subscriber))
   }
 
