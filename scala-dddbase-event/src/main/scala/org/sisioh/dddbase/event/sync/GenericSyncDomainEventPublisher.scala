@@ -14,9 +14,9 @@ case class GenericSyncDomainEventPublisher[A <: DomainEvent[_], R]
 (subscribers: Seq[DomainEventSubscriber[A, Try, R]] = Seq.empty[DomainEventSubscriber[A, Try, R]])
   extends DomainEventPublisherSupport[A, Try, R] {
 
-  type DEP = GenericSyncDomainEventPublisher[A, R]
+  type This = GenericSyncDomainEventPublisher[A, R]
 
-  protected def createInstance(subscribers: Seq[DomainEventSubscriber[A, Try, R]]): DEP =
+  protected def createInstance(subscribers: Seq[DomainEventSubscriber[A, Try, R]]): This =
     GenericSyncDomainEventPublisher(subscribers)
 
 }
