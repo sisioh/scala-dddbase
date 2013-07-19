@@ -8,11 +8,11 @@ import org.sisioh.dddbase.core.lifecycle.EntityReaderByOption
  * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader]]。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait AsyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityReaderByOption[ID, T, Future] {
-  this: AsyncEntityReader[ID, T] =>
+trait AsyncEntityReaderByOption[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReaderByOption[ID, E, Future] {
+  this: AsyncEntityReader[ID, E] =>
 
   /**
    * 識別子に該当するエンティティを解決する。
@@ -25,6 +25,6 @@ trait AsyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]]
    *         Failure:
    *         Futureが失敗した場合の例外
    */
-  def resolveOption(identity: ID): Future[Option[T]]
+  def resolveOption(identity: ID): Future[Option[E]]
 
 }

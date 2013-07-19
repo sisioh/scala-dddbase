@@ -24,19 +24,19 @@ import scala.language.higherKinds
  * を読み込むための責務を表すトレイト。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReader[ID <: Identity[_], T <: Entity[ID], M[+A]]
+trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+A]]
   extends EntityIO {
 
-  def resolve(identity: ID): M[T]
+  def resolve(identity: ID): M[E]
 
-  def apply(identity: ID): M[T] = resolve(identity)
+  def apply(identity: ID): M[E] = resolve(identity)
 
   def contains(identity: ID): M[Boolean]
 
-  def contains(entity: T): M[Boolean] = contains(entity.identity)
+  def contains(entity: E): M[Boolean] = contains(entity.identity)
 
 }
 

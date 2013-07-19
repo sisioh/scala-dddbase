@@ -15,11 +15,11 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
+import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.concurrent._
-import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
 
 /**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
@@ -30,13 +30,13 @@ import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
  *
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupport
-[SR <: SyncRepositoryOnMemory[ID, T],
+[SR <: SyncRepositoryOnMemory[ID, E],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepositoryOnMemory[ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemory[ID, E] {
 
   /**
    * 内部で利用する同期型リポジトリ。
@@ -49,7 +49,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
    * @param state 新しい同期型リポジトリ
    * @return 新しい非同期型のリポジトリ
    */
-  protected def createInstance(state: (SR, Option[T])): (This, Option[T])
+  protected def createInstance(state: (SR, Option[E])): (This, Option[E])
 
   override def equals(obj: Any) = obj match {
     case that: AsyncRepositoryOnMemorySupport[_, _, _] =>
@@ -67,7 +67,7 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     core.contains(identifier).get
   }
 
-  def store(entity: T): Future[ResultWithEntity[This, ID, T, Future]] = future {
+  def store(entity: E): Future[ResultWithEntity[This, ID, E, Future]] = future {
     val result = core.store(entity).get
     val t = (result.result.asInstanceOf[SR], Some(result.entity))
     val instance = createInstance(t)

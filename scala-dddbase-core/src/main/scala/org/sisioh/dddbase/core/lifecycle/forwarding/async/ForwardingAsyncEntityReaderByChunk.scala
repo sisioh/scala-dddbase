@@ -5,12 +5,12 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.{Future, ExecutionContext}
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReaderByChunk, AsyncEntityReader}
 
-trait ForwardingAsyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]] extends AsyncEntityReaderByChunk[ID, T] {
-  this: AsyncEntityReader[ID, T] =>
+trait ForwardingAsyncEntityReaderByChunk[ID <: Identity[_], E <: Entity[ID]] extends AsyncEntityReaderByChunk[ID, E] {
+  this: AsyncEntityReader[ID, E] =>
 
-  protected val delegateAsyncEntityReaderByChunk: AsyncEntityReaderByChunk[ID, T]
+  protected val delegateAsyncEntityReaderByChunk: AsyncEntityReaderByChunk[ID, E]
 
-  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, T]] =
+  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]] =
     delegateAsyncEntityReaderByChunk.resolveChunk(index, maxEntities)
 
 }

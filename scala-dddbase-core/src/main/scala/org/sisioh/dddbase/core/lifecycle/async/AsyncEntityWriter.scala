@@ -10,14 +10,14 @@ import scala.concurrent.{ExecutionContext, Future}
  * @see [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityWriter[ID, T, Future] {
+trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityWriter[ID, E, Future] {
 
   implicit val executor: ExecutionContext
 
-  type This <: AsyncEntityWriter[ID, T]
+  type This <: AsyncEntityWriter[ID, E]
 
   /**
    * エンティティを保存する。
@@ -31,7 +31,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: T): Future[ResultWithEntity[This, ID, T, Future]]
+  def store(entity: E): Future[ResultWithEntity[This, ID, E, Future]]
 
   /**
    * 識別子を指定してエンティティを削除する。

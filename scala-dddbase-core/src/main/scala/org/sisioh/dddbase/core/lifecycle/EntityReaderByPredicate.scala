@@ -22,10 +22,10 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
  * 述語関数に該当したエンティティを検索することができるトレイト。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait EntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID], M[+A]] {
+trait EntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID], M[+A]] {
 
-  def filterByPredicate(predicate: T => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None): M[EntitiesChunk[ID, T]]
+  def filterByPredicate(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None): M[EntitiesChunk[ID, E]]
 
 }

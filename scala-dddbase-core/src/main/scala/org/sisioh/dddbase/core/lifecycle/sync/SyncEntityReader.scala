@@ -24,10 +24,10 @@ import scala.util.Try
  * を読み込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait SyncEntityReader[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityReader[ID, T, Try] {
+trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReader[ID, E, Try] {
 
   /**
    * 識別子に該当するエンティティを解決する。
@@ -37,7 +37,7 @@ trait SyncEntityReader[ID <: Identity[_], T <: Entity[ID]]
    *         Failure: EntityNotFoundExceptionは、エンティティが見つからなかった場合、
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolve(identity: ID): Try[T]
+  def resolve(identity: ID): Try[E]
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。

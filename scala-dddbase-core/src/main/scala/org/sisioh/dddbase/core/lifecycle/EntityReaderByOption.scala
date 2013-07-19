@@ -22,10 +22,10 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
  * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait EntityReaderByOption[ID <: Identity[_], T <: Entity[ID], M[+A]] {
-  this: EntityReader[ID, T, M] =>
+trait EntityReaderByOption[ID <: Identity[_], E <: Entity[ID], M[+A]] {
+  this: EntityReader[ID, E, M] =>
 
   /**
    * 識別子に該当するエンティティを解決する。
@@ -35,6 +35,6 @@ trait EntityReaderByOption[ID <: Identity[_], T <: Entity[ID], M[+A]] {
    * @param identity 識別子
    * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
    */
-  def resolveOption(identity: ID): M[Option[T]]
+  def resolveOption(identity: ID): M[Option[E]]
 
 }

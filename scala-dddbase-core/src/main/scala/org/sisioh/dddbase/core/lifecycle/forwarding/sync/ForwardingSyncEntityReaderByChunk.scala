@@ -5,13 +5,13 @@ import org.sisioh.dddbase.core.model.{Identity, Entity}
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReaderByChunk, SyncEntityReader}
 
-trait ForwardingSyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]]
-  extends SyncEntityReaderByChunk[ID, T] {
-  this: SyncEntityReader[ID, T] =>
+trait ForwardingSyncEntityReaderByChunk[ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityReaderByChunk[ID, E] {
+  this: SyncEntityReader[ID, E] =>
 
-  protected val delegateEntityReaderByChunk: SyncEntityReaderByChunk[ID, T]
+  protected val delegateEntityReaderByChunk: SyncEntityReaderByChunk[ID, E]
 
-  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]] =
+  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, E]] =
     delegateEntityReaderByChunk.resolveChunk(index, maxEntities)
 
 }

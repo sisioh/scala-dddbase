@@ -28,17 +28,17 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
  * オンメモリで動作する不変リポジトリの実装。
  *
  * @tparam ID エンティティの識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupport
 [ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends SyncRepositoryOnMemory[ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  extends SyncRepositoryOnMemory[ID, E] {
 
   /**
    * エンティティを保存するためのマップ。
    */
-  protected[core] var entities = new HashMap[ID, T]()
+  protected[core] var entities = new HashMap[ID, E]()
 
   override def equals(obj: Any) = obj match {
     case that: SyncRepositoryOnMemorySupport[_, _] =>
@@ -49,7 +49,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   override def hashCode = 31 * entities.hashCode()
 
   override def clone: This = synchronized {
-    val result = super.clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, T]]
+    val result = super.clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
     val array = result.entities.toArray
     result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
     result.asInstanceOf[This]
@@ -68,8 +68,8 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   }
 
 
-  override def store(entity: T): Try[ResultWithEntity[This, ID, T, Try]] = synchronized {
-    val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, T]]
+  override def store(entity: E): Try[ResultWithEntity[This, ID, E, Try]] = synchronized {
+    val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
     result.entities += (entity.identity -> entity)
     Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
   }
@@ -78,7 +78,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
     contains(identifier).flatMap {
       e =>
         if (e) {
-          val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, T]]
+          val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
           result.entities -= identifier
           Success(result.asInstanceOf[This])
         } else {
@@ -87,7 +87,7 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
     }
   }
 
-  def iterator: Iterator[T] =
+  def iterator: Iterator[E] =
     entities.map(_._2.clone).toSeq.sorted.iterator
 
 }

@@ -8,11 +8,11 @@ import org.sisioh.dddbase.core.lifecycle.{EntityReaderByChunk, EntitiesChunk}
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReaderByChunk]]。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait AsyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityReaderByChunk[ID, T, Future] {
-  this: AsyncEntityReader[ID, T] =>
+trait AsyncEntityReaderByChunk[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReaderByChunk[ID, E, Future] {
+  this: AsyncEntityReader[ID, E] =>
 
   /**
    * エンティティをチャンク単位で検索する。
@@ -24,6 +24,6 @@ trait AsyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, T]]
+  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]]
 
 }

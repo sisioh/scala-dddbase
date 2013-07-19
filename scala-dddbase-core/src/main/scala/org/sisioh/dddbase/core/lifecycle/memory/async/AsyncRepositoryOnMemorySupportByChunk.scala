@@ -13,16 +13,16 @@ import scala.concurrent._
  *
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportByChunk
-[SR <: SyncRepositoryOnMemory[ID, T] with SyncEntityReaderByChunk[ID, T],
+[SR <: SyncRepositoryOnMemory[ID, E] with SyncEntityReaderByChunk[ID, E],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepositoryOnMemorySupport[SR, ID, T]
-  with AsyncEntityReaderByChunk[ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemorySupport[SR, ID, E]
+  with AsyncEntityReaderByChunk[ID, E] {
 
-  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, T]] = future {
+  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]] = future {
     core.resolveChunk(index, maxEntities).get
   }
 

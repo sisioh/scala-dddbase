@@ -5,8 +5,8 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
 
 
-trait AsyncResultWithEntity[+R <: AsyncEntityWriter[ID, T], ID <: Identity[_], T <: Entity[ID]]
-  extends ResultWithEntity[R, ID, T, Future]
+trait AsyncResultWithEntity[+R <: AsyncEntityWriter[ID, E], ID <: Identity[_], E <: Entity[ID]]
+  extends ResultWithEntity[R, ID, E, Future]
 
 object AsyncResultWithEntity {
 

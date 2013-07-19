@@ -10,18 +10,18 @@ import scala.util._
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReaderByPredicate]]ための機能を追加するトレイト。
  *
  * @tparam ID エンティティの識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupportByPredicate
 [ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends SyncRepositoryOnMemorySupport[ID, T]
-  with SyncEntityReaderByPredicate[ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  extends SyncRepositoryOnMemorySupport[ID, E]
+  with SyncEntityReaderByPredicate[ID, E] {
 
   def filterByPredicate
-  (predicate: (T) => Boolean,
+  (predicate: (E) => Boolean,
    indexOpt: Option[Int] = None,
-   maxEntitiesOpt: Option[Int] = None): Try[EntitiesChunk[ID, T]] = {
+   maxEntitiesOpt: Option[Int] = None): Try[EntitiesChunk[ID, E]] = {
     val filteredSubEntities = toList.filter(predicate)
     val index = indexOpt.getOrElse(0)
     val maxEntities = maxEntitiesOpt.getOrElse(filteredSubEntities.size)

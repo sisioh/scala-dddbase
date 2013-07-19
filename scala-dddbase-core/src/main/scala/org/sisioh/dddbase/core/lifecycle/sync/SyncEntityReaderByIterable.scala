@@ -22,10 +22,10 @@ import scala.util.{Success, Try}
  * `scala.collection.Iterable`を実装するためのトレイト。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait SyncEntityReaderByIterable[ID <: Identity[_], T <: Entity[ID]] extends Iterable[T] {
-  this: SyncEntityReader[ID, T] =>
+trait SyncEntityReaderByIterable[ID <: Identity[_], E <: Entity[ID]] extends Iterable[E] {
+  this: SyncEntityReader[ID, E] =>
 
   def contains(identifier: ID): Try[Boolean] = Success(exists(_.identity == identifier))
 
