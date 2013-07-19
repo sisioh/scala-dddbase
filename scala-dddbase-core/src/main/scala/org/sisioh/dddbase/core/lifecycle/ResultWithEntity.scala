@@ -15,14 +15,31 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.Entity
+import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**
- * リポジトリの新しい状態とエンティティを保持する値オブジェクト。
+ * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]の新しい状態とエンティティを保持する値オブジェクト。
  *
- * @param repository リポジトリの新しい状態
- * @param entity エンティティ
- * @tparam R リポジトリの型
- * @tparam T エンティティの型
+ * @tparam EW [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]の型
+ * @tparam ID エンティティの識別子の型
+ * @tparam E エンティティの型
+ * @tparam M モナドの型
  */
-case class RepositoryWithEntity[+R, T <: Entity[_]](repository: R, entity: T)
+trait ResultWithEntity[+EW <: EntityWriter[ID, E, M], ID <: Identity[_], E <: Entity[ID], M[+A]] {
+
+  /**
+   * 結果
+   */
+  val result: EW
+
+  /**
+   * エンティティ
+   */
+  val entity: E
+
+}
+
+
+
+
+

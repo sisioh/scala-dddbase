@@ -48,7 +48,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       repository.resolve(id).isFailure must_== true
       repos.flatMap {
         r =>
-          val tr = new TestRepForwardingSyncRepositoryImpl(r.repository)
+          val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
           tr.contains(entity)
       }.getOrElse(false) must_== true
     }
@@ -60,7 +60,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       repository.resolve(id).isFailure must_== true
       repos.flatMap {
         r =>
-          val tr = new TestRepForwardingSyncRepositoryImpl(r.repository)
+          val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
           tr.resolve(id)
       }.get must_== entity
     }
@@ -72,7 +72,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       repository.resolve(id).isFailure must_== true
       repos.flatMap {
         r =>
-          val tr = new TestRepForwardingSyncRepositoryImpl(r.repository)
+          val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
           tr.delete(id)
       }.get must_!= repos
     }

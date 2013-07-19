@@ -15,8 +15,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
+import scala.language.higherKinds
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて
@@ -24,13 +24,13 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
  * を書き込むための責務を表すトレイト。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityWriter[ID <: Identity[_], T <: Entity[ID], M[+A]]
+trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
   extends EntityIO {
 
-  type This <: EntityWriter[ID, T, M]
+  type This <: EntityWriter[ID, E, M]
 
   /**
    * エンティティを保存する。
@@ -41,13 +41,13 @@ trait EntityWriter[ID <: Identity[_], T <: Entity[ID], M[+A]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): M[RepositoryWithEntity[This, T]]
+  def store(entity: E): M[ResultWithEntity[This, ID, E, M]]
 
-  def update(identity: ID, entity: T) = store(entity)
+  def update(identity: ID, entity: E) = store(entity)
 
   def delete(identity: ID): M[This]
 
-  def delete(entity: T): M[This] = delete(entity.identity)
+  def delete(entity: E): M[This] = delete(entity.identity)
 
 }
 

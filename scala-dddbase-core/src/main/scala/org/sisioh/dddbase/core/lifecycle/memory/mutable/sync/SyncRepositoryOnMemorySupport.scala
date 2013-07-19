@@ -16,11 +16,11 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
-import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
-import org.sisioh.dddbase.core.lifecycle.sync._
+import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.util.Try
-import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
+import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 
 
 /**
@@ -48,11 +48,11 @@ T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
 
   override def hashCode = 31 * core.##
 
-  def store(entity: T): Try[RepositoryWithEntity[This, T]] = {
+  def store(entity: T): Try[ResultWithEntity[This, ID, T, Try]] = {
     core.store(entity).map {
       result =>
-        core = result.repository.asInstanceOf[SyncRepositoryOnMemory[ID, T]]
-        RepositoryWithEntity(this.asInstanceOf[This], result.entity)
+        core = result.result.asInstanceOf[SyncRepositoryOnMemory[ID, T]]
+        SyncResultWithEntity(this.asInstanceOf[This], result.entity)
     }
   }
 

@@ -32,7 +32,7 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(Identity[Int](i))
-        repository = repository.store(entity).get.repository
+        repository = repository.store(entity).get.result
       }
 
       val chunk = repository.filterByPredicate(

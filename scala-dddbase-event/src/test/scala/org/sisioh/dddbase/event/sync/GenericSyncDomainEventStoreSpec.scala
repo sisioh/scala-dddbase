@@ -1,11 +1,12 @@
 package org.sisioh.dddbase.event.sync
 
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
+import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
+import scala.util.Try
 
 class GenericSyncDomainEventStoreSpec extends Specification {
 
@@ -26,7 +27,7 @@ class GenericSyncDomainEventStoreSpec extends Specification {
 
       val repos = new REPOS
       val target = new GenericSyncDomainEventStore[REPOS, ID, E](repos)
-      val publisher = GenericSyncDomainEventPublisher[E, RepositoryWithEntity[REPOS, E]]()
+      val publisher = GenericSyncDomainEventPublisher[E, ResultWithEntity[REPOS, ID, E, Try]]()
       val event = new E(Identity(UUID.randomUUID()))
       val resultTrys = publisher.subscribe(target).publish(event)
 
@@ -34,8 +35,8 @@ class GenericSyncDomainEventStoreSpec extends Specification {
         resultTry =>
           resultTry.map {
             result =>
-              result.repository.size must_== 1
-              result.repository.toList(0).identity must_== event.identity
+              result.result.size must_== 1
+              result.result.toList(0).identity must_== event.identity
           }.get
       }
     }
