@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.lifecycle.async._
-import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReaderByOption
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByOption
 import org.sisioh.dddbase.core.model._
 import scala.concurrent._
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
@@ -14,10 +14,10 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportBySeq
-[SR <: SyncRepositoryOnMemory[ID, E] with SyncEntityReaderByOption[ID, E],
+[SR <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableByOption[ID, E],
 ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemorySupport[SR, ID, E] with AsyncEntityReaderBySeq[ID, E] {
+  extends AsyncRepositoryOnMemorySupport[SR, ID, E] with AsyncEntityReadableBySeq[ID, E] {
 
   def resolveAll: Future[Seq[E]] = future {
     core.toSeq

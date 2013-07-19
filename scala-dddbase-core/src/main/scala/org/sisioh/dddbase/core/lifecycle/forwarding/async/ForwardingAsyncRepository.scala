@@ -18,7 +18,9 @@ trait ForwardingAsyncRepository[ID <: Identity[_], E <: Entity[ID]]
    * デリゲート。
    */
   protected val delegateAsyncRepository: AsyncRepository[ID, E]
+
   protected val delegateAsyncEntityReader: AsyncEntityReader[ID, E] = delegateAsyncRepository
+
   protected val delegateAsyncEntityWriter: AsyncEntityWriter[ID, E] = delegateAsyncRepository
 
 }

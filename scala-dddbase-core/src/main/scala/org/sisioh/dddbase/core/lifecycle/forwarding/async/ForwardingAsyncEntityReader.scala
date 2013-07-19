@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
-import scala.concurrent.{Future, ExecutionContext}
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
+import org.sisioh.dddbase.core.model.{Entity, Identity}
+import scala.concurrent.Future
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader]]のデコレータ。
@@ -10,7 +10,8 @@ import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]] extends AsyncEntityReader[ID, E] {
+trait ForwardingAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityReader[ID, E] {
 
   /**
    * デリゲート。

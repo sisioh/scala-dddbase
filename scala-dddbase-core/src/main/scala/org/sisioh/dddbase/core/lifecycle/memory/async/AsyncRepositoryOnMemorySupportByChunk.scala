@@ -3,7 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.async
 import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
 import org.sisioh.dddbase.core.lifecycle.async._
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
-import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReaderByChunk
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByChunk
 import org.sisioh.dddbase.core.model._
 import scala.concurrent._
 
@@ -16,11 +16,11 @@ import scala.concurrent._
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportByChunk
-[SR <: SyncRepositoryOnMemory[ID, E] with SyncEntityReaderByChunk[ID, E],
+[SR <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableByChunk[ID, E],
 ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E]]
   extends AsyncRepositoryOnMemorySupport[SR, ID, E]
-  with AsyncEntityReaderByChunk[ID, E] {
+  with AsyncEntityReadableByChunk[ID, E] {
 
   def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]] = future {
     core.resolveChunk(index, maxEntities).get

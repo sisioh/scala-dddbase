@@ -9,12 +9,10 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncEntityReaderBySeq[ID <: Identity[_], E <: Entity[ID]] {
+trait AsyncEntityReadableBySeq[ID <: Identity[_], E <: Entity[ID]] {
   this: AsyncEntityReader[ID, E] =>
 
   /**
-   * すべてのエンティティを取得する。
-   *
    * @return Success:
    *         エンティティの列
    *         Failure:
