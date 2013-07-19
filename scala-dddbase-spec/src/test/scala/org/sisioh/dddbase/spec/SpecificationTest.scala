@@ -20,18 +20,18 @@ import org.scalatest.junit.AssertionsForJUnit
 import org.junit.Test
 
 /**
- * [[AbstractSpecification]]のテストクラス。
+ * [[org.sisioh.dddbase.spec.Specification]]のテストクラス。
  */
 class SpecificationTest extends AssertionsForJUnit {
   /**
-   * [[AbstractSpecification#and(Specification)]]
-   * [[AbstractSpecification#or(Specification)]]
-   * [[AbstractSpecification#not]]のテスト。
+   * [[org.sisioh.dddbase.spec.Specification#and(Specification)]]
+   * [[org.sisioh.dddbase.spec.Specification#or(Specification)]]
+   * [[org.sisioh.dddbase.spec.Specification#not]]のテスト。
    *
    * @throws Exception 例外が発生した場合
    */
   @Test
-  def test01_and_or_not {
+  def test01_and_or_not() {
     val spec = new Specification[Unit] {
       def isSatisfiedBy(t: Unit): Boolean = false
     }

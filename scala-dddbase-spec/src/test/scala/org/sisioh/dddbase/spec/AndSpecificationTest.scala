@@ -23,13 +23,14 @@ import org.mockito.Matchers._
 import org.scalatest.mock.MockitoSugar
 
 class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
+
   /**
-   * {@code false} AND {@code false} が {@code false} となること。
+   * `false` AND `false` が `false` となること。
    *
    * @throws Exception 例外が発生した場合
    */
   @Test
-  def test01_falsefalse_To_false {
+  def est01_false_false_To_false() {
 
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
@@ -38,19 +39,19 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val and = new AndSpecification[Unit](mock1, mock2)
-    assert(and.isSatisfiedBy(null.asInstanceOf[Unit]) == false)
+    assert(!and.isSatisfiedBy(()))
 
-    verify(mock1).isSatisfiedBy(null.asInstanceOf[Unit])
+    verify(mock1).isSatisfiedBy(())
     //		verify(mock2, never()).isSatisfiedBy(null);
   }
 
   /**
-   * {@code false} AND {@code true} が {@code false} となること。
+   * `false` AND `true` が `false` となること。
    *
    * @throws Exception 例外が発生した場合
    */
   @Test
-  def test02_falsetrue_To_false {
+  def test02_false_true_To_false() {
 
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
@@ -59,19 +60,19 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val and = new AndSpecification[Unit](mock1, mock2)
-    assert(and.isSatisfiedBy(null) == false)
+    assert(!and.isSatisfiedBy(()))
 
-    verify(mock1).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
     //		verify(mock2, never()).isSatisfiedBy(null);
   }
 
   /**
-   * {@code true} AND {@code false} が {@code false} となること。
+   * `true` AND `false` が `false` となること。
    *
    * @throws Exception 例外が発生した場合
    */
   @Test
-  def test03_truefalse_To_false {
+  def test03_true_false_To_false() {
 
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
@@ -80,19 +81,19 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
 
     val nandot = new AndSpecification[Unit](mock1, mock2)
-    assert(nandot.isSatisfiedBy(null) == false)
+    assert(!nandot.isSatisfiedBy(()))
 
-    verify(mock1).isSatisfiedBy(null)
-    verify(mock2).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
+    verify(mock2).isSatisfiedBy(())
   }
 
   /**
-   * {@code true} AND {@code true} が {@code true} となること。
+   * `true` AND `true` が `true` となること。
    *
    * @throws Exception 例外が発生した場合
    */
   @Test
-  def test04_truetrue_To_true {
+  def test04_true_true_To_true() {
 
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
@@ -101,9 +102,9 @@ class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
     when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
 
     val and = new AndSpecification[Unit](mock1, mock2)
-    assert(and.isSatisfiedBy(null) == true)
+    assert(and.isSatisfiedBy(()))
 
-    verify(mock1).isSatisfiedBy(null)
-    verify(mock2).isSatisfiedBy(null)
+    verify(mock1).isSatisfiedBy(())
+    verify(mock2).isSatisfiedBy(())
   }
 }
