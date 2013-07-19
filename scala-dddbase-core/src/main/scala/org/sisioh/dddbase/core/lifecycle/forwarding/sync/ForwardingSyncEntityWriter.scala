@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 
-import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
-import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityWriter
+import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntity, SyncEntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -14,13 +14,13 @@ trait ForwardingSyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
 
   protected def createInstance(state: Try[(SyncEntityWriter[ID, T]#This, Option[T])]): Try[(This, Option[T])]
 
-  def store(entity: T): Try[RepositoryWithEntity[This, T]] = {
+  def store(entity: T): Try[ResultWithEntity[This, ID, T, Try]] = {
     createInstance(
       delegateEntityWriter.store(entity).map {
         e =>
-          (e.repository, Some(e.entity))
+          (e.result, Some(e.entity))
       }
-    ).map(e => RepositoryWithEntity(e._1, e._2.get))
+    ).map(e => SyncResultWithEntity(e._1, e._2.get))
   }
 
   def delete(identity: ID): Try[This] = {

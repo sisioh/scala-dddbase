@@ -27,7 +27,7 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(IntIdentity(i))
-        repository = repository.store(entity).get.repository
+        repository = repository.store(entity).get.result
       }
 
       val chunk = repository.resolveChunk(0, 5).get

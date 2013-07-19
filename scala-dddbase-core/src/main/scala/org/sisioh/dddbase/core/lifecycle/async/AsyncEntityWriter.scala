@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.{EntityWriter, RepositoryWithEntity}
+import org.sisioh.dddbase.core.lifecycle.{EntityWriter, ResultWithEntity}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +31,7 @@ trait AsyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: T): Future[RepositoryWithEntity[This, T]]
+  def store(entity: T): Future[ResultWithEntity[This, ID, T, Future]]
 
   /**
    * 識別子を指定してエンティティを削除する。

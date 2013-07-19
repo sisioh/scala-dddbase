@@ -15,11 +15,11 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.lifecycle.RepositoryWithEntity
-import org.sisioh.dddbase.core.lifecycle.async._
+import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.concurrent._
-import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
+import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
 
 /**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
@@ -67,11 +67,11 @@ T <: Entity[ID] with EntityCloneable[ID, T]]
     core.contains(identifier).get
   }
 
-  def store(entity: T): Future[RepositoryWithEntity[This, T]] = future {
+  def store(entity: T): Future[ResultWithEntity[This, ID, T, Future]] = future {
     val result = core.store(entity).get
-    val t = (result.repository.asInstanceOf[SR], Some(result.entity))
+    val t = (result.result.asInstanceOf[SR], Some(result.entity))
     val instance = createInstance(t)
-    RepositoryWithEntity(instance._1, instance._2.get)
+    AsyncResultWithEntity(instance._1, instance._2.get)
   }
 
   def delete(identity: ID): Future[This] = future {

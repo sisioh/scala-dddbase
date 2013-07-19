@@ -27,13 +27,13 @@ import scala.language.higherKinds
  * Mutableなリポジトリは同一インスタンスを返すこと、を推奨する。
  *
  * @tparam ID エンティティの識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  * @tparam M モナドの型
  */
-trait Repository[ID <: Identity[_], T <: Entity[ID], M[+A]]
-  extends EntityReader[ID, T, M] with EntityWriter[ID, T, M] {
+trait Repository[ID <: Identity[_], E <: Entity[ID], M[+A]]
+  extends EntityReader[ID, E, M] with EntityWriter[ID, E, M] {
 
-  type This <: Repository[ID, T, M]
+  type This <: Repository[ID, E, M]
 
 }
 

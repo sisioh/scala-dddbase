@@ -32,7 +32,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       repository(entity.identity) = entity
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.repository.contains(EmptyIdentity)
+          asyncRepos.result.contains(EmptyIdentity)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
@@ -48,7 +48,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       repository(entity.identity) = entity
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.repository.contains(id)
+          asyncRepos.result.contains(id)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
@@ -62,7 +62,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.repository.resolve(id)
+          asyncRepos.result.resolve(id)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
@@ -76,7 +76,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.repository.delete(id).flatMap {
+          asyncRepos.result.delete(id).flatMap {
             asyncRepos =>
               asyncRepos.contains(id)
           }
