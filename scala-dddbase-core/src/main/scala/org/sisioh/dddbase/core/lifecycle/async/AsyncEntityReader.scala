@@ -10,10 +10,10 @@ import org.sisioh.dddbase.core.lifecycle.EntityReader
  * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]]
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityReader[ID, T, Future] {
+trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReader[ID, E, Future] {
 
   implicit val executor: ExecutionContext
 
@@ -29,7 +29,7 @@ trait AsyncEntityReader[ID <: Identity[_], T <: Entity[ID]]
    *         EntityNotFoundException リポジトリにアクセスできなかった場合
    *         RepositoryException リポジトリにアクセスできなかった場合
    */
-  def resolve(identity: ID): Future[T]
+  def resolve(identity: ID): Future[E]
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。

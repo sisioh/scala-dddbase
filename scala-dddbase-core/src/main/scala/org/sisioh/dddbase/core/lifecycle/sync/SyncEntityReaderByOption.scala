@@ -23,16 +23,16 @@ import scala.util.Try
  * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByOption[]]のTry版。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait SyncEntityReaderByOption[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityReaderByOption[ID, T, Try] {
-  this: SyncEntityReader[ID, T] =>
+trait SyncEntityReaderByOption[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReaderByOption[ID, E, Try] {
+  this: SyncEntityReader[ID, E] =>
 
   /**
    * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
    */
-  def resolveOption(identity: ID): Try[Option[T]]
+  def resolveOption(identity: ID): Try[Option[E]]
 
 }

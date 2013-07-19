@@ -26,14 +26,14 @@ import scala.concurrent._
  * @see [[org.sisioh.dddbase.core.lifecycle.Repository]]
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait AsyncRepository[ID <: Identity[_], T <: Entity[ID]]
-  extends Repository[ID, T, Future]
-  with AsyncEntityReader[ID, T]
-  with AsyncEntityWriter[ID, T] {
+trait AsyncRepository[ID <: Identity[_], E <: Entity[ID]]
+  extends Repository[ID, E, Future]
+  with AsyncEntityReader[ID, E]
+  with AsyncEntityWriter[ID, E] {
 
-  type This <: AsyncRepository[ID, T]
+  type This <: AsyncRepository[ID, E]
 
 }
 

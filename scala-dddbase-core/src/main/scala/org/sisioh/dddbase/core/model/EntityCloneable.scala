@@ -4,9 +4,9 @@ package org.sisioh.dddbase.core.model
  * クローンに対応したエンティティを実装するためのトレイト。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait EntityCloneable[ID <: Identity[_], T <: Entity[ID]]
+trait EntityCloneable[ID <: Identity[_], E <: Entity[ID]]
   extends Cloneable {
   this: Entity[ID] =>
 
@@ -15,7 +15,7 @@ trait EntityCloneable[ID <: Identity[_], T <: Entity[ID]]
    *
    * @return クローンしたインスタンス
    */
-  override def clone: T =
-    super.clone.asInstanceOf[T]
+  override def clone: E =
+    super.clone.asInstanceOf[E]
 
 }

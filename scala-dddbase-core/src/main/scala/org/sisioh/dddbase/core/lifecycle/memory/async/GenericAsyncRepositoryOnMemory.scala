@@ -25,17 +25,17 @@ import scala.concurrent.ExecutionContext
  *
  * @param core 内部で利用するオンメモリ不変リポジトリ。
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-class GenericAsyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-(protected val core: GenericSyncRepositoryOnMemory[ID, T] = GenericSyncRepositoryOnMemory[ID, T]())
+class GenericAsyncRepositoryOnMemory[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+(protected val core: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
 (implicit val executor: ExecutionContext)
-  extends AsyncRepositoryOnMemorySupport[GenericSyncRepositoryOnMemory[ID, T], ID, T] {
+  extends AsyncRepositoryOnMemorySupport[GenericSyncRepositoryOnMemory[ID, E], ID, E] {
 
-  type This = GenericAsyncRepositoryOnMemory[ID, T]
+  type This = GenericAsyncRepositoryOnMemory[ID, E]
 
-  protected def createInstance(state: (GenericSyncRepositoryOnMemory[ID, T], Option[T])): (GenericAsyncRepositoryOnMemory[ID, T], Option[T]) =
-    (new GenericAsyncRepositoryOnMemory[ID, T](state._1), state._2)
+  protected def createInstance(state: (GenericSyncRepositoryOnMemory[ID, E], Option[E])): (GenericAsyncRepositoryOnMemory[ID, E], Option[E]) =
+    (new GenericAsyncRepositoryOnMemory[ID, E](state._1), state._2)
 
 }
 

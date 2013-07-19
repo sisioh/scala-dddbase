@@ -24,19 +24,19 @@ import scala.util.Try
  * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByPredicate]]のTry版。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait SyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityReaderByPredicate[ID, T, Try] {
-  this: SyncEntityReader[ID, T] =>
+trait SyncEntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReaderByPredicate[ID, E, Try] {
+  this: SyncEntityReader[ID, E] =>
 
   /**
    * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    *         Faliure: [[org.sisioh.dddbase.core.lifecycle.RepositoryException]]
    */
   def filterByPredicate
-  (predicate: T => Boolean,
+  (predicate: E => Boolean,
    index: Option[Int] = None,
-   maxEntities: Option[Int] = None): Try[EntitiesChunk[ID, T]]
+   maxEntities: Option[Int] = None): Try[EntitiesChunk[ID, E]]
 
 }

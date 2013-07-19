@@ -5,13 +5,13 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReaderByPredicate, SyncEntityReader}
 
-trait ForwardingSyncEntityReaderByPredicate[ID <: Identity[_], T <: Entity[ID]]
-  extends SyncEntityReaderByPredicate[ID, T] {
-  this: SyncEntityReader[ID, T] =>
+trait ForwardingSyncEntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityReaderByPredicate[ID, E] {
+  this: SyncEntityReader[ID, E] =>
 
-  protected val delegateEntityReaderByPredicate: SyncEntityReaderByPredicate[ID, T]
+  protected val delegateEntityReaderByPredicate: SyncEntityReaderByPredicate[ID, E]
 
-  def filterByPredicate(predicate: (T) => Boolean, index: Option[Int], maxEntities: Option[Int]): Try[EntitiesChunk[ID, T]] =
+  def filterByPredicate(predicate: (E) => Boolean, index: Option[Int], maxEntities: Option[Int]): Try[EntitiesChunk[ID, E]] =
     delegateEntityReaderByPredicate.filterByPredicate(predicate, index, maxEntities)
 
 }

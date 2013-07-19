@@ -23,16 +23,16 @@ import scala.util.Try
  * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByChunk]]のTry版。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait SyncEntityReaderByChunk[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityReaderByChunk[ID, T, Try] {
-  this: SyncEntityReader[ID, T] =>
+trait SyncEntityReaderByChunk[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReaderByChunk[ID, E, Try] {
+  this: SyncEntityReader[ID, E] =>
 
   /**
    * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
-  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, T]]
+  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, E]]
 
 }

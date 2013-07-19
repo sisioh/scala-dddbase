@@ -5,16 +5,16 @@ import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntity, SyncEntityW
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
-trait ForwardingSyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
-  extends SyncEntityWriter[ID, T] {
+trait ForwardingSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityWriter[ID, E] {
 
-  type This <: ForwardingSyncEntityWriter[ID, T]
+  type This <: ForwardingSyncEntityWriter[ID, E]
 
-  protected val delegateEntityWriter: SyncEntityWriter[ID, T]
+  protected val delegateEntityWriter: SyncEntityWriter[ID, E]
 
-  protected def createInstance(state: Try[(SyncEntityWriter[ID, T]#This, Option[T])]): Try[(This, Option[T])]
+  protected def createInstance(state: Try[(SyncEntityWriter[ID, E]#This, Option[E])]): Try[(This, Option[E])]
 
-  def store(entity: T): Try[ResultWithEntity[This, ID, T, Try]] = {
+  def store(entity: E): Try[ResultWithEntity[This, ID, E, Try]] = {
     createInstance(
       delegateEntityWriter.store(entity).map {
         e =>

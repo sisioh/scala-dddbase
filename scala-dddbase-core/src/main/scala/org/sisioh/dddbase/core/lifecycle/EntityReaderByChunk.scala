@@ -22,10 +22,10 @@ import scala.language.higherKinds
  * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]による検索を行うためのトレイト。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReaderByChunk[ID <: Identity[_], T <: Entity[ID], M[+A]] {
+trait EntityReaderByChunk[ID <: Identity[_], E <: Entity[ID], M[+A]] {
 
   /**
    * エンティティをチャンク単位で検索する。
@@ -34,6 +34,6 @@ trait EntityReaderByChunk[ID <: Identity[_], T <: Entity[ID], M[+A]] {
    * @param maxEntities 1チャンクの件数
    * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
-  def resolveChunk(index: Int, maxEntities: Int): M[EntitiesChunk[ID, T]]
+  def resolveChunk(index: Int, maxEntities: Int): M[EntitiesChunk[ID, E]]
 
 }

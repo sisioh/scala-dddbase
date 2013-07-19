@@ -26,12 +26,12 @@ import scala.util.Try
  * を書き込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-trait SyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
-  extends EntityWriter[ID, T, Try] {
+trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityWriter[ID, E, Try] {
 
-  type This <: SyncEntityWriter[ID, T]
+  type This <: SyncEntityWriter[ID, E]
 
   /**
    * エンティティを保存する。
@@ -42,7 +42,7 @@ trait SyncEntityWriter[ID <: Identity[_], T <: Entity[ID]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: T): Try[ResultWithEntity[This, ID, T, Try]]
+  def store(entity: E): Try[ResultWithEntity[This, ID, E, Try]]
 
   /**
    * 指定した識別子のエンティティを削除する。

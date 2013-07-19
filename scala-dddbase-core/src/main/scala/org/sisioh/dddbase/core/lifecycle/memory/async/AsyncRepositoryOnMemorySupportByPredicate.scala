@@ -13,18 +13,18 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  *
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportByPredicate
-[SR <: SyncRepositoryOnMemory[ID, T] with SyncEntityReaderByPredicate[ID, T],
+[SR <: SyncRepositoryOnMemory[ID, E] with SyncEntityReaderByPredicate[ID, E],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepositoryOnMemorySupport[SR, ID, T]
-  with AsyncEntityReaderByPredicate[ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemorySupport[SR, ID, E]
+  with AsyncEntityReaderByPredicate[ID, E] {
 
   def filterByPredicate
-  (predicate: (T) => Boolean, index: Option[Int], maxEntities: Option[Int])
-  : Future[EntitiesChunk[ID, T]] = future {
+  (predicate: (E) => Boolean, index: Option[Int], maxEntities: Option[Int])
+  : Future[EntitiesChunk[ID, E]] = future {
     core.filterByPredicate(predicate, index, maxEntities).get
   }
 

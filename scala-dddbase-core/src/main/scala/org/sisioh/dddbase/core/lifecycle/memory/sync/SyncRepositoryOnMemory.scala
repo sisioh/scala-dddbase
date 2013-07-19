@@ -22,13 +22,13 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * オンメモリリポジトリを表すトレイト。
  *
  * @tparam ID エンティティの識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemory
-[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends SyncRepository[ID, T] with SyncEntityReaderByIterable[ID, T] with Cloneable {
+[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends SyncRepository[ID, E] with SyncEntityReaderByIterable[ID, E] with Cloneable {
 
-  type This <: SyncRepositoryOnMemory[ID, T]
+  type This <: SyncRepositoryOnMemory[ID, E]
 
 }
 

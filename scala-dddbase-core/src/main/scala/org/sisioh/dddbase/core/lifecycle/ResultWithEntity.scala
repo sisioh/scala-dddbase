@@ -15,6 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
+import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Identity, Entity}
 
 /**

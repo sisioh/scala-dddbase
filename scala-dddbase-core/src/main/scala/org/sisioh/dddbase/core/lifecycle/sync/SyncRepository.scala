@@ -27,15 +27,15 @@ import scala.util._
  * Immutableなリポジトリは新しいリポジトリインスタンスを返し、
  * Mutableなリポジトリは同一インスタンスを返すこと、を推奨する。
  *
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  * @tparam ID エンティティの識別子の型
  */
-trait SyncRepository[ID <: Identity[_], T <: Entity[ID]]
-  extends Repository[ID, T, Try]
-  with SyncEntityReader[ID, T]
-  with SyncEntityWriter[ID, T] {
+trait SyncRepository[ID <: Identity[_], E <: Entity[ID]]
+  extends Repository[ID, E, Try]
+  with SyncEntityReader[ID, E]
+  with SyncEntityWriter[ID, E] {
 
-  type This <: SyncRepository[ID, T]
+  type This <: SyncRepository[ID, E]
 
 }
 

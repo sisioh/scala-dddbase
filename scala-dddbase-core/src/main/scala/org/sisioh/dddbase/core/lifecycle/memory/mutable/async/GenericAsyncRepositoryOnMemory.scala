@@ -25,14 +25,14 @@ import scala.concurrent.ExecutionContext
  *
  * @param core 内部で利用するオンメモリ可変リポジトリ。
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-class GenericAsyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-(protected val core: GenericSyncRepositoryOnMemory[ID, T] = GenericSyncRepositoryOnMemory[ID, T]())
+class GenericAsyncRepositoryOnMemory[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+(protected val core: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
 (implicit val executor: ExecutionContext)
-  extends AsyncRepositoryOnMemory[GenericSyncRepositoryOnMemory[ID, T], ID, T] {
+  extends AsyncRepositoryOnMemory[GenericSyncRepositoryOnMemory[ID, E], ID, E] {
 
-  type This = GenericAsyncRepositoryOnMemory[ID, T]
+  type This = GenericAsyncRepositoryOnMemory[ID, E]
 
 }
 

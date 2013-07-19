@@ -22,12 +22,12 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * 汎用的な同期型オンメモリ可変リポジトリ。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
-class GenericSyncRepositoryOnMemory[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends SyncRepositoryOnMemorySupport[ID, T] {
+class GenericSyncRepositoryOnMemory[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  extends SyncRepositoryOnMemorySupport[ID, E] {
 
-  type This = GenericSyncRepositoryOnMemory[ID, T]
+  type This = GenericSyncRepositoryOnMemory[ID, E]
 
 }
 

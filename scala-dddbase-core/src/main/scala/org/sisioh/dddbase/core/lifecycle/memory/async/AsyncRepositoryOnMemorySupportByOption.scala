@@ -11,14 +11,14 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  *
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportByOption
-[SR <: SyncRepositoryOnMemory[ID, T] with SyncEntityReaderByOption[ID, T],
+[SR <: SyncRepositoryOnMemory[ID, E] with SyncEntityReaderByOption[ID, E],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepositoryOnMemorySupport[SR, ID, T]
-  with AsyncEntityReaderByOption[ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemorySupport[SR, ID, E]
+  with AsyncEntityReaderByOption[ID, E] {
 
   def resolveOption(identifier: ID) = future {
     core.resolveOption(identifier).get

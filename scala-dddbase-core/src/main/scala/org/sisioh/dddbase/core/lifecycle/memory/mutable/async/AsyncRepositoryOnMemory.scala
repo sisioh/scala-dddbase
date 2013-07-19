@@ -26,15 +26,15 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  *
  * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemory
-[SR <: SyncRepositoryOnMemory[ID, T],
+[SR <: SyncRepositoryOnMemory[ID, E],
 ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  extends AsyncRepositoryOnMemorySupport[SR, ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  extends AsyncRepositoryOnMemorySupport[SR, ID, E] {
 
-  protected def createInstance(state: (SR, Option[T])): (This, Option[T]) =
+  protected def createInstance(state: (SR, Option[E])): (This, Option[E]) =
     (this.asInstanceOf[This], state._2)
 
 }

@@ -23,13 +23,13 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * オンメモリで動作する[[org.sisioh.dddbase.core.lifecycle.async.AsyncRepository]]。
  *
  * @tparam ID 識別子の型
- * @tparam T エンティティの型
+ * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemory
 [ID <: Identity[_],
-T <: Entity[ID] with EntityCloneable[ID, T]]
-  extends AsyncRepository[ID, T] {
+E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepository[ID, E] {
 
-  type This <: AsyncRepositoryOnMemory[ID, T]
+  type This <: AsyncRepositoryOnMemory[ID, E]
 
 }
