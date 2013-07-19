@@ -20,8 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.model.Identity]]を用いて、[[org.sisioh.dddbase.core.model.Entity]]
- * を読み込むための責務を表すインターフェイス。
+ * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
@@ -30,9 +29,6 @@ trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   extends EntityReader[ID, E, Try] {
 
   /**
-   * 識別子に該当するエンティティを解決する。
-   *
-   * @param identity 識別子
    * @return Success: エンティティ
    *         Failure: EntityNotFoundExceptionは、エンティティが見つからなかった場合、
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
@@ -40,9 +36,6 @@ trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   def resolve(identity: ID): Try[E]
 
   /**
-   * 指定した識別子のエンティティが存在するかを返す。
-   *
-   * @param identity 識別子
    * @return Success: 存在する場合はtrue
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */

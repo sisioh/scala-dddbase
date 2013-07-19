@@ -15,7 +15,7 @@ trait SyncRepositoryOnMemorySupportByOption
 [ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemorySupport[ID, E]
-  with SyncEntityReaderByOption[ID, E] {
+  with SyncEntityReadableByOption[ID, E] {
 
   def resolveOption(identity: ID): Try[Option[E]] = synchronized {
     resolve(identity).map(Some(_)).recoverWith {

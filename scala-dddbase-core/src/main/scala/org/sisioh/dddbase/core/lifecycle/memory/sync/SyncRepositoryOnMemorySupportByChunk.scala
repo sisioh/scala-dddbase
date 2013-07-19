@@ -15,7 +15,7 @@ import scala.util._
 trait SyncRepositoryOnMemorySupportByChunk
 [ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemorySupport[ID, E] with SyncEntityReaderByChunk[ID, E] {
+  extends SyncRepositoryOnMemorySupport[ID, E] with SyncEntityReadableByChunk[ID, E] {
 
   def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, E]] = {
     val subEntities = toList.slice(index * maxEntities, index * maxEntities + maxEntities)

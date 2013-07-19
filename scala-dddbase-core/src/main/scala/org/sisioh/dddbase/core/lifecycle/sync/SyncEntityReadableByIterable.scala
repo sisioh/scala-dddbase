@@ -13,27 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle
+package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.model.{Entity, Identity}
-import scala.language.higherKinds
+import scala.util.{Success, Try}
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]による検索を行うためのトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]に
+ * `scala.collection.Iterable`を実装するためのトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
- * @tparam M モナド
  */
-trait EntityReaderByChunk[ID <: Identity[_], E <: Entity[ID], M[+A]] {
+trait SyncEntityReadableByIterable[ID <: Identity[_], E <: Entity[ID]] extends Iterable[E] {
+  this: SyncEntityReader[ID, E] =>
 
-  /**
-   * エンティティをチャンク単位で検索する。
-   *
-   * @param index 検索するチャンクのインデックス
-   * @param maxEntities 1チャンクの件数
-   * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
-   */
-  def resolveChunk(index: Int, maxEntities: Int): M[EntitiesChunk[ID, E]]
+  def contains(identifier: ID): Try[Boolean] = Success(exists(_.identity == identifier))
 
 }

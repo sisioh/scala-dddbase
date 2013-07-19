@@ -15,26 +15,25 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Entity, Identity}
+import scala.language.higherKinds
 
 /**
- * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
+ * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]による検索を行うためのトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
+ * @tparam M モナド
  */
-trait EntityReaderByOption[ID <: Identity[_], E <: Entity[ID], M[+A]] {
-  this: EntityReader[ID, E, M] =>
+trait EntityReadableByChunk[ID <: Identity[_], E <: Entity[ID], M[+A]] {
 
   /**
-   * 識別子に該当するエンティティを解決する。
+   * エンティティをチャンク単位で検索する。
    *
-   * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
-   *
-   * @param identity 識別子
-   * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
+   * @param index 検索するチャンクのインデックス
+   * @param maxEntities 1チャンクの件数
+   * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
-  def resolveOption(identity: ID): M[Option[E]]
+  def resolveChunk(index: Int, maxEntities: Int): M[EntitiesChunk[ID, E]]
 
 }

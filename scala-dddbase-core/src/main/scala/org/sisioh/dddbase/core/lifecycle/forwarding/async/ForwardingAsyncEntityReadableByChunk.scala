@@ -1,23 +1,24 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReadableByChunk, AsyncEntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
-import scala.concurrent.{Future, ExecutionContext}
-import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReaderByChunk, AsyncEntityReader}
+import scala.concurrent.Future
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReaderByChunk]]のデコレータ。
+ * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReadableByChunk]]のデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReaderByChunk[ID <: Identity[_], E <: Entity[ID]] extends AsyncEntityReaderByChunk[ID, E] {
+trait ForwardingAsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityReadableByChunk[ID, E] {
   this: AsyncEntityReader[ID, E] =>
 
   /**
    * デリゲート。
    */
-  protected val delegateAsyncEntityReaderByChunk: AsyncEntityReaderByChunk[ID, E]
+  protected val delegateAsyncEntityReaderByChunk: AsyncEntityReadableByChunk[ID, E]
 
   def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]] =
     delegateAsyncEntityReaderByChunk.resolveChunk(index, maxEntities)

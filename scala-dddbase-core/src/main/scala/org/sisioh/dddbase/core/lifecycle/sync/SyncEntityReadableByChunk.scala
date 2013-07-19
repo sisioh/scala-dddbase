@@ -15,24 +15,24 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntityReaderByOption
+import org.sisioh.dddbase.core.lifecycle.{EntityReadableByChunk, EntitiesChunk}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.EntityReaderByOption[]]のTry版。
+ * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableByChunk]]。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReaderByOption[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityReaderByOption[ID, E, Try] {
+trait SyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReadableByChunk[ID, E, Try] {
   this: SyncEntityReader[ID, E] =>
 
   /**
-   * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
-   *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
+   * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
-  def resolveOption(identity: ID): Try[Option[E]]
+  def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, E]]
 
 }

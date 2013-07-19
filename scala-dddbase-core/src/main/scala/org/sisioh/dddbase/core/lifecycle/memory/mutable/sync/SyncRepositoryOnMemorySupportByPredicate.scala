@@ -7,7 +7,7 @@ import scala.util._
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.SyncRepositoryOnMemorySupport]]に
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReaderByPredicate]]ための機能を追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByPredicate]]ための機能を追加するトレイト。
  *
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
@@ -16,7 +16,7 @@ trait SyncRepositoryOnMemorySupportByPredicate
 [ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemorySupport[ID, E]
-  with SyncEntityReaderByPredicate[ID, E] {
+  with SyncEntityReadableByPredicate[ID, E] {
 
   def filterByPredicate
   (predicate: (E) => Boolean, indexOpt: Option[Int], maxEntitiesOpt: Option[Int]): Try[EntitiesChunk[ID, E]] = {
