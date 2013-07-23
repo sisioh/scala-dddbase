@@ -13,15 +13,17 @@ import scala.concurrent.Future
 trait ForwardingAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   extends AsyncEntityReader[ID, E] {
 
+  type Delegate <: AsyncEntityReader[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateAsyncEntityReader: AsyncEntityReader[ID, E]
+  protected val delegate: Delegate
 
   def resolve(identity: ID) =
-    delegateAsyncEntityReader.resolve(identity)
+    delegate.resolve(identity)
 
   def contains(identity: ID): Future[Boolean] =
-    delegateAsyncEntityReader.contains(identity)
+    delegate.contains(identity)
 
 }

@@ -25,18 +25,21 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
   val id = Identity(UUID.randomUUID())
 
   class TestRepForwardingSyncRepositoryImpl
-  (protected val delegateRepository: SyncRepository[Identity[UUID], EntityImpl])
+  (protected val delegate: SyncRepository[Identity[UUID], EntityImpl])
     extends ForwardingSyncRepository[Identity[UUID], EntityImpl] {
 
     type This = TestRepForwardingSyncRepositoryImpl
 
-    protected def createInstance(state: Try[(SyncEntityWriter[Identity[UUID], EntityImpl]#This, Option[EntityImpl])]): Try[(TestRepForwardingSyncRepositoryImpl#This, Option[EntityImpl])] = {
+    type Delegate = SyncRepository[Identity[UUID], EntityImpl]
+
+    protected def createInstance(state: Try[(Delegate#This, Option[EntityImpl])]): Try[(TestRepForwardingSyncRepositoryImpl#This, Option[EntityImpl])] = {
       state.map {
         r =>
           val state = new TestRepForwardingSyncRepositoryImpl(r._1.asInstanceOf[SyncRepository[Identity[UUID], EntityImpl]])
           (state, r._2)
       }
     }
+
   }
 
   "The repository" should {

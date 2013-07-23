@@ -14,11 +14,13 @@ trait ForwardingSyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
   extends SyncEntityReadableByOption[ID, E] {
   this: SyncEntityReader[ID, E] =>
 
+  type Delegate <: SyncEntityReadableByOption[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateEntityReaderByOption: SyncEntityReadableByOption[ID, E]
+  protected val delegate: Delegate
 
-  def resolveOption(identity: ID): Try[Option[E]] = delegateEntityReaderByOption.resolveOption(identity)
+  def resolveOption(identity: ID): Try[Option[E]] = delegate.resolveOption(identity)
 
 }

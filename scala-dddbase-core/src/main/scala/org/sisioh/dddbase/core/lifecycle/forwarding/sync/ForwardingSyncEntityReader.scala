@@ -13,13 +13,15 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader
 trait ForwardingSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   extends SyncEntityReader[ID, E] {
 
+  type Delegate <: SyncEntityReader[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateEntityReader: SyncEntityReader[ID, E]
+  protected val delegate: Delegate
 
-  def resolve(identity: ID): Try[E] = delegateEntityReader.resolve(identity)
+  def resolve(identity: ID): Try[E] = delegate.resolve(identity)
 
-  def contains(identity: ID): Try[Boolean] = delegateEntityReader.contains(identity)
+  def contains(identity: ID): Try[Boolean] = delegate.contains(identity)
 
 }

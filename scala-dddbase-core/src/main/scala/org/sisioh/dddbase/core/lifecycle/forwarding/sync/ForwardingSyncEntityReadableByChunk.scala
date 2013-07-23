@@ -1,9 +1,9 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 
 import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByChunk, SyncEntityReader}
 import org.sisioh.dddbase.core.model.{Identity, Entity}
 import scala.util.Try
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByChunk, SyncEntityReader}
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByChunk]]のデコレータ。
@@ -15,13 +15,15 @@ trait ForwardingSyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
   extends SyncEntityReadableByChunk[ID, E] {
   this: SyncEntityReader[ID, E] =>
 
+  type Delegate <: SyncEntityReadableByChunk[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateEntityReaderByChunk: SyncEntityReadableByChunk[ID, E]
+  protected val delegate: Delegate
 
   def resolveChunk(index: Int, maxEntities: Int): Try[EntitiesChunk[ID, E]] =
-    delegateEntityReaderByChunk.resolveChunk(index, maxEntities)
+    delegate.resolveChunk(index, maxEntities)
 
 }
 
