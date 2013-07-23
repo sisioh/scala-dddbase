@@ -16,6 +16,7 @@ object DDDBaseBuild extends Build {
     shellPrompt := {
       "sbt (%s)> " format projectId(_)
     },
+    publishMavenStyle := true,
     publish,
     test in fork := false
   )
