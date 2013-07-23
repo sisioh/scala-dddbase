@@ -19,7 +19,7 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
     "publish" in {
       var result: Identity[UUID] = null
       publisher = publisher.subscribe(
-        new DomainEventSubscriber[TestDomainEvent, Future, Unit] {
+        new AsyncDomainEventSubscriber[TestDomainEvent, Unit] {
           def handleEvent(event: TestDomainEvent): Future[Unit] = {
             result = event.identity
             Future(())
