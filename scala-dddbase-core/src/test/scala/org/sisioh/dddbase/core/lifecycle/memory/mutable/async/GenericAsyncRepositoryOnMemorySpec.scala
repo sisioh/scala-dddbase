@@ -29,8 +29,8 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentity))
       val repos = repository.store(entity)
-      there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
+      there was atLeastOne(entity).identity
       Await.result(repository.resolve(EmptyIdentity), Duration.Inf) must_== entity
       Await.result(repos.flatMap(_.result.contains(entity)), Duration.Inf) must_== true
     }
@@ -38,8 +38,8 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
-      there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
+      there was atLeastOne(entity).identity
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
       Await.result(repos.flatMap(_.result.contains(entity)), Duration.Inf) must_== true
     }
@@ -47,8 +47,8 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
-      there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
+      there was atLeastOne(entity).identity
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
       Await.result(repos.flatMap(_.result.resolve(id)), Duration.Inf) must_== entity
     }
@@ -56,8 +56,8 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
-      there was atLeastOne(entity).identity
       Await.ready(repos, Duration.Inf)
+      there was atLeastOne(entity).identity
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
       Await.result(repos.flatMap(_.result.delete(id)), Duration.Inf) must_!= repos
     }
