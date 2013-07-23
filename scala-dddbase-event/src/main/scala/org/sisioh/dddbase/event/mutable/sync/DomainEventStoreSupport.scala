@@ -4,6 +4,7 @@ import org.sisioh.dddbase.core.lifecycle.Repository
 import org.sisioh.dddbase.core.model.Identity
 import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
 import scala.util.Try
+import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
 
 /**
  * [[org.sisioh.dddbase.event.DomainEventStore]]のための骨格実装。
@@ -16,7 +17,8 @@ trait DomainEventStoreSupport
 [+R <: Repository[ID, T, Try],
 ID <: Identity[_],
 T <: DomainEvent[ID]]
-  extends DomainEventStore[R, ID, T, Try, Unit] {
+  extends DomainEventStore[R, ID, T, Try, Unit]
+  with SyncDomainEventSubscriber[T, Unit] {
 
   protected val eventRepository: R
 

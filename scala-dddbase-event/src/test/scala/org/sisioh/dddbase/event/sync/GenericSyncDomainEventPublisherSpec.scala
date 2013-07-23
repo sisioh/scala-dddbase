@@ -17,7 +17,7 @@ class GenericSyncDomainEventPublisherSpec extends Specification {
     "publish" in {
       var result: Identity[UUID] = null
       publisher = publisher.subscribe(
-        new DomainEventSubscriber[TestDomainEvent, Try, Unit] {
+        new SyncDomainEventSubscriber[TestDomainEvent, Unit] {
           def handleEvent(event: TestDomainEvent): Try[Unit] = {
             result = event.identity
             Success(())
