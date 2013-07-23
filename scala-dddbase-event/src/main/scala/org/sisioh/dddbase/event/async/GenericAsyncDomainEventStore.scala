@@ -15,7 +15,7 @@ import scala.concurrent.Future
  */
 case class GenericAsyncDomainEventStore[+R <: Repository[ID, T, Future], ID <: Identity[_], T <: DomainEvent[ID]]
 (protected val eventRepository: R)
-  extends DomainEventStoreSupport[R, ID, T, Future]
-  with AsyncDomainEventSubscriber[T, ResultWithEntity[R#This, ID, T, Future]]
+  extends AsyncDomainEventStore[R, ID, T]
+  with DomainEventStoreSupport[R, ID, T, Future]
 
 
