@@ -2,7 +2,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityWriter, AsyncRepository}
+import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
 import org.sisioh.dddbase.core.lifecycle.memory.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identity}
 import org.specs2.mock.Mockito
@@ -27,16 +27,18 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
   val id = Identity(UUID.randomUUID)
 
   class TestRepForwardingRepositoryImpl
-  (protected val delegateAsyncRepository: AsyncRepository[Identity[UUID], EntityImpl])
+  (protected val delegate: AsyncRepository[Identity[UUID], EntityImpl])
   (implicit val executor: ExecutionContext)
     extends ForwardingAsyncRepository[Identity[UUID], EntityImpl] {
 
     type This = TestRepForwardingRepositoryImpl
 
-    protected def createInstance(state: Future[(AsyncEntityWriter[Identity[UUID], EntityImpl], Option[EntityImpl])]): Future[(This, Option[EntityImpl])] = {
+    type Delegate = AsyncRepository[Identity[UUID], EntityImpl]
+
+    protected def createInstance(state: Future[(Delegate#This, Option[EntityImpl])]): Future[(This, Option[EntityImpl])] = {
       state.map {
         r =>
-          val state = new TestRepForwardingRepositoryImpl(r._1.asInstanceOf[AsyncRepository[Identity[UUID], EntityImpl]])
+          val state = new TestRepForwardingRepositoryImpl(r._1.asInstanceOf[Delegate#This])
           (state, r._2)
       }
     }
