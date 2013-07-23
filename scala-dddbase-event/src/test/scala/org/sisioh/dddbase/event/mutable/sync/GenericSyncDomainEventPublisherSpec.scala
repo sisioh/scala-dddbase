@@ -5,6 +5,7 @@ import org.sisioh.dddbase.core.model.Identity
 import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import org.specs2.mutable.Specification
 import scala.util._
+import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
 
 class GenericSyncDomainEventPublisherSpec extends Specification {
 
@@ -17,7 +18,7 @@ class GenericSyncDomainEventPublisherSpec extends Specification {
     "publish" in {
       var result: Identity[UUID] = null
       publisher.subscribe(
-        new DomainEventSubscriber[TestDomainEvent, Try, Unit] {
+        new SyncDomainEventSubscriber[TestDomainEvent, Unit] {
           def handleEvent(event: TestDomainEvent): Try[Unit] = {
             result = event.identity
             Success(())

@@ -18,18 +18,18 @@ trait DomainEventPublisherSupport
   /**
    * [[org.sisioh.dddbase.event.DomainEventSubscriber]]の集合
    */
-  protected val subscribers: ArrayBuffer[DomainEventSubscriber[A, M, R]]
+  protected val subscribers: ArrayBuffer[DES]
 
   def publish(event: A): Seq[M[R]] = {
     subscribers.map(_.handleEvent(event))
   }
 
-  def subscribe(subscriber: DomainEventSubscriber[A, M, R]): This = {
+  def subscribe(subscriber: DES): This = {
     subscribers += subscriber
     this.asInstanceOf[This]
   }
 
-  def unsubscribe(subscriber: DomainEventSubscriber[A, M, R]): This = {
+  def unsubscribe(subscriber: DES): This = {
     subscribers -= subscriber
     this.asInstanceOf[This]
   }

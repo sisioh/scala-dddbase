@@ -7,6 +7,7 @@ import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 
 
 class GenericAsyncDomainEventPublisherSpec extends Specification {
@@ -20,7 +21,7 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
     "publish" in {
       var result: Identity[UUID] = null
       publisher.subscribe(
-        new DomainEventSubscriber[TestDomainEvent, Future, Unit] {
+        new AsyncDomainEventSubscriber[TestDomainEvent, Unit] {
           def handleEvent(event: TestDomainEvent): Future[Unit] = {
             result = event.identity
             Future(())
