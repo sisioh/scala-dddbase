@@ -22,6 +22,7 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
   }
 
   class ForwardingAsyncWrappedRepositoryImpl
+  (protected val delegate: GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl])
   (implicit val executor: ExecutionContext)
     extends ForwardingAsyncWrappedRepository[Identity[UUID], EntityImpl] {
 
@@ -29,21 +30,17 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
 
     type Delegate = GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]
 
-    protected val delegate: GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl] =
-      GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]
-
     protected def createInstance(state: (Delegate#This, Option[EntityImpl])): (This, Option[EntityImpl]) = {
       (this.asInstanceOf[This], state._2)
     }
 
   }
 
-
   val id = Identity(UUID.randomUUID)
 
   "The repository" should {
     "have stored entity with empty identity" in {
-      val repository = new ForwardingAsyncWrappedRepositoryImpl
+      val repository = new ForwardingAsyncWrappedRepositoryImpl(GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(EmptyIdentity))
       val repos = repository.store(entity)
       Await.ready(repos, Duration.Inf)
@@ -52,7 +49,7 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
       Await.result(repos.flatMap(_.result.contains(entity)), Duration.Inf) must_== true
     }
     "have stored entity" in {
-      val repository = new ForwardingAsyncWrappedRepositoryImpl
+      val repository = new ForwardingAsyncWrappedRepositoryImpl(GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       Await.ready(repos, Duration.Inf)
@@ -61,7 +58,7 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
       Await.result(repos.flatMap(_.result.contains(entity)), Duration.Inf) must_== true
     }
     "resolve a entity by using identity" in {
-      val repository = new ForwardingAsyncWrappedRepositoryImpl
+      val repository = new ForwardingAsyncWrappedRepositoryImpl(GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       Await.ready(repos, Duration.Inf)
@@ -70,7 +67,7 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
       Await.result(repos.flatMap(_.result.resolve(id)), Duration.Inf) must_== entity
     }
     "delete a entity by using identity" in {
-      val repository = new ForwardingAsyncWrappedRepositoryImpl
+      val repository = new ForwardingAsyncWrappedRepositoryImpl(GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       Await.ready(repos, Duration.Inf)
@@ -79,14 +76,14 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
       Await.result(repos.flatMap(_.result.delete(id)), Duration.Inf) must_!= repos
     }
     "fail to resolve a entity by a non-existent identity" in {
-      val repository = new ForwardingAsyncWrappedRepositoryImpl
+      val repository = new ForwardingAsyncWrappedRepositoryImpl(GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
       Await.result(repository.resolve(id).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true
       Await.result(repository.resolve(id), Duration.Inf) must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identity" in {
-      val repository = new ForwardingAsyncWrappedRepositoryImpl
+      val repository = new ForwardingAsyncWrappedRepositoryImpl(GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
       Await.result(repository.delete(id).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true
