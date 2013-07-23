@@ -4,6 +4,7 @@ import org.sisioh.dddbase.core.lifecycle.Repository
 import org.sisioh.dddbase.core.model.Identity
 import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
 import scala.concurrent.{Future, ExecutionContext}
+import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 
 /**
  * [[org.sisioh.dddbase.event.DomainEventStore]]のための骨格実装。
@@ -16,7 +17,7 @@ trait DomainEventStoreSupport
 [+R <: Repository[ID, T, Future],
 ID <: Identity[_],
 T <: DomainEvent[ID]]
-  extends DomainEventStore[R, ID, T, Future, Unit] {
+  extends DomainEventStore[R, ID, T, Future, Unit] with AsyncDomainEventSubscriber[T, Unit] {
 
   implicit val executor: ExecutionContext
 
