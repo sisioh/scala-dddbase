@@ -14,10 +14,12 @@ import scala.concurrent.Future
 trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
   extends AsyncEntityWriter[ID, E] {
 
+  type Delegate <: AsyncEntityWriter[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateAsyncEntityWriter: AsyncEntityWriter[ID, E]
+  protected val delegate: Delegate
 
   /**
    * 新しいインスタンスを作成する。
@@ -25,12 +27,12 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    * @param state 新しい状態のデリゲートとエンティティ
    * @return 新しいインスタンスとエンティティ
    */
-  protected def createInstance(state: Future[(AsyncEntityWriter[ID, E], Option[E])]): Future[(This, Option[E])]
+  protected def createInstance(state: Future[(Delegate#This, Option[E])]): Future[(This, Option[E])]
 
   def store(entity: E): Future[ResultWithEntity[This, ID, E, Future]] = {
-    val state = delegateAsyncEntityWriter.store(entity).map {
+    val state = delegate.store(entity).map {
       result =>
-        (result.result.asInstanceOf[AsyncEntityWriter[ID, E]], Some(result.entity))
+        (result.result.asInstanceOf[Delegate#This], Some(result.entity))
     }
     val instance = createInstance(state)
     instance.map {
@@ -40,9 +42,9 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
   }
 
   def delete(identity: ID): Future[This] = {
-    val state = delegateAsyncEntityWriter.delete(identity).map {
+    val state = delegate.delete(identity).map {
       result =>
-        (result.asInstanceOf[AsyncEntityWriter[ID, E]], None)
+        (result.asInstanceOf[Delegate#This], None)
     }
     val instance = createInstance(state)
     instance.map {
