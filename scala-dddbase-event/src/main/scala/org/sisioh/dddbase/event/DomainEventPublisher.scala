@@ -17,6 +17,8 @@ trait DomainEventPublisher
    */
   type This <: DomainEventPublisher[A, M, R]
 
+  type DES <: DomainEventSubscriber[A, M, R]
+
   /**
    * [[org.sisioh.dddbase.event.DomainEvent]]を通知する。
    *
@@ -29,13 +31,13 @@ trait DomainEventPublisher
    *
    * @param subscriber [[org.sisioh.dddbase.event.DomainEventPublisher]]
    */
-  def subscribe(subscriber: DomainEventSubscriber[A, M, R]): This
+  def subscribe(subscriber: DES): This
 
   /**
    * [[org.sisioh.dddbase.event.DomainEventPublisher]]を削除する。
    *
    * @param subscriber [[org.sisioh.dddbase.event.DomainEventPublisher]]
    */
-  def unsubscribe(subscriber: DomainEventSubscriber[A, M, R]): This
+  def unsubscribe(subscriber: DES): This
 
 }

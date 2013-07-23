@@ -1,7 +1,8 @@
 package org.sisioh.dddbase.event.mutable.sync
 
+import org.sisioh.dddbase.event.DomainEvent
 import org.sisioh.dddbase.event.mutable.DomainEventPublisherSupport
-import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
+import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 
@@ -15,6 +16,8 @@ case class GenericSyncDomainEventPublisher[A <: DomainEvent[_]]()
 
   type This = GenericSyncDomainEventPublisher[A]
 
-  protected lazy val subscribers = ArrayBuffer[DomainEventSubscriber[A, Try, Unit]]()
+  type DES = SyncDomainEventSubscriber[A, Unit]
+
+  protected lazy val subscribers = ArrayBuffer[DES]()
 
 }

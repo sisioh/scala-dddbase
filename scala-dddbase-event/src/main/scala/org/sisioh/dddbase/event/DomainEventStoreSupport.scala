@@ -20,4 +20,5 @@ trait DomainEventStoreSupport[+R <: Repository[ID, T, M], ID <: Identity[_], T <
   def handleEvent(event: T): M[ResultWithEntity[R#This, ID, T, M]] = {
     eventRepository.store(event).asInstanceOf[M[ResultWithEntity[R#This, ID, T, M]]]
   }
+
 }
