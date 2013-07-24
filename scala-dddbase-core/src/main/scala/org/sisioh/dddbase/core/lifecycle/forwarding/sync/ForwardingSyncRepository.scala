@@ -16,13 +16,11 @@ trait ForwardingSyncRepository[ID <: Identity[_], E <: Entity[ID]]
 
   type This <: ForwardingSyncRepository[ID, E]
 
+  type Delegate <: SyncRepository[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateRepository: SyncRepository[ID, E]
-
-  protected val delegateEntityReader: SyncEntityReader[ID, E] = delegateRepository
-
-  protected val delegateEntityWriter: SyncEntityWriter[ID, E] = delegateRepository
+  protected val delegate: Delegate
 
 }

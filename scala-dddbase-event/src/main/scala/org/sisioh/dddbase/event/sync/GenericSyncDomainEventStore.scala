@@ -15,4 +15,5 @@ import scala.util.Try
  */
 case class GenericSyncDomainEventStore[+R <: Repository[ID, T, Try], ID <: Identity[_], T <: DomainEvent[ID]]
 (protected val eventRepository: R)
-  extends DomainEventStoreSupport[R, ID, T, Try]
+  extends SyncDomainEventStore[R, ID, T]
+  with DomainEventStoreSupport[R, ID, T, Try]

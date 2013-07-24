@@ -11,12 +11,14 @@ import scala.concurrent.Future
  * @tparam R `handleEvent`の戻り値であるモナドの要素型
  */
 case class GenericAsyncDomainEventPublisher[A <: DomainEvent[_], R]
-(subscribers: Seq[DomainEventSubscriber[A, Future, R]] = Seq.empty[DomainEventSubscriber[A, Future, R]])
+(subscribers: Seq[AsyncDomainEventSubscriber[A, R]] = Seq.empty[AsyncDomainEventSubscriber[A, R]])
   extends DomainEventPublisherSupport[A, Future, R] {
 
   type This = GenericAsyncDomainEventPublisher[A, R]
 
-  protected def createInstance(subscribers: Seq[DomainEventSubscriber[A, Future, R]]): This =
+  type DES = AsyncDomainEventSubscriber[A, R]
+
+  protected def createInstance(subscribers: Seq[DES]): This =
     GenericAsyncDomainEventPublisher(subscribers)
 
 }

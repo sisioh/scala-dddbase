@@ -15,14 +15,16 @@ trait ForwardingAsyncEntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID]]
   extends AsyncEntityReadableByPredicate[ID, E] {
   this: AsyncEntityReader[ID, E] =>
 
+  type Delegate <: AsyncEntityReadableByPredicate[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateAsyncEntityReaderByPredicate: AsyncEntityReadableByPredicate[ID, E]
+  protected val delegate: Delegate
 
   def filterByPredicate
   (predicate: (E) => Boolean,
    index: Option[Int], maxEntities: Option[Int]): Future[EntitiesChunk[ID, E]] =
-    delegateAsyncEntityReaderByPredicate.filterByPredicate(predicate, index, maxEntities)
+    delegate.filterByPredicate(predicate, index, maxEntities)
 
 }
