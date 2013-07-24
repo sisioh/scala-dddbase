@@ -4,6 +4,7 @@ import org.sisioh.dddbase.event.mutable.DomainEventPublisherSupport
 import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
+import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 
 /**
  * 汎用的な[[org.sisioh.dddbase.event.DomainEventPublisher]]の非同期型実装。
@@ -15,6 +16,8 @@ case class GenericAsyncDomainEventPublisher[A <: DomainEvent[_]]()
 
   type This = GenericAsyncDomainEventPublisher[A]
 
-  protected val subscribers = ArrayBuffer[DomainEventSubscriber[A, Future, Unit]]()
+  type DES = AsyncDomainEventSubscriber[A, Unit]
+
+  protected val subscribers = ArrayBuffer[DES]()
 
 }

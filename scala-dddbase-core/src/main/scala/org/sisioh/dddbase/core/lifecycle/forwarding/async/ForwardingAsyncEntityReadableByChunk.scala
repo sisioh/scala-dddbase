@@ -15,12 +15,14 @@ trait ForwardingAsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
   extends AsyncEntityReadableByChunk[ID, E] {
   this: AsyncEntityReader[ID, E] =>
 
+  type Delegate <: AsyncEntityReadableByChunk[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateAsyncEntityReaderByChunk: AsyncEntityReadableByChunk[ID, E]
+  protected val delegate: Delegate
 
   def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]] =
-    delegateAsyncEntityReaderByChunk.resolveChunk(index, maxEntities)
+    delegate.resolveChunk(index, maxEntities)
 
 }

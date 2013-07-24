@@ -15,14 +15,16 @@ trait ForwardingSyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]
   extends SyncEntityReadableByPredicate[ID, E] {
   this: SyncEntityReader[ID, E] =>
 
+  type Delegate <: SyncEntityReadableByPredicate[ID, E]
+
   /**
    * デリゲート。
    */
-  protected val delegateEntityReaderByPredicate: SyncEntityReadableByPredicate[ID, E]
+  protected val delegate: Delegate
 
   def filterByPredicate
   (predicate: (E) => Boolean,
    index: Option[Int], maxEntities: Option[Int]): Try[EntitiesChunk[ID, E]] =
-    delegateEntityReaderByPredicate.filterByPredicate(predicate, index, maxEntities)
+    delegate.filterByPredicate(predicate, index, maxEntities)
 
 }
