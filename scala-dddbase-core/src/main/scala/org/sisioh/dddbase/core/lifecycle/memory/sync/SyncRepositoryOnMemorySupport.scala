@@ -16,13 +16,13 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
 import collection.Iterator
-import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, ResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.collection.immutable.HashMap
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 
 /**
  * オンメモリで動作する不変リポジトリの実装。
@@ -68,22 +68,18 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   }
 
 
-  override def store(entity: E): Try[ResultWithEntity[This, ID, E, Try]] = synchronized {
+  override def store(entity: E): Try[SyncResultWithEntity[This, ID, E]] = synchronized {
     val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
     result.entities += (entity.identity -> entity)
     Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
   }
 
-  override def delete(identifier: ID): Try[This] = synchronized {
-    contains(identifier).flatMap {
-      e =>
-        if (e) {
-          val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
-          result.entities -= identifier
-          Success(result.asInstanceOf[This])
-        } else {
-          Failure(new EntityNotFoundException())
-        }
+  override def delete(identifier: ID): Try[SyncResultWithEntity[This, ID, E]] = synchronized {
+    resolve(identifier).flatMap {
+      entity =>
+        val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
+        result.entities -= identifier
+        Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
     }
   }
 

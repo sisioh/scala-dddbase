@@ -6,4 +6,5 @@ import org.sisioh.dddbase.core.model.Identity
 
 trait TestAsyncRepository
   extends AsyncRepository[Identity[UUID], TestEntity] {
+
 }
