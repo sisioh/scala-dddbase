@@ -38,21 +38,21 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *
    * @param entity 保存する対象のエンティティ
    * @return Success:
-   *         リポジトリインスタンス
+   *         リポジトリインスタンスと保存したエンティティ
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: E): Try[ResultWithEntity[This, ID, E, Try]]
+  def store(entity: E): Try[SyncResultWithEntity[This, ID, E]]
 
   /**
    * 指定した識別子のエンティティを削除する。
    *
    * @param identity 識別子
    * @return Success:
-   *         リポジトリインスタンス
+   *         リポジトリインスタンスと削除されたエンティティ
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: ID): Try[This]
+  def delete(identity: ID): Try[SyncResultWithEntity[This, ID, E]]
 
 }

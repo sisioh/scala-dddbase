@@ -51,8 +51,9 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       val entity = spy(new EntityImpl(id))
       repository(entity.identity) = entity
       val future = repository.store(entity)
-      Await.ready(future, Duration.Inf)
+      val resultWithEntity = Await.result(future, Duration.Inf)
       there was atLeastOne(entity).identity
+      (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
           val tr = new TestRepForwardingRepositoryImpl(r.result)
@@ -64,8 +65,9 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity)
-      Await.ready(future, Duration.Inf)
+      val resultWithEntity = Await.result(future, Duration.Inf)
       there was atLeastOne(entity).identity
+      (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
           val tr = new TestRepForwardingRepositoryImpl(r.result)
@@ -77,8 +79,9 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity)
-      Await.ready(future, Duration.Inf)
+      val resultWithEntity = Await.result(future, Duration.Inf)
       there was atLeastOne(entity).identity
+      (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
           val tr = new TestRepForwardingRepositoryImpl(r.result)

@@ -1,6 +1,5 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
-import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntity, AsyncEntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
@@ -29,7 +28,7 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createInstance(state: Future[(Delegate#This, Option[E])]): Future[(This, Option[E])]
 
-  def store(entity: E): Future[ResultWithEntity[This, ID, E, Future]] = {
+  def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]] = {
     val state = delegate.store(entity).map {
       result =>
         (result.result.asInstanceOf[Delegate#This], Some(result.entity))
@@ -41,15 +40,15 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     }
   }
 
-  def delete(identity: ID): Future[This] = {
+  def delete(identity: ID): Future[AsyncResultWithEntity[This, ID, E]] = {
     val state = delegate.delete(identity).map {
       result =>
-        (result.asInstanceOf[Delegate#This], None)
+        (result.result.asInstanceOf[Delegate#This], Some(result.entity))
     }
     val instance = createInstance(state)
     instance.map {
       e =>
-        e._1
+        AsyncResultWithEntity(e._1, e._2.get)
     }
   }
 
