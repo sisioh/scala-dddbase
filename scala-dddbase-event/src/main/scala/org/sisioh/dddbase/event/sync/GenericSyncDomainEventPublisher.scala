@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.event.sync
 
-import org.sisioh.dddbase.event.{DomainEventPublisherSupport, DomainEventSubscriber, DomainEvent}
+import org.sisioh.dddbase.event.{DomainEventPublisherSupport, DomainEvent}
 import scala.util._
 
 /**
@@ -12,7 +12,8 @@ import scala.util._
  */
 case class GenericSyncDomainEventPublisher[A <: DomainEvent[_], R]
 (subscribers: Seq[SyncDomainEventSubscriber[A, R]] = Seq.empty[SyncDomainEventSubscriber[A, R]])
-  extends DomainEventPublisherSupport[A, Try, R] {
+  extends SyncDomainEventPublisher[A, R]
+  with DomainEventPublisherSupport[A, Try, R] {
 
   type This = GenericSyncDomainEventPublisher[A, R]
 
