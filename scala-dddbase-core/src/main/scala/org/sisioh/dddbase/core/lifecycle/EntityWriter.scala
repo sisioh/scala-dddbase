@@ -37,17 +37,49 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *
    * @param entity 保存する対象のエンティティ
    * @return Success:
-   *         リポジトリインスタンス
+   *         リポジトリインスタンスと保存されたエンティティ
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def store(entity: E): M[ResultWithEntity[This, ID, E, M]]
 
+  /**
+   * 更新メソッド。
+   *
+   * {{{
+   *   entityWriter(identity) = entity
+   * }}}
+   *
+   * @param identity 識別子
+   * @param entity エンティティ
+   * @return Success:
+   *         リポジトリインスタンスと保存されたエンティティ
+   *         Failure
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
   def update(identity: ID, entity: E) = store(entity)
 
-  def delete(identity: ID): M[This]
+  /**
+   * 指定した識別子のエンティティを削除する。
+   *
+   * @param identity 識別子
+   * @return Success:
+   *         リポジトリインスタンスと削除されたエンティティ
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def delete(identity: ID): M[ResultWithEntity[This, ID, E, M]]
 
-  def delete(entity: E): M[This] = delete(entity.identity)
+  /**
+   * エンティティを削除する。
+   *
+   * @param entity エンティティ
+   * @return Success:
+   *         リポジトリインスタンスと削除されたエンティティ
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def delete(entity: E): M[ResultWithEntity[This, ID, E, M]] = delete(entity.identity)
 
 }
 
