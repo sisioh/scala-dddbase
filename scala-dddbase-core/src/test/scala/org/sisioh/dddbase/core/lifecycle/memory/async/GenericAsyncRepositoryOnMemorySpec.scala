@@ -8,6 +8,7 @@ import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, 
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
 
 class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 
@@ -75,10 +76,10 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
-        asyncRepos =>
-          asyncRepos.result.delete(id).flatMap {
-            asyncRepos =>
-              asyncRepos.contains(id)
+        case AsyncResultWithEntity(repos,_) =>
+          repos.delete(id).flatMap {
+            case AsyncResultWithEntity(repos,_) =>
+              repos.contains(id)
           }
       }
       Await.ready(future, Duration.Inf)

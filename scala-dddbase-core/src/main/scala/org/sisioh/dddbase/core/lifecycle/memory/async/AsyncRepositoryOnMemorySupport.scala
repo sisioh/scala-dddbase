@@ -15,7 +15,6 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
 import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
@@ -67,18 +66,18 @@ E <: Entity[ID] with EntityCloneable[ID, E]]
     core.contains(identifier).get
   }
 
-  def store(entity: E): Future[ResultWithEntity[This, ID, E, Future]] = future {
+  def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]] = future {
     val result = core.store(entity).get
     val t = (result.result.asInstanceOf[SR], Some(result.entity))
     val instance = createInstance(t)
     AsyncResultWithEntity(instance._1, instance._2.get)
   }
 
-  def delete(identity: ID): Future[This] = future {
+  def delete(identity: ID): Future[AsyncResultWithEntity[This, ID, E]] = future {
     val result = core.delete(identity).get
-    val t = (result.asInstanceOf[SR], None)
+    val t = (result.result.asInstanceOf[SR], Some(result.entity))
     val instance = createInstance(t)
-    instance._1
+    AsyncResultWithEntity(instance._1, instance._2.get)
   }
 
 }

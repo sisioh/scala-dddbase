@@ -9,7 +9,7 @@ object DDDBaseBuild extends Build {
 
   lazy val commonSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.sisioh",
-    version := "0.1.20",
+    version := "0.1.21",
     scalaVersion := "2.10.2",
     libraryDependencies ++= Seq(junit, scalaTest, mockito, scalaTest, specs2),
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
@@ -17,8 +17,39 @@ object DDDBaseBuild extends Build {
       "sbt (%s)> " format projectId(_)
     },
     publishMavenStyle := true,
-    publish,
-    test in fork := false
+    publishArtifact in Test := false,
+    pomIncludeRepository := {
+      _ => false
+    },
+    publishTo <<= version {
+      (v: String) =>
+        val nexus = "https://oss.sonatype.org/"
+        if (v.trim.endsWith("SNAPSHOT"))
+          Some("snapshots" at nexus + "content/repositories/snapshots")
+        else
+          Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
+    pomExtra := (
+      <url>https://github.com/sisioh/sisioh-dddbase</url>
+        <licenses>
+          <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/</url>
+            <distribution>repo</distribution>
+          </license>
+        </licenses>
+        <scm>
+          <url>git@github.com:sisioh/sisioh-dddbase.git</url>
+          <connection>scm:git:git@github.com:sisioh/sisioh-dddbase.git</connection>
+        </scm>
+        <developers>
+          <developer>
+            <id>j5ik2o</id>
+            <name>Junichi Kato</name>
+            <url>http://j5ik2o.me</url>
+          </developer>
+        </developers>
+      )
   )
 
   val root = Project(
@@ -49,14 +80,5 @@ object DDDBaseBuild extends Build {
   def projectId(state: State) = extracted(state).currentProject.id
 
   def extracted(state: State) = Project extract state
-
-  def publish = publishTo <<= (version) {
-    version: String =>
-      if (version.trim.endsWith("SNAPSHOT")) {
-        Some(Resolver.file("snaphost", new File("./repos/snapshot")))
-      } else {
-        Some(Resolver.file("release", new File("./repos/release")))
-      }
-  }
 
 }

@@ -3,7 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityWriter, SyncRepository}
+import org.sisioh.dddbase.core.lifecycle.sync.SyncRepository
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
@@ -46,10 +46,11 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
     "have stored entity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val repos = repository.store(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).isFailure must_== true
-      repos.flatMap {
+      (resultWithEntity.get.result ne repository) must beTrue
+      resultWithEntity.flatMap {
         r =>
           val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
           tr.contains(entity)
@@ -58,10 +59,11 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
     "resolve a entity by using identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val repos = repository.store(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
+      (resultWithEntity.get.result ne repository) must beTrue
       repository.resolve(id).isFailure must_== true
-      repos.flatMap {
+      resultWithEntity.flatMap {
         r =>
           val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
           tr.resolve(id)
@@ -70,14 +72,17 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
     "delete a entity by using identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val repos = repository.store(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
+      (resultWithEntity.get.result ne repository) must beTrue
       repository.resolve(id).isFailure must_== true
-      repos.flatMap {
+      val resultWithEntity2 = resultWithEntity.flatMap {
         r =>
           val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
           tr.delete(id)
-      }.get must_!= repos
+      }.get
+      resultWithEntity2.result must_!= repository
+      resultWithEntity2.entity must_== entity
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
