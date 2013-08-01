@@ -2,8 +2,6 @@ package org.sisioh.dddbase.core.lifecycle.memory.sync
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.memory.sync._
 import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
@@ -25,10 +23,11 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     "have stored enitty with empty identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentity))
-      val repos = repository.store(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).isFailure must_== true
-      repos.flatMap(_.result.contains(entity)).getOrElse(false) must_== true
+      resultWithEntity.flatMap(_.result.contains(entity)).getOrElse(false) must_== true
+      (resultWithEntity.get.result ne repository) must beTrue
     }
     "have stored entity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
@@ -67,10 +66,12 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     "delete a entity by using identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val repos = repository.store(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).isFailure must_== true
-      repos.flatMap(_.result.delete(id)).get must_!= repos
+      val resultWithEntity2 = resultWithEntity.flatMap(_.result.delete(id)).get
+      (resultWithEntity2.result ne repository) must beTrue
+      resultWithEntity2.entity must_== entity
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()

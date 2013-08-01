@@ -18,16 +18,16 @@ trait ForwardingAsyncWrappedEntityWriter[ID <: Identity[_], E <: Entity[ID]]
 
   protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
-  def store(entity: E): Future[ResultWithEntity[This, ID, E, Future]] = future {
+  def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]] = future {
     val resultWithEntity = delegate.store(entity).get
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], Some(resultWithEntity.entity)))
     AsyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
   }
 
-  def delete(identity: ID): Future[This] = future {
-    val resultTry = delegate.delete(identity).get
-    val result = createInstance(resultTry.asInstanceOf[Delegate#This], None)
-    result._1
+  def delete(identity: ID): Future[AsyncResultWithEntity[This,ID,E]] = future {
+    val resultWithEntity = delegate.delete(identity).get
+    val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], Some(resultWithEntity.entity)))
+    AsyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
   }
 
 }

@@ -6,14 +6,9 @@ package org.sisioh.dddbase.event.lifecycle
 object EventType extends Enumeration {
 
   /**
-   * 参照
-   */
-  val Resolve,
-
-  /**
    * 保存　
    */
-  Store,
+  val Store,
 
 
   /**

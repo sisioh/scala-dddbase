@@ -12,7 +12,8 @@ import scala.concurrent.Future
  */
 case class GenericAsyncDomainEventPublisher[A <: DomainEvent[_], R]
 (subscribers: Seq[AsyncDomainEventSubscriber[A, R]] = Seq.empty[AsyncDomainEventSubscriber[A, R]])
-  extends DomainEventPublisherSupport[A, Future, R] {
+  extends AsyncDomainEventPublisher[A, R]
+  with DomainEventPublisherSupport[A, Future, R] {
 
   type This = GenericAsyncDomainEventPublisher[A, R]
 

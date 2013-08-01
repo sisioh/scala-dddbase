@@ -26,23 +26,23 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *
    * @param entity 保存する対象のエンティティ
    * @return Success:
-   *         非同期リポジトリ
+   *         リポジトリインスタンスと保存されたエンティティ
    *         Failure:
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: E): Future[ResultWithEntity[This, ID, E, Future]]
+  def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]]
 
   /**
    * 識別子を指定してエンティティを削除する。
    *
    * @param identity 識別子
    * @return Success:
-   *         非同期リポジトリ
+   *         リポジトリインスタンスと削除されたエンティティ
    *         Failure:
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def delete(identity: ID): Future[This]
+  def delete(identity: ID): Future[AsyncResultWithEntity[This, ID, E]]
 
 }
