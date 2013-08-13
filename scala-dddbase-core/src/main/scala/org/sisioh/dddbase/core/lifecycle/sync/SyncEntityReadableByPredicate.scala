@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{EntityReadableByPredicate, EntitiesChunk}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByPredicate, EntitiesChunk}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -36,6 +36,7 @@ trait SyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]]
    */
   def filterByPredicate
   (predicate: E => Boolean,
-   index: Option[Int] = None, maxEntities: Option[Int] = None): Try[EntitiesChunk[ID, E]]
+   index: Option[Int] = None, maxEntities: Option[Int] = None)
+  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
 
 }

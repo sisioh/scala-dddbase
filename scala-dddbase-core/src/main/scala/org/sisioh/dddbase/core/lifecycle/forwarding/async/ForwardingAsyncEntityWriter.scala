@@ -3,6 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.async
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntity, AsyncEntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityWriter]]のデコレータ。
@@ -28,7 +29,8 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createInstance(state: Future[(Delegate#This, Option[E])]): Future[(This, Option[E])]
 
-  def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+    implicit val executor = getExecutionContext(ctx)
     val state = delegate.store(entity).map {
       result =>
         (result.result.asInstanceOf[Delegate#This], Some(result.entity))
@@ -40,7 +42,8 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     }
   }
 
-  def delete(identity: ID): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def delete(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+    implicit val executor = getExecutionContext(ctx)
     val state = delegate.delete(identity).map {
       result =>
         (result.result.asInstanceOf[Delegate#This], Some(result.entity))

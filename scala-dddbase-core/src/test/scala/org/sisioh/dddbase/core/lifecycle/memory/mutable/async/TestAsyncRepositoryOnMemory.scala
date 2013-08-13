@@ -6,11 +6,12 @@ import org.sisioh.dddbase.core.model.Identity
 import scala.concurrent.ExecutionContext
 
 class TestAsyncRepositoryOnMemory
-(protected val core: GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity] = GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity]())
-(implicit val executor: ExecutionContext)
+(protected val delegate: GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity] = GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity]())
   extends TestAsyncRepository
-  with AsyncRepositoryOnMemory[GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity], Identity[UUID], TestEntity] {
+  with AsyncRepositoryOnMemory[Identity[UUID], TestEntity] {
 
   type This = TestAsyncRepositoryOnMemory
+
+  type Delegate = GenericSyncRepositoryOnMemory[Identity[UUID], TestEntity]
 
 }

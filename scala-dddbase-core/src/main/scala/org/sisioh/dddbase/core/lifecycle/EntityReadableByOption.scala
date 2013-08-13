@@ -35,6 +35,6 @@ trait EntityReadableByOption[ID <: Identity[_], E <: Entity[ID], M[+A]] {
    * @param identity 識別子
    * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
    */
-  def resolveOption(identity: ID): M[Option[E]]
+  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[M]): M[Option[E]]
 
 }
