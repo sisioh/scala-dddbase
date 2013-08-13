@@ -5,6 +5,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 import org.sisioh.dddbase.event.mutable.async.GenericAsyncDomainEventPublisher
 import scala.concurrent.Future
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * 非同期型リポジトリにイベント管理機能を追加するためのトレイト。
@@ -46,7 +47,8 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createEntityIOEvent(entity: E, eventType: EventType.Value): EntityIOEvent[ID, E]
 
-  abstract override def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]] = {
+  abstract override def store(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+    implicit val executor = getExecutionContext(ctx)
     val result = super.store(entity)
     result onSuccess {
       case resultWithEntity =>
@@ -56,7 +58,8 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
     result.asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
   }
 
-  abstract override def delete(identity: ID): Future[AsyncResultWithEntity[This, ID, E]] = {
+  abstract override def delete(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+    implicit val executor = getExecutionContext(ctx)
     val result = super.delete(identity)
     result onSuccess {
       case resultWithEntity =>

@@ -9,6 +9,8 @@ import org.specs2.mutable.Specification
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 
 class GenericAsyncDomainEventStoreSpec extends Specification {
 
@@ -20,6 +22,8 @@ class GenericAsyncDomainEventStoreSpec extends Specification {
       identity.value compareTo that.identity.value
     }
   }
+
+  implicit val ctx = AsyncWrappedSyncEntityIOContext()
 
   "domain event store" should {
     "get saved event" in {

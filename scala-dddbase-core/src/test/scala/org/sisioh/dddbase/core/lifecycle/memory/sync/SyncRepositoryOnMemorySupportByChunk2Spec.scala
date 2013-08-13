@@ -3,6 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.sync
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mockito {
 
@@ -19,6 +20,8 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
     with SyncRepositoryOnMemorySupportByChunk[IntIdentity, EntityImpl] {
     type This = TestSyncRepository
   }
+
+  implicit val ctx = SyncEntityIOContext
 
   "The repository" should {
     "have stored entities" in {
