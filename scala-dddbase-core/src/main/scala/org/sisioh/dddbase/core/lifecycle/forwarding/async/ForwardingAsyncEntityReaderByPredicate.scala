@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
-import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReadableByPredicate, AsyncEntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
@@ -24,7 +24,8 @@ trait ForwardingAsyncEntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID]]
 
   def filterByPredicate
   (predicate: (E) => Boolean,
-   index: Option[Int], maxEntities: Option[Int]): Future[EntitiesChunk[ID, E]] =
+   index: Option[Int], maxEntities: Option[Int])
+  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] =
     delegate.filterByPredicate(predicate, index, maxEntities)
 
 }

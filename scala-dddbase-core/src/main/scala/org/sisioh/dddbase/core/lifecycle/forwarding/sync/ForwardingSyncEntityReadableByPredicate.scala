@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByPredicate, SyncEntityReader}
@@ -24,7 +24,8 @@ trait ForwardingSyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]
 
   def filterByPredicate
   (predicate: (E) => Boolean,
-   index: Option[Int], maxEntities: Option[Int]): Try[EntitiesChunk[ID, E]] =
+   index: Option[Int], maxEntities: Option[Int])
+  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] =
     delegate.filterByPredicate(predicate, index, maxEntities)
 
 }

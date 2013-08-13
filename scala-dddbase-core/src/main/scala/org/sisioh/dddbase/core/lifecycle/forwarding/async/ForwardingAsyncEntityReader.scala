@@ -3,6 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.async
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader]]のデコレータ。
@@ -20,10 +21,10 @@ trait ForwardingAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolve(identity: ID) =
+  def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]) =
     delegate.resolve(identity)
 
-  def contains(identity: ID): Future[Boolean] =
+  def contains(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] =
     delegate.contains(identity)
 
 }

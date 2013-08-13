@@ -3,21 +3,15 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.sync.wrapped
 import org.specs2.mutable.Specification
 import org.sisioh.dddbase.core.model.{EmptyIdentity, EntityCloneable, Entity, Identity}
 import java.util.UUID
-import scala.concurrent.ExecutionContext.Implicits.global
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
 import scala.concurrent.duration.Duration
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.specs2.mock.Mockito
 import scala.concurrent.ExecutionContext
+import ExecutionContext.Implicits.global
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 
-/**
- * Created with IntelliJ IDEA.
- * User: junichi.kato
- * Date: 2013/08/06
- * Time: 14:14
- * To change this template use File | Settings | File Templates.
- */
-class ForwardingSyncWrappedRepositorySpec extends Specification with Mockito {
+class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identity: Identity[UUID])
     extends Entity[Identity[UUID]]
@@ -31,7 +25,7 @@ class ForwardingSyncWrappedRepositorySpec extends Specification with Mockito {
   class ForwardingSyncWrappedRepositoryImpl
   (protected val delegate: GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl])
   (implicit val executor: ExecutionContext)
-    extends ForwardingSyncWrappedRepository[Identity[UUID], EntityImpl] {
+    extends SyncWrappedAsyncRepository[Identity[UUID], EntityImpl] {
 
     type This = ForwardingSyncWrappedRepositoryImpl
 
@@ -45,6 +39,8 @@ class ForwardingSyncWrappedRepositorySpec extends Specification with Mockito {
   }
 
   val id = Identity(UUID.randomUUID)
+
+  implicit val ctx = SyncWrappedAsyncEntityIOContext(AsyncWrappedSyncEntityIOContext())
 
   "The repository" should {
     "have stored entity with empty identity" in {

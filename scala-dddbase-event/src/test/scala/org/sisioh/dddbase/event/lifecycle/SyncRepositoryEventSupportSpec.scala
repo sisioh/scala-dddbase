@@ -6,6 +6,8 @@ import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identity}
 import java.util.UUID
 import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
 import scala.util.{Success, Try}
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class SyncRepositoryEventSupportSpec extends Specification {
 
@@ -23,6 +25,8 @@ class SyncRepositoryEventSupportSpec extends Specification {
     EntityIOEvent[Identity[UUID], EntityImpl] = new EntityIOEvent[Identity[UUID], EntityImpl](Identity(UUID.randomUUID()), entity, eventType)
   }
 
+  implicit val ctx = SyncEntityIOContext
+
   "event subscriber" should {
     "receive entity io event" in {
       var result: Boolean = false
@@ -31,7 +35,7 @@ class SyncRepositoryEventSupportSpec extends Specification {
       val repos = new TestRepository()
       val entity = new EntityImpl(Identity(UUID.randomUUID()))
       repos.subscribe(new SyncDomainEventSubscriber[EntityIOEvent[Identity[UUID], EntityImpl], Unit] {
-        def handleEvent(event: EntityIOEvent[Identity[UUID], EntityImpl]): Try[Unit] = {
+        def handleEvent(event: EntityIOEvent[Identity[UUID], EntityImpl])(implicit ctx: EntityIOContext[Try]): Try[Unit] = {
           result = true
           resultEntity = event.entity
           resultEventType = event.eventType

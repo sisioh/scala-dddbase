@@ -9,8 +9,9 @@ import org.specs2.mutable.Specification
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
 import ExecutionContext.Implicits.global
+import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
 
-class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
+class AsyncWrappedSyncRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identity: Identity[UUID])
     extends Entity[Identity[UUID]]
@@ -24,7 +25,7 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
   class ForwardingAsyncWrappedRepositoryImpl
   (protected val delegate: GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl])
   (implicit val executor: ExecutionContext)
-    extends ForwardingAsyncWrappedRepository[Identity[UUID], EntityImpl] {
+    extends AsyncWrappedSyncRepository[Identity[UUID], EntityImpl] {
 
     type This = ForwardingAsyncWrappedRepositoryImpl
 
@@ -37,6 +38,8 @@ class ForwardingAsyncWrappedRepositorySpec extends Specification with Mockito {
   }
 
   val id = Identity(UUID.randomUUID)
+
+  implicit val ctx = AsyncWrappedSyncEntityIOContext()
 
   "The repository" should {
     "have stored entity with empty identity" in {

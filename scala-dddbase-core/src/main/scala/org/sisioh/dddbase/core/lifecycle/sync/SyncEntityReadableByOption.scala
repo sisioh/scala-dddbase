@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntityReadableByOption
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByOption}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -33,6 +33,6 @@ trait SyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
    * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
    */
-  def resolveOption(identity: ID): Try[Option[E]]
+  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Option[E]]
 
 }
