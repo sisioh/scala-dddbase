@@ -18,21 +18,21 @@ package org.sisioh.dddbase.core.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
-import scala.concurrent.ExecutionContext
 
 /**
  * 汎用的な非同期型オンメモリ不変リポジトリ。
  *
- * @param core 内部で利用するオンメモリ不変リポジトリ。
+ * @param delegate 内部で利用するオンメモリ不変リポジトリ。
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
 class GenericAsyncRepositoryOnMemory[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-(protected val core: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
-(implicit val executor: ExecutionContext)
-  extends AsyncRepositoryOnMemorySupport[GenericSyncRepositoryOnMemory[ID, E], ID, E] {
+(protected val delegate: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
+  extends AsyncRepositoryOnMemorySupport[ID, E] {
 
   type This = GenericAsyncRepositoryOnMemory[ID, E]
+
+  type Delegate = GenericSyncRepositoryOnMemory[ID, E]
 
   protected def createInstance(state: (GenericSyncRepositoryOnMemory[ID, E], Option[E])): (GenericAsyncRepositoryOnMemory[ID, E], Option[E]) =
     (new GenericAsyncRepositoryOnMemory[ID, E](state._1), state._2)
@@ -47,15 +47,14 @@ object GenericAsyncRepositoryOnMemory {
   /**
    * ファクトリメソッド。
    *
-   * @param core 内部で利用するオンメモリ不変リポジトリ
+   * @param delegate 内部で利用するオンメモリ不変リポジトリ
    * @tparam ID 識別子の型
    * @tparam T エンティティの型
    * @return [[org.sisioh.dddbase.core.lifecycle.memory.async.GenericAsyncRepositoryOnMemory]]
    */
   def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (core: GenericSyncRepositoryOnMemory[ID, T] = GenericSyncRepositoryOnMemory[ID, T]())
-  (implicit executor: ExecutionContext) =
-    new GenericAsyncRepositoryOnMemory(core)
+  (delegate: GenericSyncRepositoryOnMemory[ID, T] = GenericSyncRepositoryOnMemory[ID, T]()) =
+    new GenericAsyncRepositoryOnMemory(delegate)
 
   /**
    * エクストラクタメソッド。
@@ -67,7 +66,7 @@ object GenericAsyncRepositoryOnMemory {
    */
   def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
   (repository: GenericAsyncRepositoryOnMemory[ID, T]): Option[GenericSyncRepositoryOnMemory[ID, T]] =
-    Some(repository.core)
+    Some(repository.delegate)
 
 }
 

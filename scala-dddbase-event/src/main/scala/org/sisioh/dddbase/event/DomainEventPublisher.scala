@@ -1,6 +1,7 @@
 package org.sisioh.dddbase.event
 
 import scala.language.higherKinds
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * ドメインイベントを通知するためのトレイト。
@@ -24,7 +25,7 @@ trait DomainEventPublisher
    *
    * @param event ドメインイベント
    */
-  def publish(event: A): Seq[M[R]]
+  def publish(event: A)(implicit ctx: EntityIOContext[M]): Seq[M[R]]
 
   /**
    * [[org.sisioh.dddbase.event.DomainEventPublisher]]を登録する。

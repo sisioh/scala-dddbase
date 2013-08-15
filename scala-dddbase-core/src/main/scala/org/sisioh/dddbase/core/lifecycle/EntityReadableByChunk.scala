@@ -34,6 +34,6 @@ trait EntityReadableByChunk[ID <: Identity[_], E <: Entity[ID], M[+A]] {
    * @param maxEntities 1チャンクの件数
    * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
-  def resolveChunk(index: Int, maxEntities: Int): M[EntitiesChunk[ID, E]]
+  def resolveChunk(index: Int, maxEntities: Int)(implicit ctx: EntityIOContext[M]): M[EntitiesChunk[ID, E]]
 
 }

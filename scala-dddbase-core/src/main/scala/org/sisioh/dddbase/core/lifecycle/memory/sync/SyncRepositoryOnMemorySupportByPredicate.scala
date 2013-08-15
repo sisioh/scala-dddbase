@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
 import org.sisioh.dddbase.core.lifecycle.sync._
 import org.sisioh.dddbase.core.model._
 import scala.util._
@@ -21,7 +21,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   def filterByPredicate
   (predicate: (E) => Boolean,
    indexOpt: Option[Int] = None,
-   maxEntitiesOpt: Option[Int] = None): Try[EntitiesChunk[ID, E]] = {
+   maxEntitiesOpt: Option[Int] = None)(implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] = {
     val filteredSubEntities = toList.filter(predicate)
     val index = indexOpt.getOrElse(0)
     val maxEntities = maxEntitiesOpt.getOrElse(filteredSubEntities.size)

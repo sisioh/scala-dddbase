@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.event.mutable.sync
 
-import org.sisioh.dddbase.core.lifecycle.Repository
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, Repository}
 import org.sisioh.dddbase.core.model.Identity
 import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
 import scala.util.Try
@@ -22,7 +22,7 @@ T <: DomainEvent[ID]]
 
   protected val eventRepository: R
 
-  def handleEvent(event: T): Try[Unit] =
+  def handleEvent(event: T)(implicit ctx: EntityIOContext[Try]): Try[Unit] =
     eventRepository.store(event).map(_ => ())
 
 }

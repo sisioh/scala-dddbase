@@ -30,13 +30,13 @@ import scala.language.higherKinds
 trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+A]]
   extends EntityIO {
 
-  def resolve(identity: ID): M[E]
+  def resolve(identity: ID)(implicit ctx: EntityIOContext[M]): M[E]
 
-  def apply(identity: ID): M[E] = resolve(identity)
+  def apply(identity: ID)(implicit ctx: EntityIOContext[M]): M[E] = resolve(identity)
 
-  def contains(identity: ID): M[Boolean]
+  def contains(identity: ID)(implicit ctx: EntityIOContext[M]): M[Boolean]
 
-  def contains(entity: E): M[Boolean] = contains(entity.identity)
+  def contains(entity: E)(implicit ctx: EntityIOContext[M]): M[Boolean] = contains(entity.identity)
 
 }
 

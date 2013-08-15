@@ -26,8 +26,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemory
-[ID <: Identity[_],
-E <: Entity[ID] with EntityCloneable[ID, E]]
+[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends AsyncRepository[ID, E] {
 
 }

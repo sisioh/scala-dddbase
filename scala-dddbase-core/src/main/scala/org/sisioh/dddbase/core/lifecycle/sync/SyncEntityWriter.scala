@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity, EntityWriter}
+import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity, EntityIOContext, EntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -42,7 +42,8 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: E): Try[SyncResultWithEntity[This, ID, E]]
+  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]]
+
 
   /**
    * 指定した識別子のエンティティを削除する。
@@ -53,6 +54,6 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: ID): Try[SyncResultWithEntity[This, ID, E]]
+  def delete(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]]
 
 }

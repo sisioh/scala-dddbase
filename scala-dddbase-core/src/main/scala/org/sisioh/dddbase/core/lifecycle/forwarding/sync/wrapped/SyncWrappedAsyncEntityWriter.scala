@@ -6,9 +6,18 @@ import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityWriter
 import scala.util.Try
 import scala.concurrent.duration.Duration
 import scala.concurrent.Await
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
-trait ForwardingSyncWrappedEntityWriter[ID <: Identity[_], E <: Entity[ID]]
-  extends SyncEntityWriter[ID, E] {
+/**
+ * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityWriter]]を
+ * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityWriter]]として
+ * ラップするためのデコレータ。
+ *
+ * @tparam ID 識別子の型
+ * @tparam E エンティティの型
+ */
+trait SyncWrappedAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityWriter[ID, E] with SyncWrappedAsyncEntityIO {
 
   type Delegate <: AsyncEntityWriter[ID, E]
 
@@ -21,13 +30,15 @@ trait ForwardingSyncWrappedEntityWriter[ID <: Identity[_], E <: Entity[ID]]
 
   protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
-  def store(entity: E): Try[SyncResultWithEntity[This, ID, E]] = Try {
+  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = Try {
+    implicit val asyncEntityIOContext =  getAsyncEntityIOContext(ctx)
     val resultWithEntity = Await.result(delegate.store(entity), timeOut)
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], Some(resultWithEntity.entity)))
     SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
   }
 
-  def delete(identity: ID): Try[SyncResultWithEntity[This, ID, E]] = Try {
+  def delete(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = Try {
+    implicit val asyncEntityIOContext =  getAsyncEntityIOContext(ctx)
     val resultWithEntity = Await.result(delegate.delete(identity), timeOut)
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], Some(resultWithEntity.entity)))
     SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)

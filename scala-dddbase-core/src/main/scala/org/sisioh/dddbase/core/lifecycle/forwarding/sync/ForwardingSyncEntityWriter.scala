@@ -3,6 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityWriter, SyncResultWithEntity}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityWriter]]のデリゲート。
@@ -30,7 +31,7 @@ trait ForwardingSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createInstance(state: Try[(Delegate#This, Option[E])]): Try[(This, Option[E])]
 
-  def store(entity: E): Try[SyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
     createInstance(
       delegate.store(entity).map {
         e =>
@@ -39,7 +40,7 @@ trait ForwardingSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     ).map(e => SyncResultWithEntity(e._1, e._2.get))
   }
 
-  def delete(identity: ID): Try[SyncResultWithEntity[This, ID, E]] = {
+  def delete(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
     createInstance(
       delegate.delete(identity).map {
         e =>

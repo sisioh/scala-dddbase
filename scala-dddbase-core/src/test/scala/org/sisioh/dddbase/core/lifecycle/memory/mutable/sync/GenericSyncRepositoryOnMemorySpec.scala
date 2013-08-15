@@ -8,6 +8,8 @@ import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, 
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.Some
+import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 
@@ -23,6 +25,8 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
   }
 
   val id = Identity(UUID.randomUUID())
+
+  implicit val ctx = SyncEntityIOContext
 
   "The repository" should {
     "have stored entity with empty identity" in {

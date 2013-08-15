@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
 import org.sisioh.dddbase.core.model.{Entity, Identity}
-import scala.concurrent.{ExecutionContext, Future}
-import org.sisioh.dddbase.core.lifecycle.EntityReader
+import scala.concurrent.Future
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReader}
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
@@ -13,9 +13,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityReader
  * @tparam E エンティティの型
  */
 trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityReader[ID, E, Future] {
-
-  implicit val executor: ExecutionContext
+  extends AsyncEntityIO with EntityReader[ID, E, Future] {
 
   /**
    * 識別子に該当するエンティティを解決する。
@@ -29,7 +27,7 @@ trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    *         EntityNotFoundException リポジトリにアクセスできなかった場合
    *         RepositoryException リポジトリにアクセスできなかった場合
    */
-  def resolve(identity: ID): Future[E]
+  def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[E]
 
   /**
    * 指定した識別子のエンティティが存在するかを返す。
@@ -42,6 +40,6 @@ trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def contains(identity: ID): Future[Boolean]
+  def contains(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean]
 
 }
