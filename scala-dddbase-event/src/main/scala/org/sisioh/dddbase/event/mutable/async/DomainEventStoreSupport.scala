@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.event.mutable.async
 
-import org.sisioh.dddbase.core.lifecycle.Repository
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, Repository}
 import org.sisioh.dddbase.core.model.Identity
 import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
 import scala.concurrent.{Future, ExecutionContext}
@@ -23,7 +23,7 @@ T <: DomainEvent[ID]]
 
   protected val eventRepository: R
 
-  def handleEvent(event: T): Future[Unit] =
+  def handleEvent(event: T)(implicit ctx: EntityIOContext[Future]): Future[Unit] =
     eventRepository.store(event).map(_ => ())
 
 }

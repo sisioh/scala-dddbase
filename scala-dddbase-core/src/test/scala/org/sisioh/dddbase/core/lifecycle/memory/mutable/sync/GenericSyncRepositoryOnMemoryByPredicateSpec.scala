@@ -3,6 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class GenericSyncRepositoryOnMemoryByPredicateSpec extends Specification with Mockito {
 
@@ -24,6 +25,8 @@ class GenericSyncRepositoryOnMemoryByPredicateSpec extends Specification with Mo
     type This = TestSyncRepository
 
   }
+
+  implicit val ctx = SyncEntityIOContext
 
   "The repository" should {
     "have stored entities" in {

@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, ResultWithEntity}
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import scala.util.Try
@@ -48,7 +48,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   override def hashCode = 31 * core.##
 
-  def store(entity: E): Try[SyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
     core.store(entity).map {
       resultWithEntity =>
         core = resultWithEntity.result.asInstanceOf[SyncRepositoryOnMemory[ID, E]]
@@ -56,7 +56,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
     }
   }
 
-  def delete(identity: ID): Try[SyncResultWithEntity[This, ID, E]] = {
+  def delete(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
     core.delete(identity).map {
       result =>
         SyncResultWithEntity(this.asInstanceOf[This], result.entity)
@@ -65,6 +65,6 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   def iterator: Iterator[E] = core.iterator
 
-  def resolve(identity: ID): Try[E] = core.resolve(identity)
+  def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = core.resolve(identity)
 
 }

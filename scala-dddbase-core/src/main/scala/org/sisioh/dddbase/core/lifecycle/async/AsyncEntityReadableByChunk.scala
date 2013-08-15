@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.{EntityReadableByChunk, EntitiesChunk}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByChunk, EntitiesChunk}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
 
@@ -20,6 +20,7 @@ trait AsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]]
+  def resolveChunk(index: Int, maxEntities: Int)
+                  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]]
 
 }

@@ -7,6 +7,7 @@ import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
 import scala.util.Try
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class GenericSyncDomainEventStoreSpec extends Specification {
 
@@ -18,6 +19,8 @@ class GenericSyncDomainEventStoreSpec extends Specification {
       identity.value compareTo that.identity.value
     }
   }
+
+  implicit val ctx = SyncEntityIOContext
 
   "domain event store" should {
     "get saved event" in {

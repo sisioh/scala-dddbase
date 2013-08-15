@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.{EntityWriter, ResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityWriter]]。
@@ -13,9 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
  * @tparam E エンティティの型
  */
 trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityWriter[ID, E, Future] {
-
-  implicit val executor: ExecutionContext
+  extends AsyncEntityIO with EntityWriter[ID, E, Future] {
 
   type This <: AsyncEntityWriter[ID, E]
 
@@ -31,7 +29,7 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]]
+  def store(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]]
 
   /**
    * 識別子を指定してエンティティを削除する。
@@ -43,6 +41,6 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def delete(identity: ID): Future[AsyncResultWithEntity[This, ID, E]]
+  def delete(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]]
 
 }

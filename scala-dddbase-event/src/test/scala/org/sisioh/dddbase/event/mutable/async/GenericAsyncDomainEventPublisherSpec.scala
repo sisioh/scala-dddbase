@@ -8,6 +8,8 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
+import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 
 class GenericAsyncDomainEventPublisherSpec extends Specification {
@@ -17,12 +19,14 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
 
   val publisher = GenericAsyncDomainEventPublisher[TestDomainEvent]()
 
+  implicit val ctx = AsyncEntityIOContext()
+
   "dep" should {
     "publish" in {
       var result: Identity[UUID] = null
       publisher.subscribe(
         new AsyncDomainEventSubscriber[TestDomainEvent, Unit] {
-          def handleEvent(event: TestDomainEvent): Future[Unit] = {
+          def handleEvent(event: TestDomainEvent)(implicit ctx: EntityIOContext[Future]): Future[Unit] = {
             result = event.identity
             Future(())
           }

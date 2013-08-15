@@ -3,6 +3,7 @@ package org.sisioh.dddbase.event.mutable
 import scala.language.higherKinds
 import org.sisioh.dddbase.event._
 import scala.collection.mutable.ArrayBuffer
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * [[org.sisioh.dddbase.event.DomainEventPublisher]]の骨格実装。
@@ -20,7 +21,7 @@ trait DomainEventPublisherSupport
    */
   protected val subscribers: ArrayBuffer[DES]
 
-  def publish(event: A): Seq[M[R]] = {
+  def publish(event: A)(implicit ctx: EntityIOContext[M]): Seq[M[R]] = {
     subscribers.map(_.handleEvent(event))
   }
 

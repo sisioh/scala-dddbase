@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
-import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReadableByChunk, AsyncEntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
@@ -22,7 +22,8 @@ trait ForwardingAsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolveChunk(index: Int, maxEntities: Int): Future[EntitiesChunk[ID, E]] =
+  def resolveChunk(index: Int, maxEntities: Int)
+                  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] =
     delegate.resolveChunk(index, maxEntities)
 
 }

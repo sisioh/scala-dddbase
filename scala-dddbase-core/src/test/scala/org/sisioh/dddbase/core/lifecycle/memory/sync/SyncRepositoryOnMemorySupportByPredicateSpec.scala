@@ -1,10 +1,9 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
-import org.sisioh.dddbase.core.lifecycle.memory.sync._
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
-import scala.Some
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mockito {
 
@@ -25,6 +24,8 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
     override type This = TestSyncRepository
   }
 
+  implicit val ctx = SyncEntityIOContext
+
   "The repository" should {
     "have stored entities" in {
 
@@ -36,7 +37,9 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
       }
 
       val chunk = repository.filterByPredicate(
-      {e => e.identity.value % 2 == 0}, Some(0), Some(5)).get
+      {
+        e => e.identity.value % 2 == 0
+      }, Some(0), Some(5)).get
 
       chunk.index must_== 0
       chunk.entities.size must_== 5
