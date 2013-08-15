@@ -26,7 +26,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 
   val id = Identity(UUID.randomUUID())
 
-  implicit val ctx = SyncEntityIOContext
+  import GenericSyncRepositoryOnMemory.Implicits.defaultEntityIOContext
 
   "The repository" should {
     "have stored entity with empty identity" in {
