@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.{EntityReadableByPredicate, EntitiesChunk}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByPredicate, EntitiesChunk}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
 
@@ -22,7 +22,7 @@ trait AsyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def filterByPredicate
-  (predicate: E => Boolean,
-   index: Option[Int] = None, maxEntities: Option[Int] = None): Future[EntitiesChunk[ID, E]]
+  (predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
+  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]]
 
 }

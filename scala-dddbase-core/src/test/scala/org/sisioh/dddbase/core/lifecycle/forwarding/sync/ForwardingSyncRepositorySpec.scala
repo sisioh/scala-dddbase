@@ -3,7 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle._
 import org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory
-import org.sisioh.dddbase.core.lifecycle.sync.SyncRepository
+import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityIOContext, SyncRepository}
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
@@ -41,6 +41,9 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
     }
 
   }
+
+  implicit val ctx = SyncEntityIOContext
+
 
   "The repository" should {
     "have stored entity" in {

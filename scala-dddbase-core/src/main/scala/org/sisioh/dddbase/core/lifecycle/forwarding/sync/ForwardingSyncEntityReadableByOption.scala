@@ -3,6 +3,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByOption, SyncEntityReader}
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByOption]]のデコレータ。
@@ -21,6 +22,7 @@ trait ForwardingSyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolveOption(identity: ID): Try[Option[E]] = delegate.resolveOption(identity)
+  def resolveOption(identity: ID)
+                   (implicit ctx: EntityIOContext[Try]): Try[Option[E]] = delegate.resolveOption(identity)
 
 }

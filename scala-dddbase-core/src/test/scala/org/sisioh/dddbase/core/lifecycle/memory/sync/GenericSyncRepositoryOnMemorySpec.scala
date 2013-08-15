@@ -5,6 +5,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 
@@ -18,6 +19,8 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
   }
 
   val id = Identity(UUID.randomUUID())
+
+  import GenericSyncRepositoryOnMemory.Implicits.defaultEntityIOContext
 
   "The repository" should {
     "have stored enitty with empty identity" in {

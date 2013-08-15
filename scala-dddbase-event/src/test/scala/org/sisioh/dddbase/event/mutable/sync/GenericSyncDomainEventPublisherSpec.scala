@@ -6,6 +6,8 @@ import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import org.specs2.mutable.Specification
 import scala.util._
 import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 class GenericSyncDomainEventPublisherSpec extends Specification {
 
@@ -14,12 +16,14 @@ class GenericSyncDomainEventPublisherSpec extends Specification {
 
   val publisher = GenericSyncDomainEventPublisher[TestDomainEvent]()
 
+  implicit val ctx = SyncEntityIOContext
+
   "dep" should {
     "publish" in {
       var result: Identity[UUID] = null
       publisher.subscribe(
         new SyncDomainEventSubscriber[TestDomainEvent, Unit] {
-          def handleEvent(event: TestDomainEvent): Try[Unit] = {
+          def handleEvent(event: TestDomainEvent)(implicit ctx: EntityIOContext[Try]): Try[Unit] = {
             result = event.identity
             Success(())
           }

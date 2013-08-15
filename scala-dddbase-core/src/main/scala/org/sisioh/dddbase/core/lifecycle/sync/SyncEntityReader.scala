@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntityReader
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -33,12 +33,12 @@ trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    *         Failure: EntityNotFoundExceptionは、エンティティが見つからなかった場合、
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolve(identity: ID): Try[E]
+  def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E]
 
   /**
    * @return Success: 存在する場合はtrue
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def contains(identity: ID): Try[Boolean]
+  def contains(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean]
 
 }
