@@ -8,6 +8,8 @@ import org.specs2.mutable._
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 
 class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 
@@ -23,6 +25,8 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
   }
 
   val id = Identity(UUID.randomUUID())
+
+  implicit val ctx = AsyncWrappedSyncEntityIOContext()
 
   "The repository" should {
     "have stored entity with empty identity" in {

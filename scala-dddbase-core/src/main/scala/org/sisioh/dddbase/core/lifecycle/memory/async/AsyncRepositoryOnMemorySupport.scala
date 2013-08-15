@@ -15,10 +15,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
-import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
-import scala.concurrent._
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncRepository
 
 /**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
@@ -27,20 +25,13 @@ import scala.concurrent._
  * 実装を提供する。リポジトリの状態変更を起こすメソッドを呼び出した際に、新しいインスタンス
  * を生成するか `this` を返すかは `createInstance` メソッドの振る舞いによって決定する。
  *
- * @tparam SR 内部で利用する同期型リポジトリの型
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupport
-[SR <: SyncRepositoryOnMemory[ID, E],
-ID <: Identity[_],
-E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemory[ID, E] {
-
-  /**
-   * 内部で利用する同期型リポジトリ。
-   */
-  protected val core: SR
+[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemory[ID, E]
+  with AsyncWrappedSyncRepository[ID, E] {
 
   /**
    * 新しい非同期型リポジトリを生成する。
@@ -48,36 +39,14 @@ E <: Entity[ID] with EntityCloneable[ID, E]]
    * @param state 新しい同期型リポジトリ
    * @return 新しい非同期型のリポジトリ
    */
-  protected def createInstance(state: (SR, Option[E])): (This, Option[E])
+  protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
   override def equals(obj: Any) = obj match {
-    case that: AsyncRepositoryOnMemorySupport[_, _, _] =>
-      this.core == that.core
+    case that: AsyncRepositoryOnMemorySupport[_, _] =>
+      this.delegate == that.delegate
     case _ => false
   }
 
-  override def hashCode = 31 * core.hashCode()
-
-  def resolve(identifier: ID) = future {
-    core.resolve(identifier).get
-  }
-
-  def contains(identifier: ID) = future {
-    core.contains(identifier).get
-  }
-
-  def store(entity: E): Future[AsyncResultWithEntity[This, ID, E]] = future {
-    val result = core.store(entity).get
-    val t = (result.result.asInstanceOf[SR], Some(result.entity))
-    val instance = createInstance(t)
-    AsyncResultWithEntity(instance._1, instance._2.get)
-  }
-
-  def delete(identity: ID): Future[AsyncResultWithEntity[This, ID, E]] = future {
-    val result = core.delete(identity).get
-    val t = (result.result.asInstanceOf[SR], Some(result.entity))
-    val instance = createInstance(t)
-    AsyncResultWithEntity(instance._1, instance._2.get)
-  }
+  override def hashCode = 31 * delegate.hashCode()
 
 }

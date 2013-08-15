@@ -1,14 +1,15 @@
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
-import concurrent.Await
+import scala.concurrent.{Future, Await}
 import concurrent.duration.Duration
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityNotFoundException}
 import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
+import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityIOContext, AsyncResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 
 class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 
@@ -24,6 +25,8 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
   }
 
   val id = Identity(UUID.randomUUID)
+
+  implicit val ctx = AsyncWrappedSyncEntityIOContext()
 
   "The repository" should {
 

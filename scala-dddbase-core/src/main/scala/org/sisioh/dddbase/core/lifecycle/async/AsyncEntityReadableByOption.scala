@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.EntityReadableByOption
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByOption}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
 
@@ -20,6 +20,6 @@ trait AsyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         Futureが失敗した場合の例外
    */
-  def resolveOption(identity: ID): Future[Option[E]]
+  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Option[E]]
 
 }

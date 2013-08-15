@@ -2,7 +2,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
+import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityIOContext, AsyncRepository}
 import org.sisioh.dddbase.core.lifecycle.memory.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identity}
 import org.specs2.mock.Mockito
@@ -10,6 +10,7 @@ import org.specs2.mutable.Specification
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future, Await}
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 
 class ForwardingAsyncRepositorySpec extends Specification with Mockito {
 
@@ -44,6 +45,8 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
     }
 
   }
+
+  implicit val ctx = AsyncWrappedSyncEntityIOContext()
 
   "repository" should {
     "have stored entity" in {

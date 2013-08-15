@@ -41,7 +41,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: E): M[ResultWithEntity[This, ID, E, M]]
+  def store(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]]
 
   /**
    * 更新メソッド。
@@ -57,7 +57,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def update(identity: ID, entity: E) = store(entity)
+  def update(identity: ID, entity: E)(implicit ctx: EntityIOContext[M]) = store(entity)
 
   /**
    * 指定した識別子のエンティティを削除する。
@@ -68,7 +68,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: ID): M[ResultWithEntity[This, ID, E, M]]
+  def delete(identity: ID)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]]
 
   /**
    * エンティティを削除する。
@@ -79,7 +79,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(entity: E): M[ResultWithEntity[This, ID, E, M]] = delete(entity.identity)
+  def delete(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]] = delete(entity.identity)
 
 }
 
