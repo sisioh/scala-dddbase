@@ -18,6 +18,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.sync
 
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import org.sisioh.dddbase.core.lifecycle.memory.sync
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 /**
  * 汎用的な非同期型オンメモリ不変リポジトリ。
@@ -36,6 +37,12 @@ class GenericSyncRepositoryOnMemory[ID <: Identity[_], E <: Entity[ID] with Enti
  * コンパニオンオブジェクト。
  */
 object GenericSyncRepositoryOnMemory {
+
+  object Implicits {
+
+    implicit val defaultEntityIOContext = SyncEntityIOContext
+
+  }
 
   /**
    * ファクトリメソッド。

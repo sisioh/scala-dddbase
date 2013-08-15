@@ -18,6 +18,8 @@ package org.sisioh.dddbase.core.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
+import scala.concurrent.ExecutionContext
 
 /**
  * 汎用的な非同期型オンメモリ不変リポジトリ。
@@ -43,6 +45,22 @@ class GenericAsyncRepositoryOnMemory[ID <: Identity[_], E <: Entity[ID] with Ent
  * コンパニオンオブジェクト。
  */
 object GenericAsyncRepositoryOnMemory {
+
+  object Implicits {
+
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    implicit val defaultEntityIOContext = createEntityIOContext
+
+  }
+
+  /**
+   * [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]を生成する。
+   *
+   * @param executor `ExecutionContext`
+   * @return [[org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext]]
+   */
+  def createEntityIOContext(implicit executor: ExecutionContext) = AsyncWrappedSyncEntityIOContext()
 
   /**
    * ファクトリメソッド。

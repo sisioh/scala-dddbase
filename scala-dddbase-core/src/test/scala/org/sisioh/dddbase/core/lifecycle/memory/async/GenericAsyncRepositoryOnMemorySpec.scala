@@ -26,7 +26,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 
   val id = Identity(UUID.randomUUID)
 
-  implicit val ctx = AsyncWrappedSyncEntityIOContext()
+  import GenericAsyncRepositoryOnMemory.Implicits.defaultEntityIOContext
 
   "The repository" should {
 
