@@ -30,9 +30,9 @@ trait SyncWrappedAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
     Await.result(delegate.resolve(identity), timeOut)
   }
 
-  def contains(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean] = Try {
+  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
-    Await.result(delegate.contains(identity), timeOut)
+    Await.result(delegate.containsByIdentity(identity), timeOut)
   }
 
 }

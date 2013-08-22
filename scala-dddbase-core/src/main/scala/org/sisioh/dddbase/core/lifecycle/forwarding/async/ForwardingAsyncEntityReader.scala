@@ -24,7 +24,7 @@ trait ForwardingAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]) =
     delegate.resolve(identity)
 
-  def contains(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] =
-    delegate.contains(identity)
+  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] =
+    delegate.containsByIdentity(identity)
 
 }
