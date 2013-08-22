@@ -32,11 +32,17 @@ trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+A]]
 
   def resolve(identity: ID)(implicit ctx: EntityIOContext[M]): M[E]
 
+  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[Seq[E]]
+
   def apply(identity: ID)(implicit ctx: EntityIOContext[M]): M[E] = resolve(identity)
 
-  def contains(identity: ID)(implicit ctx: EntityIOContext[M]): M[Boolean]
+  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[M]): M[Boolean]
 
-  def contains(entity: E)(implicit ctx: EntityIOContext[M]): M[Boolean] = contains(entity.identity)
+  def containsByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[Boolean]
+
+  def contains(entity: E)(implicit ctx: EntityIOContext[M]): M[Boolean] = containsByIdentity(entity.identity)
+
+  def contains(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[Boolean] = containsByIdentities(entities.map(_.identity))
 
 }
 

@@ -23,6 +23,6 @@ trait ForwardingSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
 
   def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = delegate.resolve(identity)
 
-  def contains(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean] = delegate.contains(identity)
+  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean] = delegate.containsByIdentity(identity)
 
 }
