@@ -35,10 +35,18 @@ trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    */
   def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E]
 
+  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[Seq[E]] = Try {
+    identities.map(resolve(_).get)
+  }
+
   /**
    * @return Success: 存在する場合はtrue
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def contains(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean]
+  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean]
+
+  def containsByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[Boolean] = Try {
+    identities.map(containsByIdentity(_).get).forall(_ == true)
+  }
 
 }

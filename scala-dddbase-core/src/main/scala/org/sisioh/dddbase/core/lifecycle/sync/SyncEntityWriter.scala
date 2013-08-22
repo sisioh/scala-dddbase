@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity, EntityIOContext, EntityWriter}
+import org.sisioh.dddbase.core.lifecycle.{ResultWithEntities, EntityIOContext, EntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -44,6 +44,42 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    */
   def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]]
 
+  /**
+   * 複数のタスクを個々のタスクに分解して処理するためのユーティリティメソッド。
+   *
+   * @param tasks タスクの集合
+   * @param processor タスクを処理する関数
+   * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
+   * @tparam A タスクの型
+   * @return Success:
+   *         リポジトリインスタンスと保存されたエンティティ
+   *         Failure
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  protected final def forEachEntities[A](tasks: Seq[A])(processor: (This, A) => Try[SyncResultWithEntity[This, ID, E]])
+                                  (implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] = Try {
+    val result = tasks.foldLeft[(This, Seq[E])]((this.asInstanceOf[This], Seq.empty[E])) {
+      (resultWithEntities, task) =>
+        val resultWithEntity = processor(resultWithEntities._1, task).get
+        (resultWithEntity.result.asInstanceOf[This], resultWithEntities._2 :+ resultWithEntity.entity)
+    }
+    SyncResultWithEntities(result._1, result._2)
+  }
+
+  /**
+   * 複数のエンティティを保存する。
+   *
+   * @param entities 保存する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンスと保存されたエンティティ
+   *         Failure
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def store(entities: Seq[E])(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] =
+    forEachEntities(entities) {
+      (repository, entity) =>
+        repository.store(entity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
+    }
 
   /**
    * 指定した識別子のエンティティを削除する。
@@ -54,6 +90,21 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]]
+  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]]
+
+  /**
+   * 指定した複数の識別子のエンティティを削除する。
+   *
+   * @param identities 識別子
+   * @return Success:
+   *         リポジトリインスタンスと削除されたエンティティ
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def deleteByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[ResultWithEntities[This, ID, E, Try]] =
+    forEachEntities(identities) {
+      (repository, identity) =>
+        repository.deleteByIdentity(identity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
+    }
 
 }

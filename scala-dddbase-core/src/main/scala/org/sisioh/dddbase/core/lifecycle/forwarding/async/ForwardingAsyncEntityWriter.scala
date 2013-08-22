@@ -42,9 +42,9 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     }
   }
 
-  def delete(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
-    val state = delegate.delete(identity).map {
+    val state = delegate.deleteByIdentity(identity).map {
       result =>
         (result.result.asInstanceOf[Delegate#This], Some(result.entity))
     }

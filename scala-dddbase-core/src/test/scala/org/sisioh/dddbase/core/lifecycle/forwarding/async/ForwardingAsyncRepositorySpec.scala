@@ -88,7 +88,7 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       val future2 = future.flatMap {
         r =>
           val tr = new TestRepForwardingRepositoryImpl(r.result)
-          tr.delete(id)
+          tr.deleteByIdentity(id)
       }
       Await.result(future2, Duration.Inf) must not beNull
     }
@@ -101,7 +101,7 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
     }
     "not delete a entity by using a non-existent identity" in {
       val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
-      val future = repository.delete(id)
+      val future = repository.deleteByIdentity(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]

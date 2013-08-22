@@ -17,6 +17,7 @@ package org.sisioh.dddbase.core.lifecycle
 
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.language.higherKinds
+import scala.reflect.ClassTag
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて
@@ -44,6 +45,18 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
   def store(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]]
 
   /**
+   * 複数のエンティティを保存する。
+   *
+   * @param entities 保存する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンスと保存されたエンティティ
+   *         Failure
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def store(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]]
+
+
+  /**
    * 更新メソッド。
    *
    * {{{
@@ -68,7 +81,18 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(identity: ID)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]]
+  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]]
+
+  /**
+   * 指定した複数の識別子のエンティティを削除する。
+   *
+   * @param identities 識別子
+   * @return Success:
+   *         リポジトリインスタンスと削除されたエンティティ
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def deleteByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]]
 
   /**
    * エンティティを削除する。
@@ -79,7 +103,10 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]] = delete(entity.identity)
+  def delete(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]] = deleteByIdentity(entity.identity)
+
+  def delete(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]] =
+    deleteByIdentities(entities.map(_.identity))
 
 }
 
