@@ -72,7 +72,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      val resultWithEntity = repos.flatMap(_.result.delete(id)).get
+      val resultWithEntity = repos.flatMap(_.result.deleteByIdentity(id)).get
       resultWithEntity.result must_!= repos
       resultWithEntity.entity must_== entity
     }
@@ -83,8 +83,8 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     }
     "fail to delete a entity by a non-existent identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
-      repository.delete(id).isFailure must_== true
-      repository.delete(id).get must throwA[EntityNotFoundException]
+      repository.deleteByIdentity(id).isFailure must_== true
+      repository.deleteByIdentity(id).get must throwA[EntityNotFoundException]
     }
   }
 }

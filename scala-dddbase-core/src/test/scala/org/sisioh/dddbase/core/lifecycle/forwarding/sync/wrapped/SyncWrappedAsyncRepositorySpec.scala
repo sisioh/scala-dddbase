@@ -73,7 +73,7 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
       val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
       repository.resolve(id).get must_== entity
-      resultWithEntity.flatMap(_.result.delete(id)) must_!= resultWithEntity.get.result
+      resultWithEntity.flatMap(_.result.deleteByIdentity(id)) must_!= resultWithEntity.get.result
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
@@ -84,10 +84,10 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
     }
     "fail to delete a entity by a non-existent identity" in {
       val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
-      repository.delete(id).recover {
+      repository.deleteByIdentity(id).recover {
         case ex: EntityNotFoundException => true
       }.get must_== true
-      repository.delete(id).get must throwA[EntityNotFoundException]
+      repository.deleteByIdentity(id).get must throwA[EntityNotFoundException]
     }
   }
 

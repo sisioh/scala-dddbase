@@ -82,7 +82,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       val resultWithEntity2 = resultWithEntity.flatMap {
         r =>
           val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
-          tr.delete(id)
+          tr.deleteByIdentity(id)
       }.get
       resultWithEntity2.result must_!= repository
       resultWithEntity2.entity must_== entity
@@ -94,8 +94,8 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
     }
     "fail to delete a entity by a non-existent identity" in {
       val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
-      repository.delete(id).isFailure must_== true
-      repository.delete(id).get must throwA[EntityNotFoundException]
+      repository.deleteByIdentity(id).isFailure must_== true
+      repository.deleteByIdentity(id).get must throwA[EntityNotFoundException]
     }
   }
 
