@@ -56,7 +56,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   }
 
   override def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]) = synchronized {
-    contains(identity).flatMap {
+    containsByIdentity(identity).flatMap {
       _ =>
         Try {
           entities(identity).clone
@@ -74,7 +74,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
     Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
   }
 
-  override def delete(identifier: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = synchronized {
+  override def deleteByIdentity(identifier: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = synchronized {
     resolve(identifier).flatMap {
       entity =>
         val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]

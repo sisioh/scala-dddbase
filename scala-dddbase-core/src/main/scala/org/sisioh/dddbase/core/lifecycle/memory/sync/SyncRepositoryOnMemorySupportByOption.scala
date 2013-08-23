@@ -19,7 +19,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   with SyncEntityReadableByOption[ID, E] {
 
   override def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]) = synchronized {
-    contains(identity).flatMap {
+    containsByIdentity(identity).flatMap {
       _ =>
         Try {
           Some(entities(identity).clone)

@@ -63,7 +63,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       Await.ready(repos, Duration.Inf)
       there was atLeastOne(entity).identity
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
-      Await.result(repos.flatMap(_.result.delete(id)), Duration.Inf) must_!= repos
+      Await.result(repos.flatMap(_.result.deleteByIdentity(id)), Duration.Inf) must_!= repos
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
@@ -74,10 +74,10 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
     }
     "fail to delete a entity by a non-existent identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
-      Await.result(repository.delete(id).recover {
+      Await.result(repository.deleteByIdentity(id).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true
-      Await.result(repository.delete(id), Duration.Inf) must throwA[EntityNotFoundException]
+      Await.result(repository.deleteByIdentity(id), Duration.Inf) must throwA[EntityNotFoundException]
     }
   }
 }

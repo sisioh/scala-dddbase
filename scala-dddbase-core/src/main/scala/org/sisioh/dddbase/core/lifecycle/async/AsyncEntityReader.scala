@@ -29,6 +29,14 @@ trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    */
   def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[E]
 
+  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
+    implicit val executor = getExecutionContext(ctx)
+    Future.traverse(identities){
+      identity =>
+        resolve(identity)
+    }
+  }
+
   /**
    * 指定した識別子のエンティティが存在するかを返す。
    *
@@ -40,6 +48,16 @@ trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def contains(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean]
+  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean]
 
+  def containsByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Future]): Future[Boolean] = {
+    implicit val executor = getExecutionContext(ctx)
+    Future.traverse(identities){
+      identity =>
+        containsByIdentity(identity)
+    }.map{
+      contains =>
+        contains.forall(_ == true)
+    }
+  }
 }

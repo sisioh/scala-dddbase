@@ -40,9 +40,9 @@ trait ForwardingSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     ).map(e => SyncResultWithEntity(e._1, e._2.get))
   }
 
-  def delete(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
     createInstance(
-      delegate.delete(identity).map {
+      delegate.deleteByIdentity(identity).map {
         e =>
           (e.result.asInstanceOf[Delegate#This], Some(e.entity))
       }
