@@ -10,9 +10,9 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityReadableByPredicate[ID, E, Future] {
-  this: AsyncEntityReader[ID, E] =>
+trait AsyncEntityReadableByPredicate[CTX <: EntityIOContext[Future] ,ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReadableByPredicate[CTX, ID, E, Future] {
+  this: AsyncEntityReader[CTX, ID, E] =>
 
   /**
    * @return Success:
@@ -23,6 +23,6 @@ trait AsyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]]
    */
   def filterByPredicate
   (predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
-  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]]
+  (implicit ctx: CTX): Future[EntitiesChunk[ID, E]]
 
 }

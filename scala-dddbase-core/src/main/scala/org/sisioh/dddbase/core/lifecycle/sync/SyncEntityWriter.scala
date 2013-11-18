@@ -28,10 +28,10 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityWriter[ID, E, Try] {
+trait SyncEntityWriter[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends EntityWriter[CTX, ID, E, Try] {
 
-  type This <: SyncEntityWriter[ID, E]
+  type This <: SyncEntityWriter[CTX, ID, E]
 
   /**
    * エンティティを保存する。
@@ -42,7 +42,7 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]]
+  def store(entity: E)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]]
 
   /**
    * 複数のタスクを個々のタスクに分解して処理するためのユーティリティメソッド。
@@ -56,8 +56,8 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  protected final def forEachEntities[A](tasks: Seq[A])(processor: (This, A) => Try[SyncResultWithEntity[This, ID, E]])
-                                  (implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] = Try {
+  protected final def forEachEntities[A](tasks: Seq[A])(processor: (This, A) => Try[SyncResultWithEntity[This, CTX, ID, E]])
+                                  (implicit ctx: CTX): Try[SyncResultWithEntities[This, CTX,  ID, E]] = Try {
     val result = tasks.foldLeft[(This, Seq[E])]((this.asInstanceOf[This], Seq.empty[E])) {
       (resultWithEntities, task) =>
         val resultWithEntity = processor(resultWithEntities._1, task).get
@@ -75,10 +75,10 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entities: Seq[E])(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] =
+  def store(entities: Seq[E])(implicit ctx: CTX): Try[SyncResultWithEntities[This, CTX, ID, E]] =
     forEachEntities(entities) {
       (repository, entity) =>
-        repository.store(entity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
+        repository.store(entity).asInstanceOf[Try[SyncResultWithEntity[This, CTX, ID, E]]]
     }
 
   /**
@@ -90,7 +90,7 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]]
+  def deleteByIdentity(identity: ID)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]]
 
   /**
    * 指定した複数の識別子のエンティティを削除する。
@@ -101,10 +101,10 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def deleteByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[ResultWithEntities[This, ID, E, Try]] =
+  def deleteByIdentities(identities: Seq[ID])(implicit ctx: CTX): Try[ResultWithEntities[This, CTX, ID, E, Try]] =
     forEachEntities(identities) {
       (repository, identity) =>
-        repository.deleteByIdentity(identity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
+        repository.deleteByIdentity(identity).asInstanceOf[Try[SyncResultWithEntity[This, CTX, ID, E]]]
     }
 
 }

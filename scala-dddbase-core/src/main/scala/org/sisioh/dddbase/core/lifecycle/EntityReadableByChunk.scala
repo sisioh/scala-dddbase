@@ -25,7 +25,7 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReadableByChunk[ID <: Identity[_], E <: Entity[ID], M[+A]] {
+trait EntityReadableByChunk[CTX <: EntityIOContext[M], ID <: Identity[_], E <: Entity[ID], M[+A]] {
 
   /**
    * エンティティをチャンク単位で検索する。
@@ -34,6 +34,6 @@ trait EntityReadableByChunk[ID <: Identity[_], E <: Entity[ID], M[+A]] {
    * @param maxEntities 1チャンクの件数
    * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
-  def resolveChunk(index: Int, maxEntities: Int)(implicit ctx: EntityIOContext[M]): M[EntitiesChunk[ID, E]]
+  def resolveChunk(index: Int, maxEntities: Int)(implicit ctx: CTX): M[EntitiesChunk[ID, E]]
 
 }

@@ -15,45 +15,45 @@
  * governing permissions and limitations under the License.
  */
 package org.sisioh.dddbase.spec
-
-import org.junit.Test
-import org.mockito.Matchers._
-import org.mockito.Mockito._
-import org.scalatest.junit.AssertionsForJUnit
-import org.scalatest.mock.MockitoSugar
-
-class NotSpecificationTest extends AssertionsForJUnit with MockitoSugar {
-  /**
-   * NOT `false` が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test01_false_To_true() {
-    val mock1 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-
-    val not = new NotSpecification[Unit](mock1)
-    assert(not.isSatisfiedBy())
-
-    verify(mock1).isSatisfiedBy(())
-  }
-
-  /**
-   * NOT `true` が `false` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test01_true_To_false() {
-    val mock1 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-
-    val not = new NotSpecification[Unit](mock1)
-    assert(!not.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-  }
-}
+//
+//import org.junit.Test
+//import org.mockito.Matchers._
+//import org.mockito.Mockito._
+//import org.scalatest.junit.AssertionsForJUnit
+//import org.scalatest.mock.MockitoSugar
+//
+//class NotSpecificationTest extends AssertionsForJUnit with MockitoSugar {
+//  /**
+//   * NOT `false` が `true` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test01_false_To_true() {
+//    val mock1 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//
+//    val not = new NotSpecification[Unit](mock1)
+//    assert(not.isSatisfiedBy())
+//
+//    verify(mock1).isSatisfiedBy(())
+//  }
+//
+//  /**
+//   * NOT `true` が `false` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test01_true_To_false() {
+//    val mock1 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//
+//    val not = new NotSpecification[Unit](mock1)
+//    assert(!not.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//  }
+//}

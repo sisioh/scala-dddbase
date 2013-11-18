@@ -19,8 +19,8 @@ class SyncRepositoryEventSupportSpec extends Specification {
     }
   }
 
-  class TestRepository extends GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]
-  with SyncRepositoryEventSupport[Identity[UUID], EntityImpl] {
+  class TestRepository extends GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]
+  with SyncRepositoryEventSupport[EntityIOContext[Try], Identity[UUID], EntityImpl] {
     protected def createEntityIOEvent(entity: EntityImpl, eventType: EventType.Value):
     EntityIOEvent[Identity[UUID], EntityImpl] = new EntityIOEvent[Identity[UUID], EntityImpl](Identity(UUID.randomUUID()), entity, eventType)
   }
@@ -34,7 +34,7 @@ class SyncRepositoryEventSupportSpec extends Specification {
       var resultEventType: EventType.Value = null
       val repos = new TestRepository()
       val entity = new EntityImpl(Identity(UUID.randomUUID()))
-      repos.subscribe(new SyncDomainEventSubscriber[EntityIOEvent[Identity[UUID], EntityImpl], Unit] {
+      repos.subscribe(new SyncDomainEventSubscriber[EntityIOEvent[Identity[UUID], EntityImpl], EntityIOContext[Try], Unit] {
         def handleEvent(event: EntityIOEvent[Identity[UUID], EntityImpl])(implicit ctx: EntityIOContext[Try]): Try[Unit] = {
           result = true
           resultEntity = event.entity

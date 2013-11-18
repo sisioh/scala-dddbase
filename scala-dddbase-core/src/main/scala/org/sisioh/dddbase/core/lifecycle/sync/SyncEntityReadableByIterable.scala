@@ -26,10 +26,10 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByIterable[ID <: Identity[_], E <: Entity[ID]] extends Iterable[E] {
-  this: SyncEntityReader[ID, E] =>
+trait SyncEntityReadableByIterable[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]] extends Iterable[E] {
+  this: SyncEntityReader[CTX, ID, E] =>
 
   def containsByIdentity(identifier: ID)
-                        (implicit ctx: EntityIOContext[Try]): Try[Boolean] = Success(exists(_.identity == identifier))
+                        (implicit ctx: CTX): Try[Boolean] = Success(exists(_.identity == identifier))
 
 }

@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityNotFoundException}
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityIOContext, AsyncRepository}
 import org.sisioh.dddbase.core.lifecycle.memory.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identity}
@@ -28,13 +28,13 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
   val id = Identity(UUID.randomUUID)
 
   class TestRepForwardingRepositoryImpl
-  (protected val delegate: AsyncRepository[Identity[UUID], EntityImpl])
+  (protected val delegate: AsyncRepository[EntityIOContext[Future], Identity[UUID], EntityImpl])
   (implicit val executor: ExecutionContext)
-    extends ForwardingAsyncRepository[Identity[UUID], EntityImpl] {
+    extends ForwardingAsyncRepository[EntityIOContext[Future], Identity[UUID], EntityImpl] {
 
     type This = TestRepForwardingRepositoryImpl
 
-    type Delegate = AsyncRepository[Identity[UUID], EntityImpl]
+    type Delegate = AsyncRepository[EntityIOContext[Future], Identity[UUID], EntityImpl]
 
     protected def createInstance(state: Future[(Delegate#This, Option[EntityImpl])]): Future[(This, Option[EntityImpl])] = {
       state.map {
@@ -50,7 +50,7 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
 
   "repository" should {
     "have stored entity" in {
-      val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       repository(entity.identity) = entity
       val future = repository.store(entity)
@@ -65,7 +65,7 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       Await.result(future2, Duration.Inf) must_== entity
     }
     "resolve entity by using a identity" in {
-      val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
@@ -79,7 +79,7 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       Await.result(future2, Duration.Inf) must_== entity
     }
     "delete entity by using a identity" in {
-      val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
@@ -93,14 +93,14 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       Await.result(future2, Duration.Inf) must not beNull
     }
     "not resolve a entity by using a non-existent identity" in {
-      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       val future = repository.resolve(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]
     }
     "not delete a entity by using a non-existent identity" in {
-      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       val future = repository.deleteByIdentity(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true

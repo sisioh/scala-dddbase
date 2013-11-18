@@ -25,11 +25,12 @@ class AsyncRepositoryEventSupportSpec extends Specification {
   }
 
   class TestRepository
-    extends GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]
-    with AsyncRepositoryEventSupport[Identity[UUID], EntityImpl] {
+    extends GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]
+    with AsyncRepositoryEventSupport[Identity[UUID], EntityImpl, EntityIOContext[Future]] {
 
     protected def createEntityIOEvent(entity: EntityImpl, eventType: EventType.Value):
-    EntityIOEvent[Identity[UUID], EntityImpl] = new EntityIOEvent[Identity[UUID], EntityImpl](Identity(UUID.randomUUID()), entity, eventType)
+    EntityIOEvent[Identity[UUID], EntityImpl] =
+      new EntityIOEvent[Identity[UUID], EntityImpl](Identity(UUID.randomUUID()), entity, eventType)
 
   }
 
@@ -42,7 +43,7 @@ class AsyncRepositoryEventSupportSpec extends Specification {
       var resultEventType: EventType.Value = null
       val repos = new TestRepository()
       val entity = new EntityImpl(Identity(UUID.randomUUID()))
-      repos.subscribe(new AsyncDomainEventSubscriber[EntityIOEvent[Identity[UUID], EntityImpl], Unit] {
+      repos.subscribe(new AsyncDomainEventSubscriber[EntityIOEvent[Identity[UUID], EntityImpl], EntityIOContext[Future], Unit] {
         def handleEvent(event: EntityIOEvent[Identity[UUID], EntityImpl])(implicit ctx: EntityIOContext[Future]): Future[Unit] = future {
           result = true
           resultEntity = event.entity

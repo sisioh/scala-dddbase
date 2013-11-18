@@ -26,7 +26,7 @@ import org.sisioh.dddbase.core.model.{Identity, Entity}
  * @tparam E エンティティの型
  * @tparam M モナドの型
  */
-trait ResultWithEntity[+EW <: EntityWriter[ID, E, M], ID <: Identity[_], E <: Entity[ID], M[+A]] {
+trait ResultWithEntity[+EW <: EntityWriter[CTX, ID, E, M], CTX <: EntityIOContext[M], ID <: Identity[_], E <: Entity[ID], M[+A]] {
 
   /**
    * 結果

@@ -13,15 +13,15 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam R モナドの値の型
  */
 trait DomainEventPublisherSupport
-[A <: DomainEvent[_], M[+B], R]
-  extends DomainEventPublisher[A, M, R] {
+[A <: DomainEvent[_], CTX <: EntityIOContext[M], M[+B], R]
+  extends DomainEventPublisher[A, CTX, M, R] {
 
   /**
    * [[org.sisioh.dddbase.event.DomainEventSubscriber]]の集合
    */
   protected val subscribers: ArrayBuffer[DES]
 
-  def publish(event: A)(implicit ctx: EntityIOContext[M]): Seq[M[R]] = {
+  def publish(event: A)(implicit ctx: CTX): Seq[M[R]] = {
     subscribers.map(_.handleEvent(event))
   }
 

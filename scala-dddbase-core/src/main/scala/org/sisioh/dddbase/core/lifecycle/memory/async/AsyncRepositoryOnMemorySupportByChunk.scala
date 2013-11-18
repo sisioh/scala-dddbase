@@ -6,6 +6,7 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByChunk
 import org.sisioh.dddbase.core.model._
 import scala.concurrent._
+import scala.util.Try
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.async.AsyncRepositoryOnMemorySupport]]に
@@ -15,14 +16,14 @@ import scala.concurrent._
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportByChunk
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemorySupport[ID, E]
-  with AsyncEntityReadableByChunk[ID, E] {
+[CTX <: EntityIOContext[Future] ,ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemorySupport[CTX, ID, E]
+  with AsyncEntityReadableByChunk[CTX, ID, E] {
 
-  type Delegate <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableByChunk[ID, E]
+  type Delegate <: SyncRepositoryOnMemory[EntityIOContext[Try], ID, E] with SyncEntityReadableByChunk[EntityIOContext[Try], ID, E]
 
   def resolveChunk(index: Int, maxEntities: Int)
-                  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] = {
+                  (implicit ctx: CTX): Future[EntitiesChunk[ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {

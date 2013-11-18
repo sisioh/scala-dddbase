@@ -1,8 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityNotFoundException}
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync._
 import org.sisioh.dddbase.core.model.{EmptyIdentity, Identity, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
@@ -10,6 +9,7 @@ import org.specs2.mutable._
 import scala.Some
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import scala.util.Try
 
 class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 
@@ -30,7 +30,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 
   "The repository" should {
     "have stored entity with empty identity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentity))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -38,7 +38,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repos.flatMap(_.result.contains(entity)).getOrElse(false) must_== true
     }
     "have stored entity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -46,7 +46,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repos.flatMap(_.result.contains(entity)).getOrElse(false) must_== true
     }
     "resolve a entity by using identity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -55,8 +55,8 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     }
     "resolveOption a entity by using identity" in {
       class TestSyncRepository
-        extends SyncRepositoryOnMemorySupport[Identity[UUID], EntityImpl]
-        with SyncRepositoryOnMemorySupportByOption[Identity[UUID], EntityImpl] {
+        extends SyncRepositoryOnMemorySupport[EntityIOContext[Try], Identity[UUID], EntityImpl]
+        with SyncRepositoryOnMemorySupportByOption[EntityIOContext[Try], Identity[UUID], EntityImpl] {
         type This = TestSyncRepository
       }
       val repository = new TestSyncRepository
@@ -67,7 +67,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repos.flatMap(_.result.resolveOption(id)).get must_== Some(entity)
     }
     "delete a entity by using identity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -77,12 +77,12 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       resultWithEntity.entity must_== entity
     }
     "fail to resolve a entity by a non-existent identity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       repository.resolve(id).isFailure must_== true
       repository.resolve(id).get must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       repository.deleteByIdentity(id).isFailure must_== true
       repository.deleteByIdentity(id).get must throwA[EntityNotFoundException]
     }

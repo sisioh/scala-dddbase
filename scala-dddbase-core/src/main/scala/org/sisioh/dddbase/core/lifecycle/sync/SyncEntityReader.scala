@@ -25,17 +25,17 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityReader[ID, E, Try] {
+trait SyncEntityReader[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReader[CTX, ID, E, Try] {
 
   /**
    * @return Success: エンティティ
    *         Failure: EntityNotFoundExceptionは、エンティティが見つからなかった場合、
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E]
+  def resolve(identity: ID)(implicit ctx: CTX): Try[E]
 
-  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[Seq[E]] = Try {
+  def resolves(identities: Seq[ID])(implicit ctx: CTX): Try[Seq[E]] = Try {
     identities.map(resolve(_).get)
   }
 
@@ -43,9 +43,9 @@ trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    * @return Success: 存在する場合はtrue
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean]
+  def containsByIdentity(identity: ID)(implicit ctx: CTX): Try[Boolean]
 
-  def containsByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[Boolean] = Try {
+  def containsByIdentities(identities: Seq[ID])(implicit ctx: CTX): Try[Boolean] = Try {
     identities.map(containsByIdentity(_).get).forall(_ == true)
   }
 

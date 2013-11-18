@@ -18,6 +18,8 @@ package org.sisioh.dddbase.core.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.lifecycle.async._
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import scala.concurrent.Future
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * オンメモリで動作する[[org.sisioh.dddbase.core.lifecycle.async.AsyncRepository]]。
@@ -26,7 +28,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemory
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepository[ID, E] {
+[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepository[CTX, ID, E] {
 
 }

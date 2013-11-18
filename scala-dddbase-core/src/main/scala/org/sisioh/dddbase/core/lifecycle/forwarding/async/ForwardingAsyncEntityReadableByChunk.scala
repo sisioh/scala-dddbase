@@ -11,11 +11,11 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncEntityReadableByChunk[ID, E] {
-  this: AsyncEntityReader[ID, E] =>
+trait ForwardingAsyncEntityReadableByChunk[CTX <: EntityIOContext[Future] ,ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityReadableByChunk[CTX, ID, E] {
+  this: AsyncEntityReader[CTX, ID, E] =>
 
-  type Delegate <: AsyncEntityReadableByChunk[ID, E]
+  type Delegate <: AsyncEntityReadableByChunk[CTX, ID, E]
 
   /**
    * デリゲート。
@@ -23,7 +23,7 @@ trait ForwardingAsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
   protected val delegate: Delegate
 
   def resolveChunk(index: Int, maxEntities: Int)
-                  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] =
+                  (implicit ctx: CTX): Future[EntitiesChunk[ID, E]] =
     delegate.resolveChunk(index, maxEntities)
 
 }

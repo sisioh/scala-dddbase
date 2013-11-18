@@ -6,6 +6,7 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByPredicate
 import org.sisioh.dddbase.core.model._
 import scala.concurrent._
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
+import scala.util.Try
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.async.AsyncRepositoryOnMemorySupport]]に
@@ -15,15 +16,15 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportByPredicate
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemorySupport[ID, E]
-  with AsyncEntityReadableByPredicate[ID, E] {
+[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemorySupport[CTX, ID, E]
+  with AsyncEntityReadableByPredicate[CTX, ID, E] {
 
-  type Delegate <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableByPredicate[ID, E]
+  type Delegate <: SyncRepositoryOnMemory[EntityIOContext[Try], ID, E] with SyncEntityReadableByPredicate[EntityIOContext[Try], ID, E]
 
   def filterByPredicate
   (predicate: (E) => Boolean, index: Option[Int], maxEntities: Option[Int])
-  (implicit ctx: EntityIOContext[Future])
+  (implicit ctx: CTX)
   : Future[EntitiesChunk[ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor

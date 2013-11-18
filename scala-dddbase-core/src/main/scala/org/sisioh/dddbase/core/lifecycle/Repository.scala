@@ -17,6 +17,7 @@ package org.sisioh.dddbase.core.lifecycle
 
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.language.higherKinds
+import scala.concurrent.Future
 
 /**
  * 基本的なリポジトリのトレイト。
@@ -30,10 +31,10 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナドの型
  */
-trait Repository[ID <: Identity[_], E <: Entity[ID], M[+A]]
-  extends EntityReader[ID, E, M] with EntityWriter[ID, E, M] {
+trait Repository[CTX <: EntityIOContext[M], ID <: Identity[_], E <: Entity[ID], M[+A]]
+  extends EntityReader[CTX, ID, E, M] with EntityWriter[CTX, ID, E, M] {
 
-  type This <: Repository[ID, E, M]
+  type This <: Repository[CTX, ID, E, M]
 
 }
 

@@ -14,16 +14,17 @@ import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
  * @tparam T エンティティの型
  */
 trait DomainEventStoreSupport
-[+R <: Repository[ID, T, Future],
+[+R <: Repository[CTX, ID, T, Future],
+CTX <: EntityIOContext[Future],
 ID <: Identity[_],
 T <: DomainEvent[ID]]
-  extends DomainEventStore[R, ID, T, Future, Unit] with AsyncDomainEventSubscriber[T, Unit] {
+  extends DomainEventStore[R, CTX, ID, T, Future, Unit] with AsyncDomainEventSubscriber[T, CTX, Unit] {
 
   implicit val executor: ExecutionContext
 
   protected val eventRepository: R
 
-  def handleEvent(event: T)(implicit ctx: EntityIOContext[Future]): Future[Unit] =
+  def handleEvent(event: T)(implicit ctx: CTX): Future[Unit] =
     eventRepository.store(event).map(_ => ())
 
 }

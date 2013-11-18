@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.event.mutable.async
 
-import org.sisioh.dddbase.core.lifecycle.Repository
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, Repository}
 import org.sisioh.dddbase.core.model.Identity
 import org.sisioh.dddbase.event.DomainEvent
 import scala.concurrent.{ExecutionContext, Future}
@@ -14,6 +14,6 @@ import scala.concurrent.{ExecutionContext, Future}
  * @tparam ID エンティティの識別子の型
  * @tparam T エンティティの型
  */
-case class GenericAsyncDomainEventStore[+R <: Repository[ID, T, Future], ID <: Identity[_], T <: DomainEvent[ID]]
+case class GenericAsyncDomainEventStore[+R <: Repository[CTX, ID, T, Future], ID <: Identity[_], T <: DomainEvent[ID], CTX <: EntityIOContext[Future]]
 (protected val eventRepository: R)(implicit val executor: ExecutionContext)
-  extends DomainEventStoreSupport[R, ID, T]
+  extends DomainEventStoreSupport[R, CTX, ID, T]

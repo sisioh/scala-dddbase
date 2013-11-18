@@ -13,10 +13,10 @@ import scala.collection.mutable.ListBuffer
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncEntityIO with EntityWriter[ID, E, Future] {
+trait AsyncEntityWriter[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityIO with EntityWriter[CTX, ID, E, Future] {
 
-  type This <: AsyncEntityWriter[ID, E]
+  type This <: AsyncEntityWriter[CTX, ID, E]
 
   /**
    * エンティティを保存する。
@@ -30,7 +30,7 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def store(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]]
+  def store(entity: E)(implicit ctx: CTX): Future[AsyncResultWithEntity[This, CTX, ID, E]]
 
   /**
    * 複数のタスクを個々のタスクに分解して処理するためのユーティリティメソッド。
@@ -46,12 +46,12 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   protected final def forEachEntities[A](repository: This, tasks: List[A], entities: ListBuffer[E])
-                                        (processor: (This, A) => Future[AsyncResultWithEntity[This, ID, E]])
-                                        (implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntities[This, ID, E]] = {
+                                        (processor: (This, A) => Future[AsyncResultWithEntity[This, CTX, ID, E]])
+                                        (implicit ctx: CTX): Future[AsyncResultWithEntities[This, CTX, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
     tasks match {
       case Nil =>
-        Future(AsyncResultWithEntities[This, ID, E](repository, entities))
+        Future(AsyncResultWithEntities[This, CTX, ID, E](repository, entities))
       case head :: tail =>
         processor(repository, head).flatMap {
           resultWithEntity =>
@@ -70,11 +70,11 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def store(entities: Seq[E])
-           (implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntities[This, ID, E]] = {
+           (implicit ctx: CTX): Future[AsyncResultWithEntities[This, CTX, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
     forEachEntities(this.asInstanceOf[This], entities.toList, ListBuffer[E]()) {
       (repository, entity) =>
-        repository.store(entity).asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
+        repository.store(entity).asInstanceOf[Future[AsyncResultWithEntity[This, CTX, ID, E]]]
     }
   }
 
@@ -88,7 +88,7 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryException リポジトリにアクセスできなかった場合
    *         Futureが失敗した場合の例外
    */
-  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]]
+  def deleteByIdentity(identity: ID)(implicit ctx: CTX): Future[AsyncResultWithEntity[This, CTX, ID, E]]
 
   /**
    * 指定した複数の識別子のエンティティを削除する。
@@ -100,11 +100,11 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def deleteByIdentities(identities: Seq[ID])
-                        (implicit ctx: EntityIOContext[Future]): Future[ResultWithEntities[This, ID, E, Future]] = {
+                        (implicit ctx: CTX): Future[ResultWithEntities[This, CTX, ID, E, Future]] = {
     implicit val executor = getExecutionContext(ctx)
     forEachEntities(this.asInstanceOf[This], identities.toList, ListBuffer[E]()) {
       (repository, identity) =>
-        repository.deleteByIdentity(identity).asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
+        repository.deleteByIdentity(identity).asInstanceOf[Future[AsyncResultWithEntity[This, CTX, ID, E]]]
     }
   }
 

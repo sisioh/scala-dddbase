@@ -16,91 +16,91 @@
  */
 package org.sisioh.dddbase.spec
 
-import org.scalatest.mock.MockitoSugar
-import org.scalatest.junit.AssertionsForJUnit
-import org.junit.Test
-import org.mockito.Mockito._
-import org.mockito.Matchers._
-
-class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
-  /**
-   * `false` OR `false`が `false`となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test01_false_false_To_false() {
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-
-    val or = new OrSpecification[Unit](mock1, mock2)
-    assert(!or.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    verify(mock2).isSatisfiedBy(())
-  }
-
-  /**
-   * `false` OR `true` が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test02_false_true_To_true() {
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-
-    val or = new OrSpecification[Unit](mock1, mock2)
-    assert(or.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    verify(mock2).isSatisfiedBy(())
-  }
-
-  /**
-   * `true` OR `false`が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test03_true_false_To_true() {
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-
-    val or = new OrSpecification[Unit](mock1, mock2)
-    assert(or.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    //		verify(mock2, never()).isSatisfiedBy(null);
-  }
-
-  /**
-   * `true` OR `true` が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test04_true_true_To_true() {
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-
-    val or = new OrSpecification[Unit](mock1, mock2)
-    assert(or.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    //		verify(mock2, never()).isSatisfiedBy(null);
-  }
-
-}
+//import org.scalatest.mock.MockitoSugar
+//import org.scalatest.junit.AssertionsForJUnit
+//import org.junit.Test
+//import org.mockito.Mockito._
+//import org.mockito.Matchers._
+//
+//class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
+//  /**
+//   * `false` OR `false`が `false`となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test01_false_false_To_false() {
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//
+//    val or = new OrSpecification[Unit](mock1, mock2)
+//    assert(!or.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    verify(mock2).isSatisfiedBy(())
+//  }
+//
+//  /**
+//   * `false` OR `true` が `true` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test02_false_true_To_true() {
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//
+//    val or = new OrSpecification[Unit](mock1, mock2)
+//    assert(or.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    verify(mock2).isSatisfiedBy(())
+//  }
+//
+//  /**
+//   * `true` OR `false`が `true` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test03_true_false_To_true() {
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//
+//    val or = new OrSpecification[Unit](mock1, mock2)
+//    assert(or.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    //		verify(mock2, never()).isSatisfiedBy(null);
+//  }
+//
+//  /**
+//   * `true` OR `true` が `true` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test04_true_true_To_true() {
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//
+//    val or = new OrSpecification[Unit](mock1, mock2)
+//    assert(or.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    //		verify(mock2, never()).isSatisfiedBy(null);
+//  }
+//
+//}

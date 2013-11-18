@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event.async
 
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, ResultWithEntity}
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
 import org.sisioh.dddbase.event.DomainEvent
@@ -29,11 +29,12 @@ class GenericAsyncDomainEventStoreSpec extends Specification {
     "get saved event" in {
       type ID = Identity[UUID]
       type E = TestDomainEvent
-      type REPOS = GenericAsyncRepositoryOnMemory[ID, E]
+      type CTX = EntityIOContext[Future]
+      type REPOS = GenericAsyncRepositoryOnMemory[CTX, ID, E]
 
       val repos = new REPOS
-      val target = new GenericAsyncDomainEventStore[REPOS, ID, E](repos)
-      val publisher = GenericAsyncDomainEventPublisher[E, ResultWithEntity[REPOS, ID, E, Future]]()
+      val target = new GenericAsyncDomainEventStore[REPOS, CTX, ID, E](repos)
+      val publisher = GenericAsyncDomainEventPublisher[E, CTX, ResultWithEntity[REPOS, CTX, ID, E, Future]]()
       val event = new E(Identity(UUID.randomUUID()))
       val futures = publisher.subscribe(target).publish(event)
 

@@ -10,6 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.util.Try
 
 
 class GenericAsyncDomainEventPublisherSpec extends Specification {
@@ -17,7 +18,7 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
   class TestDomainEvent(val identity: Identity[UUID])
     extends DomainEvent[Identity[UUID]]
 
-  val publisher = GenericAsyncDomainEventPublisher[TestDomainEvent]()
+  val publisher = GenericAsyncDomainEventPublisher[TestDomainEvent, EntityIOContext[Future]]()
 
   implicit val ctx = AsyncEntityIOContext()
 
@@ -25,7 +26,7 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
     "publish" in {
       var result: Identity[UUID] = null
       publisher.subscribe(
-        new AsyncDomainEventSubscriber[TestDomainEvent, Unit] {
+        new AsyncDomainEventSubscriber[TestDomainEvent, EntityIOContext[Future], Unit] {
           def handleEvent(event: TestDomainEvent)(implicit ctx: EntityIOContext[Future]): Future[Unit] = {
             result = event.identity
             Future(())

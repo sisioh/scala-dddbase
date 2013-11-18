@@ -13,11 +13,11 @@ import scala.util._
  * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupportByChunk
-[ID <: Identity[_],
+[CTX <: EntityIOContext[Try], ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemorySupport[ID, E] with SyncEntityReadableByChunk[ID, E] {
+  extends SyncRepositoryOnMemorySupport[CTX, ID, E] with SyncEntityReadableByChunk[CTX, ID, E] {
 
-  def resolveChunk(index: Int, maxEntities: Int)(implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] = {
+  def resolveChunk(index: Int, maxEntities: Int)(implicit ctx: CTX): Try[EntitiesChunk[ID, E]] = {
     val subEntities = toList.slice(index * maxEntities, index * maxEntities + maxEntities)
     Success(EntitiesChunk(index, subEntities))
   }

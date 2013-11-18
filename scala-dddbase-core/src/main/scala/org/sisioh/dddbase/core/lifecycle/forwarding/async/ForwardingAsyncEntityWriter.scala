@@ -11,10 +11,10 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncEntityWriter[ID, E] {
+trait ForwardingAsyncEntityWriter[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityWriter[CTX, ID, E] {
 
-  type Delegate <: AsyncEntityWriter[ID, E]
+  type Delegate <: AsyncEntityWriter[CTX, ID, E]
 
   /**
    * デリゲート。
@@ -29,7 +29,7 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createInstance(state: Future[(Delegate#This, Option[E])]): Future[(This, Option[E])]
 
-  def store(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: CTX): Future[AsyncResultWithEntity[This, CTX, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
     val state = delegate.store(entity).map {
       result =>
@@ -42,7 +42,7 @@ trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     }
   }
 
-  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def deleteByIdentity(identity: ID)(implicit ctx: CTX): Future[AsyncResultWithEntity[This, CTX, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
     val state = delegate.deleteByIdentity(identity).map {
       result =>

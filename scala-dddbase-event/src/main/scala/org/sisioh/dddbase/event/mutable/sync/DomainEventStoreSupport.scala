@@ -14,15 +14,16 @@ import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
  * @tparam T エンティティの型
  */
 trait DomainEventStoreSupport
-[+R <: Repository[ID, T, Try],
+[+R <: Repository[CTX, ID, T, Try],
+CTX <: EntityIOContext[Try],
 ID <: Identity[_],
 T <: DomainEvent[ID]]
-  extends DomainEventStore[R, ID, T, Try, Unit]
-  with SyncDomainEventSubscriber[T, Unit] {
+  extends DomainEventStore[R, CTX, ID, T, Try, Unit]
+  with SyncDomainEventSubscriber[T, CTX, Unit] {
 
   protected val eventRepository: R
 
-  def handleEvent(event: T)(implicit ctx: EntityIOContext[Try]): Try[Unit] =
+  def handleEvent(event: T)(implicit ctx: CTX): Try[Unit] =
     eventRepository.store(event).map(_ => ())
 
 }

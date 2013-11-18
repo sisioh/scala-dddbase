@@ -11,11 +11,11 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingSyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
-  extends SyncEntityReadableByChunk[ID, E] {
-  this: SyncEntityReader[ID, E] =>
+trait ForwardingSyncEntityReadableByChunk[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityReadableByChunk[CTX, ID, E] {
+  this: SyncEntityReader[CTX, ID, E] =>
 
-  type Delegate <: SyncEntityReadableByChunk[ID, E]
+  type Delegate <: SyncEntityReadableByChunk[CTX, ID, E]
 
   /**
    * デリゲート。
@@ -23,7 +23,7 @@ trait ForwardingSyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
   protected val delegate: Delegate
 
   def resolveChunk(index: Int, maxEntities: Int)
-                  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] =
+                  (implicit ctx: CTX): Try[EntitiesChunk[ID, E]] =
     delegate.resolveChunk(index, maxEntities)
 
 }

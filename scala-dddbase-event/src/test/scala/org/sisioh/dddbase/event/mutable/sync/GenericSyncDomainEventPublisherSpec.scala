@@ -8,13 +8,14 @@ import scala.util._
 import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.concurrent.Future
 
 class GenericSyncDomainEventPublisherSpec extends Specification {
 
   class TestDomainEvent(val identity: Identity[UUID])
     extends DomainEvent[Identity[UUID]]
 
-  val publisher = GenericSyncDomainEventPublisher[TestDomainEvent]()
+  val publisher = GenericSyncDomainEventPublisher[TestDomainEvent, EntityIOContext[Try]]()
 
   implicit val ctx = SyncEntityIOContext
 
@@ -22,7 +23,7 @@ class GenericSyncDomainEventPublisherSpec extends Specification {
     "publish" in {
       var result: Identity[UUID] = null
       publisher.subscribe(
-        new SyncDomainEventSubscriber[TestDomainEvent, Unit] {
+        new SyncDomainEventSubscriber[TestDomainEvent, EntityIOContext[Try], Unit] {
           def handleEvent(event: TestDomainEvent)(implicit ctx: EntityIOContext[Try]): Try[Unit] = {
             result = event.identity
             Success(())

@@ -24,8 +24,8 @@ import scala.language.higherKinds
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait EntityReadableByOption[ID <: Identity[_], E <: Entity[ID], M[+A]] {
-  this: EntityReader[ID, E, M] =>
+trait EntityReadableByOption[CTX <: EntityIOContext[M] , ID <: Identity[_], E <: Entity[ID], M[+A]] {
+  this: EntityReader[CTX, ID, E, M] =>
 
   /**
    * 識別子に該当するエンティティを解決する。
@@ -35,6 +35,6 @@ trait EntityReadableByOption[ID <: Identity[_], E <: Entity[ID], M[+A]] {
    * @param identity 識別子
    * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
    */
-  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[M]): M[Option[E]]
+  def resolveOption(identity: ID)(implicit ctx: CTX): M[Option[E]]
 
 }

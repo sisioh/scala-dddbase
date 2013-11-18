@@ -25,15 +25,15 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityReadableByChunk[ID, E, Try] {
-  this: SyncEntityReader[ID, E] =>
+trait SyncEntityReadableByChunk[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReadableByChunk[CTX, ID, E, Try] {
+  this: SyncEntityReader[CTX, ID, E] =>
 
   /**
    * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
   def resolveChunk(index: Int, maxEntities: Int)
-                  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
+                  (implicit ctx: CTX): Try[EntitiesChunk[ID, E]]
 
 }

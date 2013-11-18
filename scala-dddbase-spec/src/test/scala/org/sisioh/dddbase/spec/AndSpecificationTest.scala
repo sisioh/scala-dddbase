@@ -15,96 +15,96 @@
  * governing permissions and limitations under the License.
  */
 package org.sisioh.dddbase.spec
-
-import org.scalatest.junit.AssertionsForJUnit
-import org.junit.Test
-import org.mockito.Mockito._
-import org.mockito.Matchers._
-import org.scalatest.mock.MockitoSugar
-
-class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
-
-  /**
-   * `false` AND `false` が `false` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def est01_false_false_To_false() {
-
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-
-    val and = new AndSpecification[Unit](mock1, mock2)
-    assert(!and.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    //		verify(mock2, never()).isSatisfiedBy(null);
-  }
-
-  /**
-   * `false` AND `true` が `false` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test02_false_true_To_false() {
-
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-
-    val and = new AndSpecification[Unit](mock1, mock2)
-    assert(!and.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    //		verify(mock2, never()).isSatisfiedBy(null);
-  }
-
-  /**
-   * `true` AND `false` が `false` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test03_true_false_To_false() {
-
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
-
-    val nandot = new AndSpecification[Unit](mock1, mock2)
-    assert(!nandot.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    verify(mock2).isSatisfiedBy(())
-  }
-
-  /**
-   * `true` AND `true` が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test04_true_true_To_true() {
-
-    val mock1 = mock[Specification[Unit]]
-    val mock2 = mock[Specification[Unit]]
-
-    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
-
-    val and = new AndSpecification[Unit](mock1, mock2)
-    assert(and.isSatisfiedBy(()))
-
-    verify(mock1).isSatisfiedBy(())
-    verify(mock2).isSatisfiedBy(())
-  }
-}
+//
+//import org.scalatest.junit.AssertionsForJUnit
+//import org.junit.Test
+//import org.mockito.Mockito._
+//import org.mockito.Matchers._
+//import org.scalatest.mock.MockitoSugar
+//
+//class AndSpecificationTest extends AssertionsForJUnit with MockitoSugar {
+//
+//  /**
+//   * `false` AND `false` が `false` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def est01_false_false_To_false() {
+//
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//
+//    val and = new AndSpecification[Unit](mock1, mock2)
+//    assert(!and.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    //		verify(mock2, never()).isSatisfiedBy(null);
+//  }
+//
+//  /**
+//   * `false` AND `true` が `false` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test02_false_true_To_false() {
+//
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//
+//    val and = new AndSpecification[Unit](mock1, mock2)
+//    assert(!and.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    //		verify(mock2, never()).isSatisfiedBy(null);
+//  }
+//
+//  /**
+//   * `true` AND `false` が `false` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test03_true_false_To_false() {
+//
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
+//
+//    val nandot = new AndSpecification[Unit](mock1, mock2)
+//    assert(!nandot.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    verify(mock2).isSatisfiedBy(())
+//  }
+//
+//  /**
+//   * `true` AND `true` が `true` となること。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test04_true_true_To_true() {
+//
+//    val mock1 = mock[Specification[Unit]]
+//    val mock2 = mock[Specification[Unit]]
+//
+//    when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//    when(mock2.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)
+//
+//    val and = new AndSpecification[Unit](mock1, mock2)
+//    assert(and.isSatisfiedBy(()))
+//
+//    verify(mock1).isSatisfiedBy(())
+//    verify(mock2).isSatisfiedBy(())
+//  }
+//}

@@ -30,33 +30,33 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
  * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupport
-[ID <: Identity[_],
+[CTX <: EntityIOContext[Try], ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemory[ID, E] {
+  extends SyncRepositoryOnMemory[CTX, ID, E] {
 
   /**
    * 内部で利用されるオンメモリリポジトリ
    */
-  protected var core: SyncRepositoryOnMemory[ID, E] =
-    new org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory[ID, E]()
+  protected var core: SyncRepositoryOnMemory[CTX, ID, E] =
+    new org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory[CTX, ID, E]()
 
   override def equals(obj: Any) = obj match {
-    case that: SyncRepositoryOnMemorySupport[_, _] =>
+    case that: SyncRepositoryOnMemorySupport[_, _, _] =>
       this.core == that.core
     case _ => false
   }
 
   override def hashCode = 31 * core.##
 
-  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]] = {
     core.store(entity).map {
       resultWithEntity =>
-        core = resultWithEntity.result.asInstanceOf[SyncRepositoryOnMemory[ID, E]]
+        core = resultWithEntity.result.asInstanceOf[SyncRepositoryOnMemory[CTX, ID, E]]
         SyncResultWithEntity(this.asInstanceOf[This], resultWithEntity.entity)
     }
   }
 
-  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+  def deleteByIdentity(identity: ID)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]] = {
     core.deleteByIdentity(identity).map {
       result =>
         SyncResultWithEntity(this.asInstanceOf[This], result.entity)
@@ -65,6 +65,6 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   def iterator: Iterator[E] = core.iterator
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = core.resolve(identity)
+  def resolve(identity: ID)(implicit ctx: CTX): Try[E] = core.resolve(identity)
 
 }

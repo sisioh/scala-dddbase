@@ -13,14 +13,14 @@ import scala.util._
  * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupportByPredicate
-[ID <: Identity[_],
+[CTX <: EntityIOContext[Try], ID <: Identity[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemorySupport[ID, E]
-  with SyncEntityReadableByPredicate[ID, E] {
+  extends SyncRepositoryOnMemorySupport[CTX, ID, E]
+  with SyncEntityReadableByPredicate[CTX, ID, E] {
 
   def filterByPredicate
   (predicate: (E) => Boolean, indexOpt: Option[Int], maxEntitiesOpt: Option[Int])
-  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] = {
+  (implicit ctx: CTX): Try[EntitiesChunk[ID, E]] = {
     val filteredSubEntities = toList.filter(predicate)
     val index = indexOpt.getOrElse(0)
     val maxEntities = maxEntitiesOpt.getOrElse(filteredSubEntities.size)

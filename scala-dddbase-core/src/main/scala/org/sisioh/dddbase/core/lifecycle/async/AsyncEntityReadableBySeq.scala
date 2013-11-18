@@ -10,8 +10,8 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncEntityReadableBySeq[ID <: Identity[_], E <: Entity[ID]] {
-  this: AsyncEntityReader[ID, E] =>
+trait AsyncEntityReadableBySeq[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID]] {
+  this: AsyncEntityReader[CTX, ID, E] =>
 
   /**
    * @return Success:
@@ -19,6 +19,6 @@ trait AsyncEntityReadableBySeq[ID <: Identity[_], E <: Entity[ID]] {
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def resolveAll(implicit ctx: EntityIOContext[Future]): Future[Seq[E]]
+  def resolveAll(implicit ctx: CTX): Future[Seq[E]]
 
 }

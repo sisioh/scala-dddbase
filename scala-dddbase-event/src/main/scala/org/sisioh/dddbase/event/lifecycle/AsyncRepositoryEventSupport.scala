@@ -13,17 +13,17 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncRepository[ID, E] {
+trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID], CTX <: EntityIOContext[Future]]
+  extends AsyncRepository[CTX, ID, E] {
 
-  private val eventPublisher = GenericAsyncDomainEventPublisher[EntityIOEvent[ID, E]]()
+  private val eventPublisher = GenericAsyncDomainEventPublisher[EntityIOEvent[ID, E], CTX]()
 
   /**
    * [[org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber]]を登録する。
    *
    * @param subscriber [[org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber]]
    */
-  def subscribe(subscriber: AsyncDomainEventSubscriber[EntityIOEvent[ID, E], Unit]): This = {
+  def subscribe(subscriber: AsyncDomainEventSubscriber[EntityIOEvent[ID, E], CTX, Unit]): This = {
     eventPublisher.subscribe(subscriber)
     this.asInstanceOf[This]
   }
@@ -33,7 +33,7 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
    *
    * @param subscriber [[org.sisioh.dddbase.event.async.AsyncDomainEventPublisher]]
    */
-  def unsubscribe(subscriber: AsyncDomainEventSubscriber[EntityIOEvent[ID, E], Unit]): This = {
+  def unsubscribe(subscriber: AsyncDomainEventSubscriber[EntityIOEvent[ID, E], CTX, Unit]): This = {
     eventPublisher.unsubscribe(subscriber)
     this.asInstanceOf[This]
   }
@@ -47,7 +47,7 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createEntityIOEvent(entity: E, eventType: EventType.Value): EntityIOEvent[ID, E]
 
-  abstract override def store(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+  abstract override def store(entity: E)(implicit ctx: CTX): Future[AsyncResultWithEntity[This, CTX, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
     val result = super.store(entity)
     result onSuccess {
@@ -55,10 +55,10 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Store)
         eventPublisher.publish(event)
     }
-    result.asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
+    result.asInstanceOf[Future[AsyncResultWithEntity[This, CTX, ID, E]]]
   }
 
-  abstract override def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+  abstract override def deleteByIdentity(identity: ID)(implicit ctx: CTX): Future[AsyncResultWithEntity[This, CTX, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
     val result = super.deleteByIdentity(identity)
     result onSuccess {
@@ -66,7 +66,7 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Delete)
         eventPublisher.publish(event)
     }
-    result.asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
+    result.asInstanceOf[Future[AsyncResultWithEntity[This, CTX, ID, E]]]
   }
 
 }

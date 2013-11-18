@@ -13,17 +13,17 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
-  extends SyncRepository[ID, E] {
+trait SyncRepositoryEventSupport[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends SyncRepository[CTX, ID, E] {
 
-  private val eventPublisher = GenericSyncDomainEventPublisher[EntityIOEvent[ID, E]]()
+  private val eventPublisher = GenericSyncDomainEventPublisher[EntityIOEvent[ID, E], CTX]()
 
   /**
    * [[org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber]]を登録する。
    *
    * @param subscriber [[org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber]]
    */
-  def subscribe(subscriber: SyncDomainEventSubscriber[EntityIOEvent[ID, E], Unit]): This = {
+  def subscribe(subscriber: SyncDomainEventSubscriber[EntityIOEvent[ID, E], CTX, Unit]): This = {
     eventPublisher.subscribe(subscriber)
     this.asInstanceOf[This]
   }
@@ -33,7 +33,7 @@ trait SyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
    *
    * @param subscriber [[org.sisioh.dddbase.event.sync.SyncDomainEventPublisher]]
    */
-  def unsubscribe(subscriber: SyncDomainEventSubscriber[EntityIOEvent[ID, E], Unit]): This = {
+  def unsubscribe(subscriber: SyncDomainEventSubscriber[EntityIOEvent[ID, E], CTX, Unit]): This = {
     eventPublisher.unsubscribe(subscriber)
     this.asInstanceOf[This]
   }
@@ -47,22 +47,22 @@ trait SyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createEntityIOEvent(entity: E, eventType: EventType.Value): EntityIOEvent[ID, E]
 
-  abstract override def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+  abstract override def store(entity: E)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]] = {
     val result = super.store(entity).map{
       resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Store)
         eventPublisher.publish(event)
     }
-    result.asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
+    result.asInstanceOf[Try[SyncResultWithEntity[This, CTX, ID, E]]]
   }
 
-  abstract override def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+  abstract override def deleteByIdentity(identity: ID)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]] = {
     val result = super.deleteByIdentity(identity).map{
       resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Delete)
         eventPublisher.publish(event)
     }
-    result.asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
+    result.asInstanceOf[Try[SyncResultWithEntity[This, CTX, ID, E]]]
   }
 
 }

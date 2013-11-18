@@ -27,22 +27,22 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+A]]
+trait EntityReader[CTX <: EntityIOContext[M], ID <: Identity[_], E <: Entity[ID], M[+A]]
   extends EntityIO {
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[M]): M[E]
+  def resolve(identity: ID)(implicit ctx: CTX): M[E]
 
-  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[Seq[E]]
+  def resolves(identities: Seq[ID])(implicit ctx: CTX): M[Seq[E]]
 
-  def apply(identity: ID)(implicit ctx: EntityIOContext[M]): M[E] = resolve(identity)
+  def apply(identity: ID)(implicit ctx: CTX): M[E] = resolve(identity)
 
-  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[M]): M[Boolean]
+  def containsByIdentity(identity: ID)(implicit ctx: CTX): M[Boolean]
 
-  def containsByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[Boolean]
+  def containsByIdentities(identities: Seq[ID])(implicit ctx: CTX): M[Boolean]
 
-  def contains(entity: E)(implicit ctx: EntityIOContext[M]): M[Boolean] = containsByIdentity(entity.identity)
+  def contains(entity: E)(implicit ctx: CTX): M[Boolean] = containsByIdentity(entity.identity)
 
-  def contains(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[Boolean] = containsByIdentities(entities.map(_.identity))
+  def contains(entities: Seq[E])(implicit ctx: CTX): M[Boolean] = containsByIdentities(entities.map(_.identity))
 
 }
 

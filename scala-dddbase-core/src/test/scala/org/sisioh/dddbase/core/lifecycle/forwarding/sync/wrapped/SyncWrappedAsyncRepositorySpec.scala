@@ -5,11 +5,12 @@ import org.sisioh.dddbase.core.model.{EmptyIdentity, EntityCloneable, Entity, Id
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
 import scala.concurrent.duration.Duration
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityNotFoundException}
 import org.specs2.mock.Mockito
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{Future, ExecutionContext}
 import ExecutionContext.Implicits.global
 import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
+import scala.util.Try
 
 class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
 
@@ -23,13 +24,13 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
   }
 
   class ForwardingSyncWrappedRepositoryImpl
-  (protected val delegate: GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl])
+  (protected val delegate: GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl])
   (implicit val executor: ExecutionContext)
-    extends SyncWrappedAsyncRepository[Identity[UUID], EntityImpl] {
+    extends SyncWrappedAsyncRepository[EntityIOContext[Try], Identity[UUID], EntityImpl] {
 
     type This = ForwardingSyncWrappedRepositoryImpl
 
-    type Delegate = GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]
+    type Delegate = GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]
 
     protected def createInstance(state: (Delegate#This, Option[EntityImpl])): (This, Option[EntityImpl]) = {
       (this.asInstanceOf[This], state._2)
@@ -44,7 +45,7 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
 
   "The repository" should {
     "have stored entity with empty identity" in {
-      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(EmptyIdentity))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -52,7 +53,7 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
       repos.flatMap(_.result.contains(entity)).get must_== true
     }
     "have stored entity" in {
-      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -60,7 +61,7 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
       repos.flatMap(_.result.contains(entity)).get must_== true
     }
     "resolve a entity by using identity" in {
-      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -68,7 +69,7 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
       resultWithEntity.flatMap(_.result.resolve(id)).get must_== entity
     }
     "delete a entity by using identity" in {
-      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -76,14 +77,14 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
       resultWithEntity.flatMap(_.result.deleteByIdentity(id)) must_!= resultWithEntity.get.result
     }
     "fail to resolve a entity by a non-existent identity" in {
-      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       repository.resolve(id).recover {
         case ex: EntityNotFoundException => true
       }.get must_== true
       repository.resolve(id).get must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identity" in {
-      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new ForwardingSyncWrappedRepositoryImpl(GenericAsyncRepositoryOnMemory[EntityIOContext[Future], Identity[UUID], EntityImpl]())
       repository.deleteByIdentity(id).recover {
         case ex: EntityNotFoundException => true
       }.get must_== true

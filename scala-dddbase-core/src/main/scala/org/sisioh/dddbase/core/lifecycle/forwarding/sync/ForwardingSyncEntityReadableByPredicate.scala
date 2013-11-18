@@ -11,11 +11,11 @@ import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByPredicate, Sy
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingSyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]]
-  extends SyncEntityReadableByPredicate[ID, E] {
-  this: SyncEntityReader[ID, E] =>
+trait ForwardingSyncEntityReadableByPredicate[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityReadableByPredicate[CTX, ID, E] {
+  this: SyncEntityReader[CTX, ID, E] =>
 
-  type Delegate <: SyncEntityReadableByPredicate[ID, E]
+  type Delegate <: SyncEntityReadableByPredicate[CTX, ID, E]
 
   /**
    * デリゲート。
@@ -25,7 +25,7 @@ trait ForwardingSyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]
   def filterByPredicate
   (predicate: (E) => Boolean,
    index: Option[Int], maxEntities: Option[Int])
-  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] =
+  (implicit ctx: CTX): Try[EntitiesChunk[ID, E]] =
     delegate.filterByPredicate(predicate, index, maxEntities)
 
 }

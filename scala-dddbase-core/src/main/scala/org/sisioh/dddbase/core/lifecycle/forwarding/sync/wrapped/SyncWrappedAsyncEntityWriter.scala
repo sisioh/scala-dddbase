@@ -5,7 +5,7 @@ import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntity, SyncEntityW
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityWriter
 import scala.util.Try
 import scala.concurrent.duration.Duration
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
@@ -16,10 +16,10 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncWrappedAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
-  extends SyncEntityWriter[ID, E] with SyncWrappedAsyncEntityIO {
+trait SyncWrappedAsyncEntityWriter[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityWriter[CTX, ID, E] with SyncWrappedAsyncEntityIO {
 
-  type Delegate <: AsyncEntityWriter[ID, E]
+  type Delegate <: AsyncEntityWriter[EntityIOContext[Future], ID, E]
 
   /**
    * デリゲート。
@@ -30,18 +30,18 @@ trait SyncWrappedAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
 
   protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
-  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = Try {
+  def store(entity: E)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]] = Try {
     implicit val asyncEntityIOContext =  getAsyncEntityIOContext(ctx)
     val resultWithEntity = Await.result(delegate.store(entity), timeOut)
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], Some(resultWithEntity.entity)))
-    SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
+    SyncResultWithEntity[This, CTX, ID, E](result._1.asInstanceOf[This], result._2.get)
   }
 
-  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = Try {
+  def deleteByIdentity(identity: ID)(implicit ctx: CTX): Try[SyncResultWithEntity[This, CTX, ID, E]] = Try {
     implicit val asyncEntityIOContext =  getAsyncEntityIOContext(ctx)
     val resultWithEntity = Await.result(delegate.deleteByIdentity(identity), timeOut)
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], Some(resultWithEntity.entity)))
-    SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
+    SyncResultWithEntity[This, CTX, ID, E](result._1.asInstanceOf[This], result._2.get)
   }
 
 }

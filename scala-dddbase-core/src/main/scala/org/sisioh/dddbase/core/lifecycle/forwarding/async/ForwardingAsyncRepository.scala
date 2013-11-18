@@ -2,6 +2,8 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
 import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.concurrent.Future
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.async.AsyncRepository]]のデコレータ。
@@ -9,12 +11,12 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncRepository[ID <: Identity[_], E <: Entity[ID]]
-  extends ForwardingAsyncEntityReader[ID, E]
-  with ForwardingAsyncEntityWriter[ID, E]
-  with AsyncRepository[ID, E] {
+trait ForwardingAsyncRepository[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID]]
+  extends ForwardingAsyncEntityReader[CTX, ID, E]
+  with ForwardingAsyncEntityWriter[CTX, ID, E]
+  with AsyncRepository[CTX, ID, E] {
 
-  type Delegate <: AsyncRepository[ID, E]
+  type Delegate <: AsyncRepository[CTX, ID, E]
 
   /**
    * デリゲート。

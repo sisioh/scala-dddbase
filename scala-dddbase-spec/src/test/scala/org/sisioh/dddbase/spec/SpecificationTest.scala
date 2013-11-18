@@ -16,27 +16,26 @@
  */
 package org.sisioh.dddbase.spec
 
-import org.scalatest.junit.AssertionsForJUnit
 import org.junit.Test
 
 /**
  * [[org.sisioh.dddbase.spec.Specification]]のテストクラス。
  */
-class SpecificationTest extends AssertionsForJUnit {
-  /**
-   * [[org.sisioh.dddbase.spec.Specification#and(Specification)]]
-   * [[org.sisioh.dddbase.spec.Specification#or(Specification)]]
-   * [[org.sisioh.dddbase.spec.Specification#not]]のテスト。
-   *
-   * @throws Exception 例外が発生した場合
-   */
-  @Test
-  def test01_and_or_not() {
-    val spec = new Specification[Unit] {
-      def isSatisfiedBy(t: Unit): Boolean = false
-    }
-    assert(spec.and(spec).isInstanceOf[AndSpecification[_]])
-    assert(spec.or(spec).isInstanceOf[OrSpecification[_]])
-    assert(spec.not.isInstanceOf[NotSpecification[_]])
-  }
-}
+//class SpecificationTest extends AssertionsForJUnit {
+//  /**
+//   * [[org.sisioh.dddbase.spec.Specification#and(Specification)]]
+//   * [[org.sisioh.dddbase.spec.Specification#or(Specification)]]
+//   * [[org.sisioh.dddbase.spec.Specification#not]]のテスト。
+//   *
+//   * @throws Exception 例外が発生した場合
+//   */
+//  @Test
+//  def test01_and_or_not() {
+//    val spec = new Specification[Unit] {
+//      def isSatisfiedBy(t: Unit): Boolean = false
+//    }
+//    assert(spec.and(spec).isInstanceOf[AndSpecification[_]])
+//    assert(spec.or(spec).isInstanceOf[OrSpecification[_]])
+//    assert(spec.not.isInstanceOf[NotSpecification[_]])
+//  }
+//}

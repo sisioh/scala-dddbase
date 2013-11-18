@@ -11,11 +11,11 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingSyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
-  extends SyncEntityReadableByOption[ID, E] {
-  this: SyncEntityReader[ID, E] =>
+trait ForwardingSyncEntityReadableByOption[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityReadableByOption[CTX, ID, E] {
+  this: SyncEntityReader[CTX, ID, E] =>
 
-  type Delegate <: SyncEntityReadableByOption[ID, E]
+  type Delegate <: SyncEntityReadableByOption[CTX, ID, E]
 
   /**
    * デリゲート。
@@ -23,6 +23,6 @@ trait ForwardingSyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
   protected val delegate: Delegate
 
   def resolveOption(identity: ID)
-                   (implicit ctx: EntityIOContext[Try]): Try[Option[E]] = delegate.resolveOption(identity)
+                   (implicit ctx: CTX): Try[Option[E]] = delegate.resolveOption(identity)
 
 }

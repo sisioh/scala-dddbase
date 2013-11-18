@@ -5,6 +5,7 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent._
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.util.Try
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]を
@@ -14,14 +15,14 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncWrappedSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncEntityReader[ID, E] with AsyncWrappedSyncEntityIO {
+trait AsyncWrappedSyncEntityReader[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityReader[CTX, ID, E] with AsyncWrappedSyncEntityIO {
 
-  type Delegate <: SyncEntityReader[ID, E]
+  type Delegate <: SyncEntityReader[EntityIOContext[Try], ID, E]
 
   protected val delegate: Delegate
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]) = {
+  def resolve(identity: ID)(implicit ctx: CTX) = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {
@@ -30,7 +31,7 @@ trait AsyncWrappedSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
     }
   }
 
-  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] = {
+  def containsByIdentity(identity: ID)(implicit ctx: CTX): Future[Boolean] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {
@@ -39,6 +40,6 @@ trait AsyncWrappedSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
     }
   }
 
-  override def contains(entity: E)(implicit ctx: EntityIOContext[Future]): Future[Boolean] =
+  override def contains(entity: E)(implicit ctx: CTX): Future[Boolean] =
     containsByIdentity(entity.identity)
 }

@@ -24,8 +24,8 @@ import scala.language.higherKinds
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait EntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID], M[+A]] {
-  this: EntityReader[ID, E, M] =>
+trait EntityReadableByPredicate[CTX <: EntityIOContext[M], ID <: Identity[_], E <: Entity[ID], M[+A]] {
+  this: EntityReader[CTX, ID, E, M] =>
 
   /**
    * 述語関数に該当したエンティティを取得する。
@@ -36,6 +36,6 @@ trait EntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID], M[+A]] {
    * @return モナドにラップした[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
   def filterByPredicate(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
-                       (implicit ctx: EntityIOContext[M]): M[EntitiesChunk[ID, E]]
+                       (implicit ctx: CTX): M[EntitiesChunk[ID, E]]
 
 }

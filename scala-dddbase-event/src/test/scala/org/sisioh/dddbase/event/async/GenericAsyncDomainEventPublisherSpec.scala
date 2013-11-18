@@ -15,7 +15,7 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
   class TestDomainEvent(val identity: Identity[UUID])
     extends DomainEvent[Identity[UUID]]
 
-  var publisher = GenericAsyncDomainEventPublisher[TestDomainEvent, Unit]()
+  var publisher = GenericAsyncDomainEventPublisher[TestDomainEvent, EntityIOContext[Future], Unit]()
 
   implicit val ctx = AsyncEntityIOContext()
 
@@ -23,7 +23,7 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
     "publish" in {
       var result: Identity[UUID] = null
       publisher = publisher.subscribe(
-        new AsyncDomainEventSubscriber[TestDomainEvent, Unit] {
+        new AsyncDomainEventSubscriber[TestDomainEvent, EntityIOContext[Future], Unit] {
           def handleEvent(event: TestDomainEvent)(implicit ctx: EntityIOContext[Future]): Future[Unit] = {
             result = event.identity
             Future(())

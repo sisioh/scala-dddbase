@@ -1,13 +1,14 @@
 package org.sisioh.dddbase.event.sync
 
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, ResultWithEntity}
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import scala.concurrent.Future
 
 class GenericSyncDomainEventStoreSpec extends Specification {
 
@@ -26,11 +27,12 @@ class GenericSyncDomainEventStoreSpec extends Specification {
     "get saved event" in {
       type ID = Identity[UUID]
       type E = TestDomainEvent
-      type REPOS = GenericSyncRepositoryOnMemory[ID, E]
+      type CTX = EntityIOContext[Try]
+      type REPOS = GenericSyncRepositoryOnMemory[CTX, ID, E]
 
       val repos = new REPOS
-      val target = new GenericSyncDomainEventStore[REPOS, ID, E](repos)
-      val publisher = GenericSyncDomainEventPublisher[E, ResultWithEntity[REPOS, ID, E, Try]]()
+      val target = new GenericSyncDomainEventStore[REPOS, CTX, ID, E](repos)
+      val publisher = GenericSyncDomainEventPublisher[E, CTX, ResultWithEntity[REPOS, CTX, ID, E, Try]]()
       val event = new E(Identity(UUID.randomUUID()))
       val resultTrys = publisher.subscribe(target).publish(event)
 

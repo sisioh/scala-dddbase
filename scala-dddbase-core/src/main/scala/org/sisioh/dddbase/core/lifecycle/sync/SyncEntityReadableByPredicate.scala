@@ -26,9 +26,9 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityReadableByPredicate[ID, E, Try] {
-  this: SyncEntityReader[ID, E] =>
+trait SyncEntityReadableByPredicate[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReadableByPredicate[CTX, ID, E, Try] {
+  this: SyncEntityReader[CTX, ID, E] =>
 
   /**
    * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
@@ -37,6 +37,6 @@ trait SyncEntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID]]
   def filterByPredicate
   (predicate: E => Boolean,
    index: Option[Int] = None, maxEntities: Option[Int] = None)
-  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
+  (implicit ctx: CTX): Try[EntitiesChunk[ID, E]]
 
 }

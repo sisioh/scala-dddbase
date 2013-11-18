@@ -11,20 +11,20 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncEntityReader[ID, E] {
+trait ForwardingAsyncEntityReader[CTX <: EntityIOContext[Future],ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityReader[CTX, ID, E] {
 
-  type Delegate <: AsyncEntityReader[ID, E]
+  type Delegate <: AsyncEntityReader[CTX, ID, E]
 
   /**
    * デリゲート。
    */
   protected val delegate: Delegate
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]) =
+  def resolve(identity: ID)(implicit ctx: CTX) =
     delegate.resolve(identity)
 
-  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] =
+  def containsByIdentity(identity: ID)(implicit ctx: CTX): Future[Boolean] =
     delegate.containsByIdentity(identity)
 
 }

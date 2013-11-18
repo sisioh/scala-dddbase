@@ -11,21 +11,21 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam R モナドの値の型
  */
 trait DomainEventPublisher
-[A <: DomainEvent[_], M[+B], R] {
+[A <: DomainEvent[_], CTX <: EntityIOContext[M], M[+B], R] {
 
   /**
    * 派生型
    */
-  type This <: DomainEventPublisher[A, M, R]
+  type This <: DomainEventPublisher[A, CTX, M, R]
 
-  type DES <: DomainEventSubscriber[A, M, R]
+  type DES <: DomainEventSubscriber[A, CTX, M, R]
 
   /**
    * [[org.sisioh.dddbase.event.DomainEvent]]を通知する。
    *
    * @param event ドメインイベント
    */
-  def publish(event: A)(implicit ctx: EntityIOContext[M]): Seq[M[R]]
+  def publish(event: A)(implicit ctx: CTX): Seq[M[R]]
 
   /**
    * [[org.sisioh.dddbase.event.DomainEventPublisher]]を登録する。

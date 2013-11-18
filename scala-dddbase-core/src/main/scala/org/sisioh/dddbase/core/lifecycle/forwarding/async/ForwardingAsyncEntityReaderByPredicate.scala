@@ -11,11 +11,11 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncEntityReadableByPredicate[ID, E] {
-  this: AsyncEntityReader[ID, E] =>
+trait ForwardingAsyncEntityReaderByPredicate[CTX <: EntityIOContext[Future] , ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityReadableByPredicate[CTX, ID, E] {
+  this: AsyncEntityReader[CTX, ID, E] =>
 
-  type Delegate <: AsyncEntityReadableByPredicate[ID, E]
+  type Delegate <: AsyncEntityReadableByPredicate[CTX, ID, E]
 
   /**
    * デリゲート。
@@ -25,7 +25,7 @@ trait ForwardingAsyncEntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID]]
   def filterByPredicate
   (predicate: (E) => Boolean,
    index: Option[Int], maxEntities: Option[Int])
-  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] =
+  (implicit ctx: CTX): Future[EntitiesChunk[ID, E]] =
     delegate.filterByPredicate(predicate, index, maxEntities)
 
 }

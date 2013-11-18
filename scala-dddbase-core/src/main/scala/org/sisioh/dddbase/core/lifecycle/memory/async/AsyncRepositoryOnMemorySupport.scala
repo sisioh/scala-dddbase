@@ -17,6 +17,8 @@ package org.sisioh.dddbase.core.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncRepository
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.concurrent.Future
 
 /**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
@@ -29,9 +31,9 @@ import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSy
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupport
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemory[ID, E]
-  with AsyncWrappedSyncRepository[ID, E] {
+[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+  extends AsyncRepositoryOnMemory[CTX, ID, E]
+  with AsyncWrappedSyncRepository[CTX, ID, E] {
 
   /**
    * 新しい非同期型リポジトリを生成する。
@@ -42,7 +44,7 @@ trait AsyncRepositoryOnMemorySupport
   protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
   override def equals(obj: Any) = obj match {
-    case that: AsyncRepositoryOnMemorySupport[_, _] =>
+    case that: AsyncRepositoryOnMemorySupport[_, _, _] =>
       this.delegate == that.delegate
     case _ => false
   }

@@ -25,14 +25,14 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
-  extends EntityReadableByOption[ID, E, Try] {
-  this: SyncEntityReader[ID, E] =>
+trait SyncEntityReadableByOption[CTX <: EntityIOContext[Try] ,ID <: Identity[_], E <: Entity[ID]]
+  extends EntityReadableByOption[CTX, ID, E, Try] {
+  this: SyncEntityReader[CTX, ID, E] =>
 
   /**
    * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
    */
-  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Option[E]]
+  def resolveOption(identity: ID)(implicit ctx: CTX): Try[Option[E]]
 
 }

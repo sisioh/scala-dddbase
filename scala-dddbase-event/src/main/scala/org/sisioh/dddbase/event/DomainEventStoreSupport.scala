@@ -12,13 +12,13 @@ import scala.language.higherKinds
  * @tparam T エンティティの型
  * @tparam M モナドの型
  */
-trait DomainEventStoreSupport[+R <: Repository[ID, T, M], ID <: Identity[_], T <: DomainEvent[ID], M[+A]]
-  extends DomainEventStore[R, ID, T, M, ResultWithEntity[R#This, ID, T, M]] {
+trait DomainEventStoreSupport[+R <: Repository[CTX, ID, T, M], CTX <: EntityIOContext[M], ID <: Identity[_], T <: DomainEvent[ID], M[+A]]
+  extends DomainEventStore[R, CTX, ID, T, M, ResultWithEntity[R#This, CTX, ID, T, M]] {
 
   protected val eventRepository: R
 
-  def handleEvent(event: T)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[R#This, ID, T, M]] = {
-    eventRepository.store(event).asInstanceOf[M[ResultWithEntity[R#This, ID, T, M]]]
+  def handleEvent(event: T)(implicit ctx: CTX): M[ResultWithEntity[R#This, CTX, ID, T, M]] = {
+    eventRepository.store(event).asInstanceOf[M[ResultWithEntity[R#This, CTX, ID, T, M]]]
   }
 
 }

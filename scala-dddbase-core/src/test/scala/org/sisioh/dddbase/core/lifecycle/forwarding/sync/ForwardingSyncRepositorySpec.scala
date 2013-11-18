@@ -25,17 +25,17 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
   val id = Identity(UUID.randomUUID())
 
   class TestRepForwardingSyncRepositoryImpl
-  (protected val delegate: SyncRepository[Identity[UUID], EntityImpl])
-    extends ForwardingSyncRepository[Identity[UUID], EntityImpl] {
+  (protected val delegate: SyncRepository[EntityIOContext[Try], Identity[UUID], EntityImpl])
+    extends ForwardingSyncRepository[EntityIOContext[Try], Identity[UUID], EntityImpl] {
 
     type This = TestRepForwardingSyncRepositoryImpl
 
-    type Delegate = SyncRepository[Identity[UUID], EntityImpl]
+    type Delegate = SyncRepository[EntityIOContext[Try], Identity[UUID], EntityImpl]
 
     protected def createInstance(state: Try[(Delegate#This, Option[EntityImpl])]): Try[(TestRepForwardingSyncRepositoryImpl#This, Option[EntityImpl])] = {
       state.map {
         r =>
-          val state = new TestRepForwardingSyncRepositoryImpl(r._1.asInstanceOf[SyncRepository[Identity[UUID], EntityImpl]])
+          val state = new TestRepForwardingSyncRepositoryImpl(r._1.asInstanceOf[SyncRepository[EntityIOContext[Try], Identity[UUID], EntityImpl]])
           (state, r._2)
       }
     }
@@ -47,7 +47,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
 
   "The repository" should {
     "have stored entity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -60,7 +60,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       }.getOrElse(false) must_== true
     }
     "resolve a entity by using identity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -73,7 +73,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       }.get must_== entity
     }
     "delete a entity by using identity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
@@ -88,19 +88,19 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       resultWithEntity2.entity must_== entity
     }
     "fail to resolve a entity by a non-existent identity" in {
-      val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]())
       repository.resolve(id).isFailure must_== true
       repository.resolve(id).get must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identity" in {
-      val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]())
       repository.deleteByIdentity(id).isFailure must_== true
       repository.deleteByIdentity(id).get must throwA[EntityNotFoundException]
     }
   }
 
   "The cloned repository" should {
-    val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+    val repository = new GenericSyncRepositoryOnMemory[EntityIOContext[Try], Identity[UUID], EntityImpl]()
     "equals the repository before clone" in {
       repository must_== repository.clone
     }

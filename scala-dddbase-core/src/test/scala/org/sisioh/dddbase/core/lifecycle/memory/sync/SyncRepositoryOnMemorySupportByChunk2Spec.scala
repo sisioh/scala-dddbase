@@ -4,6 +4,8 @@ import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.util.Try
 
 class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mockito {
 
@@ -16,8 +18,8 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
     with EntityOrdered[Int, IntIdentity, EntityImpl]
 
   class TestSyncRepository
-    extends SyncRepositoryOnMemorySupport[IntIdentity, EntityImpl]()
-    with SyncRepositoryOnMemorySupportByChunk[IntIdentity, EntityImpl] {
+    extends SyncRepositoryOnMemorySupport[EntityIOContext[Try], IntIdentity, EntityImpl]()
+    with SyncRepositoryOnMemorySupportByChunk[EntityIOContext[Try], IntIdentity, EntityImpl] {
     type This = TestSyncRepository
   }
 

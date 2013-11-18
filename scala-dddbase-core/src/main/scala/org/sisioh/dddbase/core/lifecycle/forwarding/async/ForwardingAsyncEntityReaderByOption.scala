@@ -11,15 +11,15 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReaderByOption[ID <: Identity[_], E <: Entity[ID]]
-  extends AsyncEntityReadableByOption[ID, E] {
-  this: AsyncEntityReader[ID, E] =>
+trait ForwardingAsyncEntityReaderByOption[CTX <: EntityIOContext[Future], ID <: Identity[_], E <: Entity[ID]]
+  extends AsyncEntityReadableByOption[CTX, ID, E] {
+  this: AsyncEntityReader[CTX, ID, E] =>
 
-  type Delegate <: AsyncEntityReadableByOption[ID, E]
+  type Delegate <: AsyncEntityReadableByOption[CTX, ID, E]
 
   protected val delegate: Delegate
 
-  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Option[E]] =
+  def resolveOption(identity: ID)(implicit ctx: CTX): Future[Option[E]] =
     delegate.resolveOption(identity)
 
 }

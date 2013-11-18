@@ -19,7 +19,9 @@ package org.sisioh.dddbase.core.lifecycle.memory.async
 import org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
 import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{Future, ExecutionContext}
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.util.Try
 
 /**
  * 汎用的な非同期型オンメモリ不変リポジトリ。
@@ -28,16 +30,16 @@ import scala.concurrent.ExecutionContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-class GenericAsyncRepositoryOnMemory[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-(protected val delegate: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
-  extends AsyncRepositoryOnMemorySupport[ID, E] {
+class GenericAsyncRepositoryOnMemory[CTX <: EntityIOContext[Future] ,ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+(protected val delegate: GenericSyncRepositoryOnMemory[EntityIOContext[Try], ID, E] = GenericSyncRepositoryOnMemory[EntityIOContext[Try], ID, E]())
+  extends AsyncRepositoryOnMemorySupport[CTX, ID, E] {
 
-  type This = GenericAsyncRepositoryOnMemory[ID, E]
+  type This = GenericAsyncRepositoryOnMemory[CTX, ID, E]
 
-  type Delegate = GenericSyncRepositoryOnMemory[ID, E]
+  type Delegate = GenericSyncRepositoryOnMemory[EntityIOContext[Try], ID, E]
 
-  protected def createInstance(state: (GenericSyncRepositoryOnMemory[ID, E], Option[E])): (GenericAsyncRepositoryOnMemory[ID, E], Option[E]) =
-    (new GenericAsyncRepositoryOnMemory[ID, E](state._1), state._2)
+  protected def createInstance(state: (GenericAsyncRepositoryOnMemory[CTX, ID, E]#Delegate#This, Option[E])): (GenericAsyncRepositoryOnMemory[CTX, ID, E]#This, Option[E]) =
+    (new GenericAsyncRepositoryOnMemory[CTX, ID, E](state._1.asInstanceOf[GenericSyncRepositoryOnMemory[EntityIOContext[Try], ID, E]]), state._2)
 
 }
 
@@ -70,9 +72,9 @@ object GenericAsyncRepositoryOnMemory {
    * @tparam T エンティティの型
    * @return [[org.sisioh.dddbase.core.lifecycle.memory.async.GenericAsyncRepositoryOnMemory]]
    */
-  def apply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (delegate: GenericSyncRepositoryOnMemory[ID, T] = GenericSyncRepositoryOnMemory[ID, T]()) =
-    new GenericAsyncRepositoryOnMemory(delegate)
+  def apply[CTX <: EntityIOContext[Future], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  (delegate: GenericSyncRepositoryOnMemory[EntityIOContext[Try], ID, T] = GenericSyncRepositoryOnMemory[EntityIOContext[Try], ID, T]()) =
+    new GenericAsyncRepositoryOnMemory[CTX, ID, T](delegate)
 
   /**
    * エクストラクタメソッド。
@@ -82,8 +84,8 @@ object GenericAsyncRepositoryOnMemory {
    * @tparam T エンティティの型
    * @return 構成要素
    */
-  def unapply[ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (repository: GenericAsyncRepositoryOnMemory[ID, T]): Option[GenericSyncRepositoryOnMemory[ID, T]] =
+  def unapply[CTX <: EntityIOContext[Future], ID <: Identity[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
+  (repository: GenericAsyncRepositoryOnMemory[CTX, ID, T]): Option[GenericSyncRepositoryOnMemory[EntityIOContext[Try], ID, T]] =
     Some(repository.delegate)
 
 }

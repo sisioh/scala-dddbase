@@ -5,7 +5,7 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
 import scala.util.Try
 import scala.concurrent.duration.Duration
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
@@ -16,21 +16,21 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncWrappedAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
-  extends SyncEntityReader[ID, E] with SyncWrappedAsyncEntityIO {
+trait SyncWrappedAsyncEntityReader[CTX <: EntityIOContext[Try], ID <: Identity[_], E <: Entity[ID]]
+  extends SyncEntityReader[CTX, ID, E] with SyncWrappedAsyncEntityIO {
 
-  type Delegate <: AsyncEntityReader[ID, E]
+  type Delegate <: AsyncEntityReader[EntityIOContext[Future], ID, E]
 
   protected val delegate: Delegate
 
   protected val timeOut: Duration
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = Try {
+  def resolve(identity: ID)(implicit ctx: CTX): Try[E] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
     Await.result(delegate.resolve(identity), timeOut)
   }
 
-  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean] = Try {
+  def containsByIdentity(identity: ID)(implicit ctx: CTX): Try[Boolean] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
     Await.result(delegate.containsByIdentity(identity), timeOut)
   }
