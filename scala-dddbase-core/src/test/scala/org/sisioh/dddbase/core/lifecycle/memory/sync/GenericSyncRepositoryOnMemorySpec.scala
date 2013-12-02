@@ -84,12 +84,11 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identity
-      repository.resolveOption(id).isFailure must_== false
-      val resolveOptionTry = repos.flatMap {
+      val resolveOptionTry = repos.map {
         r =>
           r.result.resolveOption(id)
-      }
-      resolveOptionTry.get.get must_== entity
+      }.get
+      resolveOptionTry.get must_== entity
     }
     "delete a entity by using identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
