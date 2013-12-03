@@ -31,7 +31,7 @@ trait Entity[ID <: Identity[_]] {
    *
    * @return ハッシュコード
    */
-  override final def hashCode: Int = identity.##
+  override final def hashCode: Int = 31 * identity.##
 
   /**
    * 指定されたオブジェクトと等価であるかを判定する。
