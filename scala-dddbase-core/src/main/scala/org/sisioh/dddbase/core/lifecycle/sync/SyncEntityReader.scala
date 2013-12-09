@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReader}
+import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityIOContext, EntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -35,8 +35,27 @@ trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    */
   def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E]
 
-  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[Seq[E]] = Try {
-    identities.map(resolve(_).get)
+
+  protected def traverse[V](values: Seq[V])(f: (V) => Try[E])
+                           (implicit ctx: EntityIOContext[Try]): Try[Seq[E]] = {
+    val r = values.map(f).foldLeft(Try(Seq.empty[E])) {
+      (resultTry, resolveTry) =>
+        resultTry.flatMap {
+          result =>
+            resolveTry.map {
+              entity =>
+                result :+ entity
+            }.recover {
+              case ex: EntityNotFoundException =>
+                result
+            }
+        }
+    }
+    r
+  }
+
+  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[Seq[E]] = {
+    traverse(identities)(resolve)
   }
 
   /**
