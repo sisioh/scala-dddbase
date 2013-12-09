@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
+import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityIOContext, EntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent.Future
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReader}
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
@@ -29,12 +29,27 @@ trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    */
   def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[E]
 
-  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
+  protected def traverse[V](values: Seq[V])(f: (V) => Future[E])
+                           (implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
     implicit val executor = getExecutionContext(ctx)
-    Future.traverse(identities){
-      identity =>
-        resolve(identity)
+    val r = values.map(f).foldLeft(Future.successful(Seq.empty[E])) {
+      (resultFuture, resolveFuture) =>
+        resultFuture.flatMap {
+          result =>
+            resolveFuture.map {
+              entity =>
+                result :+ entity
+            }.recover {
+              case ex: EntityNotFoundException =>
+                result
+            }
+        }
     }
+    r
+  }
+
+  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
+    traverse(identities)(resolve)
   }
 
   /**
@@ -52,10 +67,10 @@ trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
 
   def containsByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Future]): Future[Boolean] = {
     implicit val executor = getExecutionContext(ctx)
-    Future.traverse(identities){
+    Future.traverse(identities) {
       identity =>
         containsByIdentity(identity)
-    }.map{
+    }.map {
       contains =>
         contains.forall(_ == true)
     }

@@ -32,6 +32,18 @@ trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+A]]
 
   def resolve(identity: ID)(implicit ctx: EntityIOContext[M]): M[E]
 
+  /**
+   * 複数の値からエンティティを取得し、`M[Seq[E]]` に変換する。
+   *
+   * @param values 入力値の集合
+   * @param f エンティティを引き当てるための関数
+   * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
+   * @tparam V 入力値の型
+   * @return M にラップされた Seq[E]
+   */
+  protected def traverse[V](values: Seq[V])(f: (V) => M[E])
+                           (implicit ctx: EntityIOContext[M]): M[Seq[E]]
+
   def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[Seq[E]]
 
   def apply(identity: ID)(implicit ctx: EntityIOContext[M]): M[E] = resolve(identity)
