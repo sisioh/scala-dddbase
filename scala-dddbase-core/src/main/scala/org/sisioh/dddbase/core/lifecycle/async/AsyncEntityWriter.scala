@@ -51,7 +51,7 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     implicit val executor = getExecutionContext(ctx)
     tasks match {
       case Nil =>
-        Future(AsyncResultWithEntities[This, ID, E](repository, entities))
+        Future.successful(AsyncResultWithEntities[This, ID, E](repository, entities))
       case head :: tail =>
         processor(repository, head).flatMap {
           resultWithEntity =>
