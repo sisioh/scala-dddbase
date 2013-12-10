@@ -33,6 +33,6 @@ trait SyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
    * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
    *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
    */
-  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Option[E]]
+  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]): Option[E]
 
 }
