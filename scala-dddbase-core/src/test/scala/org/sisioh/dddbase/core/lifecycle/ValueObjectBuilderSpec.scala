@@ -41,11 +41,11 @@ class ValueObjectBuilderSpec extends Specification {
     "build PersonName" in {
       val personName1 = PersonNameBuilder().withFirstName("Junichi").withLastName("Kato").build
       val PersonName(firstName, lastName) = personName1 // 抽出子を使ってそれぞれのプロパティに分解
-      assert(firstName == "Junichi")
-      assert(lastName == "Kato")
+      firstName must_== "Junichi"
+      lastName must_== "Kato"
       val personName2 = PersonNameBuilder().withLastName(lastName.toUpperCase).build(personName1)
-      assert(personName2.firstName == "Junichi")
-      assert(personName2.lastName == "KATO")
+      personName2.firstName must_== "Junichi"
+      personName2.lastName must_== "KATO"
     }
   }
 
