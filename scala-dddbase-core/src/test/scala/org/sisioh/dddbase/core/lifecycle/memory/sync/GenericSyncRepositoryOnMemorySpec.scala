@@ -45,7 +45,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
         spy(new EntityImpl(id))
       }
       val repos = repository.store(entities)
-      for (i <- 0 to 9) {
+      for (i <- 0 to 9) yield {
         there was atLeastOne(entities(i)).identity
         repository.resolve(entities(i).identity).isFailure must_== true
         repos.flatMap(_.result.contains(entities(i))).getOrElse(false) must_== true

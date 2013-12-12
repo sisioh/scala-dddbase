@@ -2,7 +2,7 @@ import sbt._
 import Keys._
 
 object DDDBaseBuild extends Build {
-  val specs2 = "org.specs2" %% "specs2" % "1.14" % "test"
+  val specs2 = "org.specs2" %% "specs2" % "2.0" % "test"
   val scalaTest = "org.scalatest" %% "scalatest" % "1.9.1" % "test"
   val junit = "junit" % "junit" % "4.8.1" % "test"
   val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
