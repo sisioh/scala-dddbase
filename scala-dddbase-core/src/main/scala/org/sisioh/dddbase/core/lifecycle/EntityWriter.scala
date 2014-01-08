@@ -48,7 +48,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+ _]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def storeEntity(entity: E)(implicit ctx: Ctx): M[Result]
+  def store(entity: E)(implicit ctx: Ctx): M[Result]
 
   /**
    * 複数のエンティティを保存する。
@@ -59,7 +59,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+ _]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def storeEntities(entities: Seq[E])(implicit ctx: Ctx): M[Results]
+  def multiStore(entities: E*)(implicit ctx: Ctx): M[Results]
 
   /**
    * 更新メソッド。
@@ -68,36 +68,36 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+ _]]
    *   entityWriter(identity) = entity
    * }}}
    *
-   * @param identity 識別子
+   * @param identifier 識別子
    * @param entity エンティティ
    * @return Success:
    *         リポジトリインスタンスと保存されたエンティティ
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def update(identity: ID, entity: E)(implicit ctx: Ctx) = storeEntity(entity)
+  def update(identifier: ID, entity: E)(implicit ctx: Ctx) = store(entity)
 
   /**
    * 指定した識別子のエンティティを削除する。
    *
-   * @param identity 識別子
+   * @param identifier 識別子
    * @return Success:
    *         リポジトリインスタンスと削除されたエンティティ
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def deleteByIdentifier(identity: ID)(implicit ctx: Ctx): M[Result]
+  def deleteBy(identifier: ID)(implicit ctx: Ctx): M[Result]
 
   /**
    * 指定した複数の識別子のエンティティを削除する。
    *
-   * @param identities 識別子
+   * @param identifiers 識別子
    * @return Success:
    *         リポジトリインスタンスと削除されたエンティティ
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def deleteByIdentifiers(identities: Seq[ID])(implicit ctx: Ctx): M[Results]
+  def multiDeleteBy(identifiers: ID*)(implicit ctx: Ctx): M[Results]
 
 }
 

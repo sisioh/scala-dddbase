@@ -21,9 +21,9 @@ trait ForwardingSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolveEntity(identity: ID)(implicit ctx: Ctx): Try[E] = delegate.resolveEntity(identity)
+  def resolveBy(identity: ID)(implicit ctx: Ctx): Try[E] = delegate.resolveBy(identity)
 
-  def existByIdentifier(identifier: ID)(implicit ctx: Ctx): Try[Boolean] =
-    delegate.existByIdentifier(identifier)
+  def existBy(identifier: ID)(implicit ctx: Ctx): Try[Boolean] =
+    delegate.existBy(identifier)
 
 }

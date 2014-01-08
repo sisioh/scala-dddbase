@@ -32,9 +32,9 @@ trait EntityReadableByOption[ID <: Identity[_], E <: Entity[ID], M[+A]] {
    *
    * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
    *
-   * @param identity 識別子
+   * @param identifier 識別子
    * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
    */
-  def resolveOption(identity: ID)(implicit ctx: Ctx): Option[E]
+  def resolveOption(identifier: ID)(implicit ctx: Ctx): Option[E]
 
 }

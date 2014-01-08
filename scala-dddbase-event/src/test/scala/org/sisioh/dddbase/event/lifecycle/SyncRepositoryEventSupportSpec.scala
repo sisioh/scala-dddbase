@@ -42,7 +42,7 @@ class SyncRepositoryEventSupportSpec extends Specification {
           Success(())
         }
       })
-      repos.storeEntity(entity)
+      repos.store(entity)
       result must beTrue
       resultEntity must_== entity
       resultEventType must_== EventType.Store

@@ -45,23 +45,23 @@ trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+ _]]
 
   }
 
-  def resolveEntity(identifier: ID)(implicit ctx: Ctx): M[E]
+  def resolveBy(identifier: ID)(implicit ctx: Ctx): M[E]
 
-  def resolveEntities(identifiers: Seq[ID])(implicit ctx: Ctx): M[Seq[E]] =
-    traverse(identifiers)(resolveEntity)
+  def multiResolveBy(identifiers: ID*)(implicit ctx: Ctx): M[Seq[E]] =
+    traverse(identifiers)(resolveBy)
 
-  def apply(identifier: ID)(implicit ctx: Ctx): M[E] = resolveEntity(identifier)
+  def apply(identifier: ID)(implicit ctx: Ctx): M[E] = resolveBy(identifier)
 
-  def existByIdentifier(identifier: ID)(implicit ctx: Ctx): M[Boolean]
+  def existBy(identifier: ID)(implicit ctx: Ctx): M[Boolean]
 
-  def existByIdentifiers(identifiers: ID*)(implicit ctx: Ctx): M[Boolean] =
-    traverse(identifiers)(existByIdentifier).mapValues(_.forall(_ == true))
+  def multiExistBy(identifiers: ID*)(implicit ctx: Ctx): M[Boolean] =
+    traverse(identifiers)(existBy).mapValues(_.forall(_ == true))
 
-  def existByEntity(entity: E)(implicit ctx: Ctx): M[Boolean] =
-    existByIdentifier(entity.identity)
+  def exist(entity: E)(implicit ctx: Ctx): M[Boolean] =
+    existBy(entity.identity)
 
-  def existByEntities(entities: E*)(implicit ctx: Ctx): M[Boolean] =
-    existByIdentifiers(entities.map(_.identity): _*)
+  def multiExist(entities: E*)(implicit ctx: Ctx): M[Boolean] =
+    multiExistBy(entities.map(_.identity): _*)
 
 
 }

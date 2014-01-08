@@ -49,53 +49,53 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
     "have stored entity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val resultWithEntity = repository.storeEntity(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
-      repository.resolveEntity(id).isFailure must_== true
+      repository.resolveBy(id).isFailure must_== true
       (resultWithEntity.get.result ne repository) must beTrue
       resultWithEntity.flatMap {
         r =>
           val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
-          tr.existByEntity(entity)
+          tr.exist(entity)
       }.getOrElse(false) must_== true
     }
     "resolve a entity by using identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val resultWithEntity = repository.storeEntity(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
       (resultWithEntity.get.result ne repository) must beTrue
-      repository.resolveEntity(id).isFailure must_== true
+      repository.resolveBy(id).isFailure must_== true
       resultWithEntity.flatMap {
         r =>
           val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
-          tr.resolveEntity(id)
+          tr.resolveBy(id)
       }.get must_== entity
     }
     "delete a entity by using identity" in {
       val repository = new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val resultWithEntity = repository.storeEntity(entity)
+      val resultWithEntity = repository.store(entity)
       there was atLeastOne(entity).identity
       (resultWithEntity.get.result ne repository) must beTrue
-      repository.resolveEntity(id).isFailure must_== true
+      repository.resolveBy(id).isFailure must_== true
       val resultWithEntity2 = resultWithEntity.flatMap {
         r =>
           val tr = new TestRepForwardingSyncRepositoryImpl(r.result)
-          tr.deleteByIdentifier(id)
+          tr.deleteBy(id)
       }.get
       resultWithEntity2.result must_!= repository
       resultWithEntity2.entity must_== entity
     }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
-      repository.resolveEntity(id).isFailure must_== true
-      repository.resolveEntity(id).get must throwA[EntityNotFoundException]
+      repository.resolveBy(id).isFailure must_== true
+      repository.resolveBy(id).get must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identity" in {
       val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
-      repository.deleteByIdentifier(id).isFailure must_== true
-      repository.deleteByIdentifier(id).get must throwA[EntityNotFoundException]
+      repository.deleteBy(id).isFailure must_== true
+      repository.deleteBy(id).get must throwA[EntityNotFoundException]
     }
   }
 

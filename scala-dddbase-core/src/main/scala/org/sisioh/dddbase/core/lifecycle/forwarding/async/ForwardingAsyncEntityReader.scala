@@ -21,10 +21,10 @@ trait ForwardingAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolveEntity(identifier: ID)(implicit ctx: EntityIOContext[Future]) =
-    delegate.resolveEntity(identifier)
+  def resolveBy(identifier: ID)(implicit ctx: EntityIOContext[Future]) =
+    delegate.resolveBy(identifier)
 
-  def existByIdentifier(identifier: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] =
-    delegate.existByIdentifier(identifier)
+  def existBy(identifier: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] =
+    delegate.existBy(identifier)
 
 }

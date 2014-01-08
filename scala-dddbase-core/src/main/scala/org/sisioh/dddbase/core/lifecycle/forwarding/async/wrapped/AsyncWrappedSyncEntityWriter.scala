@@ -26,24 +26,24 @@ trait AsyncWrappedSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
 
   protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
-  def storeEntity(entity: E)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
-      val resultWithEntity = delegate.storeEntity(entity).get
+      val resultWithEntity = delegate.store(entity).get
       val _entity: Option[E] = Some(resultWithEntity.entity.asInstanceOf[E])
       val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], _entity) )
       AsyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
     }
   }
 
-  def deleteByIdentifier(identity: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def deleteBy(identity: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
-      val resultWithEntity = delegate.deleteByIdentifier(identity).get
+      val resultWithEntity = delegate.deleteBy(identity).get
       val _entity: Option[E] = Some(resultWithEntity.entity.asInstanceOf[E])
       val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], _entity))
       AsyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)

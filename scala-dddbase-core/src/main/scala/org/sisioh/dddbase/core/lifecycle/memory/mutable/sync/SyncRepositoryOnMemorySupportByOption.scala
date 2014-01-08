@@ -17,8 +17,8 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemorySupport[ID, E]
   with SyncEntityReadableByOption[ID, E] {
 
-  def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]): Option[E] = synchronized {
-    resolveEntity(identity).map(Some(_)).recoverWith {
+  def resolveOption(identifier: ID)(implicit ctx: EntityIOContext[Try]): Option[E] = synchronized {
+    resolveBy(identifier).map(Some(_)).recoverWith {
       case ex: EntityNotFoundException =>
         Success(None)
     }.getOrElse(None)

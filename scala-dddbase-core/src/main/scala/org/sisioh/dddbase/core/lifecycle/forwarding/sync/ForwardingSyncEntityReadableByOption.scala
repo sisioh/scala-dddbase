@@ -22,7 +22,7 @@ trait ForwardingSyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolveOption(identity: ID)
-                   (implicit ctx: EntityIOContext[Try]): Option[E] = delegate.resolveOption(identity)
+  def resolveOption(identifier: ID)
+                   (implicit ctx: EntityIOContext[Try]): Option[E] = delegate.resolveOption(identifier)
 
 }

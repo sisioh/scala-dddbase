@@ -47,9 +47,9 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createEntityIOEvent(entity: E, eventType: EventType.Value): EntityIOEvent[ID, E]
 
-  abstract override def storeEntity(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+  abstract override def store(entity: E)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
-    val result = super.storeEntity(entity)
+    val result = super.store(entity)
     result onSuccess {
       case resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Store)
@@ -58,9 +58,9 @@ trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
     result.asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
   }
 
-  abstract override def deleteByIdentifier(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
+  abstract override def deleteBy(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntity[This, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
-    val result = super.deleteByIdentifier(identity)
+    val result = super.deleteBy(identity)
     result onSuccess {
       case resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Delete)

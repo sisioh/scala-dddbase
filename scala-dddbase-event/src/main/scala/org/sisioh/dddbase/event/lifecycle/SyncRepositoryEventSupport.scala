@@ -47,8 +47,8 @@ trait SyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createEntityIOEvent(entity: E, eventType: EventType.Value): EntityIOEvent[ID, E]
 
-  abstract override def storeEntity(entity: E)(implicit ctx: Ctx): Try[Result] = {
-    val result = super.storeEntity(entity).map{
+  abstract override def store(entity: E)(implicit ctx: Ctx): Try[Result] = {
+    val result = super.store(entity).map{
       resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Store)
         eventPublisher.publish(event)
@@ -56,8 +56,8 @@ trait SyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
     result.asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
   }
 
-  abstract override def deleteByIdentifier(identity: ID)(implicit ctx: Ctx): Try[Result] = {
-    val result = super.deleteByIdentifier(identity).map{
+  abstract override def deleteBy(identity: ID)(implicit ctx: Ctx): Try[Result] = {
+    val result = super.deleteBy(identity).map{
       resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Delete)
         eventPublisher.publish(event)

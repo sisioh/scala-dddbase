@@ -32,13 +32,13 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[Int], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentity))
       repository(entity.identity) = entity
-      val future = repository.storeEntity(entity).flatMap {
+      val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.result.existByIdentifier(EmptyIdentity)
+          asyncRepos.result.existBy(EmptyIdentity)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
-      Await.result(repository.resolveEntity(EmptyIdentity).recover {
+      Await.result(repository.resolveBy(EmptyIdentity).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true
       future.value.get.get must_== true
@@ -47,13 +47,13 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[Int], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       repository(entity.identity) = entity
-      val future = repository.storeEntity(entity).flatMap {
+      val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.result.existByIdentifier(id)
+          asyncRepos.result.existBy(id)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
-      Await.result(repository.resolveEntity(id).recover {
+      Await.result(repository.resolveBy(id).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true
       future.value.get.get must_== true
@@ -64,16 +64,16 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identity(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.storeEntities(entities).flatMap {
+      val future = repository.multiStore(entities: _*).flatMap {
         resultWithEntities =>
           val identities = resultWithEntities.entities.map(_.identity)
-          resultWithEntities.result.existByIdentifiers(identities: _*)
+          resultWithEntities.result.multiExistBy(identities: _*)
       }
       Await.ready(future, Duration.Inf)
       for (i <- 0 to 9) {
         there was atLeastOne(entities(i)).identity
         Await.result(
-          repository.resolveEntity(entities(i).identity).recover {
+          repository.resolveBy(entities(i).identity).recover {
             case ex: EntityNotFoundException => true
           }, Duration.Inf
         ) must_== true
@@ -83,13 +83,13 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
     "resolve entity by using a identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[Int], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val future = repository.storeEntity(entity).flatMap {
+      val future = repository.store(entity).flatMap {
         asyncRepos =>
-          asyncRepos.result.resolveEntity(id)
+          asyncRepos.result.resolveBy(id)
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
-      Await.result(repository.resolveEntity(id).recover {
+      Await.result(repository.resolveBy(id).recover {
         case ex: EntityNotFoundException => true
       }, Duration.Inf) must_== true
       future.value.get.get must_== entity
@@ -100,15 +100,15 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identity(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.storeEntities(entities).flatMap {
+      val future = repository.multiStore(entities: _*).flatMap {
         asyncRepos =>
-          asyncRepos.result.resolveEntities(entities.map(_.identity))
+          asyncRepos.result.multiResolveBy(entities.map(_.identity): _*)
       }
       Await.ready(future, Duration.Inf)
       for (i <- 0 to 9) {
         there was atLeastOne(entities(i)).identity
         Await.result(
-          repository.resolveEntity(entities(i).identity).recover {
+          repository.resolveBy(entities(i).identity).recover {
             case ex: EntityNotFoundException => true
           }, Duration.Inf
         ) must_== true
@@ -121,24 +121,24 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identity(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.storeEntities(entities).flatMap {
+      val future = repository.multiStore(entities: _*).flatMap {
         asyncRepos =>
-          asyncRepos.result.resolveEntities(entities.map(_.identity))
+          asyncRepos.result.multiResolveBy(entities.map(_.identity): _*)
       }
       Await.ready(future, Duration.Inf)
       entities.foreach {
         entity =>
           there was atLeastOne(entity).identity
           Await.result(
-            repository.resolveEntity(entity.identity).recover {
+            repository.resolveBy(entity.identity).recover {
               case ex: EntityNotFoundException => true
             }, Duration.Inf
           ) must_== true
       }
-      Await.result(repository.resolveEntities(entities.map(_.identity)), Duration.Inf) must_== Seq.empty
-      val r = repository.storeEntities(entities).flatMap {
+      Await.result(repository.multiResolveBy(entities.map(_.identity): _*), Duration.Inf) must_== Seq.empty
+      val r = repository.multiStore(entities: _*).flatMap {
         resultWithEntities =>
-          resultWithEntities.result.resolveEntities((0 to 9).map(e => Identity(e)).toSeq)
+          resultWithEntities.result.multiResolveBy((0 to 9).map(e => Identity(e)).toSeq: _*)
       }
       Await.result(r, Duration.Inf).size must_!= 0
       future.value.get.get must_== entities
@@ -146,17 +146,17 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
     "delete entity by using a identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[Int], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val future = repository.storeEntity(entity).flatMap {
+      val future = repository.store(entity).flatMap {
         case AsyncResultWithEntity(repos1, _) =>
-          repos1.deleteByIdentifier(id).flatMap {
+          repos1.deleteBy(id).flatMap {
             case AsyncResultWithEntity(repos2, _) =>
-              repos2.existByIdentifier(id)
+              repos2.existBy(id)
           }
       }
       Await.ready(future, Duration.Inf)
       there was atLeastOne(entity).identity
       Await.result(
-        repository.resolveEntity(id).recover {
+        repository.resolveBy(id).recover {
           case ex: EntityNotFoundException => true
         }, Duration.Inf
       ) must_== true
@@ -168,18 +168,18 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identity(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.storeEntities(entities).flatMap {
+      val future = repository.multiStore(entities: _*).flatMap {
         case AsyncResultWithEntities(repos1, _) =>
-          repos1.deleteByIdentifiers(entities.map(_.identity)).flatMap {
+          repos1.multiDeleteBy(entities.map(_.identity): _*).flatMap {
             case AsyncResultWithEntities(repos2, _) =>
-              repos2.existByIdentifiers(entities.map(_.identity): _*)
+              repos2.multiExistBy(entities.map(_.identity): _*)
           }
       }
       Await.ready(future, Duration.Inf)
       for (i <- 0 to 9) {
         there was atLeastOne(entities(i)).identity
         Await.result(
-          repository.resolveEntity(entities(i).identity).recover {
+          repository.resolveBy(entities(i).identity).recover {
             case ex: EntityNotFoundException => true
           }, Duration.Inf
         ) must_== true
@@ -188,14 +188,14 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
     }
     "not resolve a entity by using a non-existent identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[Int], EntityImpl]()
-      val future = repository.resolveEntity(id)
+      val future = repository.resolveBy(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]
     }
     "not delete a entity by using a non-existent identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[Int], EntityImpl]()
-      val future = repository.deleteByIdentifier(id)
+      val future = repository.deleteBy(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]

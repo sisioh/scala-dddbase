@@ -31,18 +31,18 @@ trait ForwardingSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    */
   protected def createInstance(state: Try[(Delegate#This, Option[E])]): Try[(This, Option[E])]
 
-  def storeEntity(entity: E)(implicit ctx: Ctx): Try[Result] = {
+  def store(entity: E)(implicit ctx: Ctx): Try[Result] = {
     createInstance(
-      delegate.storeEntity(entity).map {
+      delegate.store(entity).map {
         e =>
           (e.result.asInstanceOf[Delegate#This], Some(e.entity))
       }
     ).map(e => SyncResultWithEntity(e._1, e._2.get))
   }
 
-  def deleteByIdentifier(identity: ID)(implicit ctx: Ctx): Try[Result] = {
+  def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = {
     createInstance(
-      delegate.deleteByIdentifier(identity).map {
+      delegate.deleteBy(identifier).map {
         e =>
           (e.result.asInstanceOf[Delegate#This], Some(e.entity))
       }

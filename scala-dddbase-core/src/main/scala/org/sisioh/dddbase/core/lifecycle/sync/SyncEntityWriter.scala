@@ -45,16 +45,16 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     SyncResultWithEntities(result._1, result._2)
   }
 
-  def storeEntities(entities: Seq[E])(implicit ctx: Ctx): Try[Results] =
+  def multiStore(entities: E*)(implicit ctx: Ctx): Try[Results] =
     traverseWithThis(entities) {
       (repository, entity) =>
-        repository.storeEntity(entity).asInstanceOf[Try[Result]]
+        repository.multiStore(entity).asInstanceOf[Try[Result]]
     }
 
-  def deleteByIdentifiers(identifiers: Seq[ID])(implicit ctx: Ctx): Try[Results] =
+  def multiDeleteBy(identifiers: ID*)(implicit ctx: Ctx): Try[Results] =
     traverseWithThis(identifiers) {
       (repository, identifier) =>
-        repository.deleteByIdentifier(identifier).asInstanceOf[Try[Result]]
+        repository.multiDeleteBy(identifier).asInstanceOf[Try[Result]]
     }
 
 }
