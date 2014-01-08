@@ -17,6 +17,8 @@ package org.sisioh.dddbase.core.lifecycle
 
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
+import scala.language.implicitConversions
+import scala.language.reflectiveCalls
 
 /**
  * [[org.sisioh.dddbase.core.model.Identifier]]を用いて

@@ -15,10 +15,12 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
+import scala.language.higherKinds
+
 /**
  * エンティティをIOするためのトレイト。
  */
-trait EntityIO[M[+_]] {
+trait EntityIO[M[+ _]] {
 
   type Ctx = EntityIOContext[M]
 
