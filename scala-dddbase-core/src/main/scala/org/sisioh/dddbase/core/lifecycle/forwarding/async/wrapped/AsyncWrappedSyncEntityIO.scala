@@ -1,7 +1,5 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped
 
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
-import scala.concurrent.Future
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIO
 
 /**
@@ -16,7 +14,7 @@ trait AsyncWrappedSyncEntityIO extends AsyncEntityIO {
    * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
    * @return [[org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext]]
    */
-  protected def getAsyncWrappedEntityIOContext(ctx: EntityIOContext[Future]): AsyncWrappedSyncEntityIOContext =
+  protected def getAsyncWrappedEntityIOContext(ctx: Ctx): AsyncWrappedSyncEntityIOContext =
     ctx match {
       case result: AsyncWrappedSyncEntityIOContext => result
       case _ => throw new IllegalArgumentException(s"$ctx is type miss match. please set to AsyncWrappedSyncEntityIOContext.")

@@ -36,6 +36,6 @@ trait EntityReadableByPredicate[ID <: Identity[_], E <: Entity[ID], M[+A]] {
    * @return モナドにラップした[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
   def filterByPredicate(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
-                       (implicit ctx: EntityIOContext[M]): M[EntitiesChunk[ID, E]]
+                       (implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
 
 }

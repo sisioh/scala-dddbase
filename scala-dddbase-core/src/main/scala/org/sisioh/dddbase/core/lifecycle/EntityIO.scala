@@ -18,4 +18,8 @@ package org.sisioh.dddbase.core.lifecycle
 /**
  * エンティティをIOするためのトレイト。
  */
-trait EntityIO
+trait EntityIO[M[+_]] {
+
+  type Ctx = EntityIOContext[M]
+
+}

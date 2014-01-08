@@ -25,14 +25,14 @@ trait SyncWrappedAsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
 
   protected val timeOut: Duration
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = Try {
+  def resolve(identity: ID)(implicit ctx: Ctx): Try[E] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
     Await.result(delegate.resolve(identity), timeOut)
   }
 
-  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[Boolean] = Try {
+  def existByIdentifier(identity: ID)(implicit ctx: Ctx): Try[Boolean] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
-    Await.result(delegate.containsByIdentity(identity), timeOut)
+    Await.result(delegate.existByIdentifier(identity), timeOut)
   }
 
 }

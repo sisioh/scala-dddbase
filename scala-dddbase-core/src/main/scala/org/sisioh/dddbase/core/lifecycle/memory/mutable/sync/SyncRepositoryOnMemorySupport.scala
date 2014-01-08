@@ -48,16 +48,16 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   override def hashCode = 31 * core.##
 
-  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
-    core.store(entity).map {
+  def storeEntity(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+    core.storeEntity(entity).map {
       resultWithEntity =>
         core = resultWithEntity.result.asInstanceOf[SyncRepositoryOnMemory[ID, E]]
         SyncResultWithEntity(this.asInstanceOf[This], resultWithEntity.entity)
     }
   }
 
-  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
-    core.deleteByIdentity(identity).map {
+  def deleteByIdentifier(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+    core.deleteByIdentifier(identity).map {
       result =>
         SyncResultWithEntity(this.asInstanceOf[This], result.entity)
     }

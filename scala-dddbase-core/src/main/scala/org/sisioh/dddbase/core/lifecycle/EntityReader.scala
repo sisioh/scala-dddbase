@@ -27,34 +27,35 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+A]]
-  extends EntityIO {
+trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+ _]]
+  extends EntityIO[M] {
+  self =>
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[M]): M[E]
+  protected def traverseWithoutFailures[A, R](values: Seq[A])(f: (A) => M[R])(implicit ctx: Ctx): M[Seq[R]] =
+    traverse[A, R](values, forceSuccess = true)(f)
 
-  /**
-   * 複数の値からエンティティを取得し、`M[Seq[E]]` に変換する。
-   *
-   * @param values 入力値の集合
-   * @param f エンティティを引き当てるための関数
-   * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
-   * @tparam V 入力値の型
-   * @return M にラップされた Seq[E]
-   */
-  protected def traverse[V](values: Seq[V])(f: (V) => M[E])
-                           (implicit ctx: EntityIOContext[M]): M[Seq[E]]
+  protected def traverse[A, R](values: Seq[A], forceSuccess: Boolean = false)
+                              (f: (A) => M[R])(implicit ctx: Ctx): M[Seq[R]]
 
-  def resolves(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[Seq[E]]
+  protected def mapValues[A, R](values: M[A])(f: (A) => R)(implicit ctx: Ctx): M[R]
 
-  def apply(identity: ID)(implicit ctx: EntityIOContext[M]): M[E] = resolve(identity)
+  protected implicit def MapExtension[A](values: M[A]) = new {
 
-  def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[M]): M[Boolean]
+    def mapValues[R](f: (A) => R)(implicit ctx: Ctx): M[R] = self.mapValues(values)(f)
 
-  def containsByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[Boolean]
+  }
 
-  def contains(entity: E)(implicit ctx: EntityIOContext[M]): M[Boolean] = containsByIdentity(entity.identity)
+  def resolve(identifier: ID)(implicit ctx: Ctx): M[E]
 
-  def contains(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[Boolean] = containsByIdentities(entities.map(_.identity))
+  def resolves(identifiers: Seq[ID])(implicit ctx: Ctx): M[Seq[E]] =
+    traverse(identifiers)(resolve)
+
+  def apply(identifier: ID)(implicit ctx: Ctx): M[E] = resolve(identifier)
+
+  def existByIdentifier(identifier: ID)(implicit ctx: Ctx): M[Boolean]
+
+  def existByIdentifiers(identifiers: ID*)(implicit ctx: Ctx): M[Boolean] =
+    traverse(identifiers)(existByIdentifier).mapValues(_.forall(_ == true))
 
 }
 

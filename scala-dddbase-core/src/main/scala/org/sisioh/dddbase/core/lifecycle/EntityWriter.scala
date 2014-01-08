@@ -28,10 +28,16 @@ import scala.reflect.ClassTag
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
-  extends EntityIO {
+trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+ _]]
+  extends EntityIO[M] {
 
   type This <: EntityWriter[ID, E, M]
+  type Result <: ResultWithEntity[This, ID, E, M]
+  type Results <: ResultWithEntities[This, ID, E, M]
+
+  protected def traverseWithThis[A](values: Seq[A])
+                                   (processor: (This, A) => M[Result])
+                                   (implicit ctx: Ctx): M[Results]
 
   /**
    * エンティティを保存する。
@@ -42,7 +48,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]]
+  def storeEntity(entity: E)(implicit ctx: Ctx): M[Result]
 
   /**
    * 複数のエンティティを保存する。
@@ -53,8 +59,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def store(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]]
-
+  def storeEntities(entities: Seq[E])(implicit ctx: Ctx): M[Results]
 
   /**
    * 更新メソッド。
@@ -70,7 +75,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def update(identity: ID, entity: E)(implicit ctx: EntityIOContext[M]) = store(entity)
+  def update(identity: ID, entity: E)(implicit ctx: Ctx) = storeEntity(entity)
 
   /**
    * 指定した識別子のエンティティを削除する。
@@ -81,7 +86,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]]
+  def deleteByIdentifier(identity: ID)(implicit ctx: Ctx): M[Result]
 
   /**
    * 指定した複数の識別子のエンティティを削除する。
@@ -92,21 +97,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def deleteByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]]
-
-  /**
-   * エンティティを削除する。
-   *
-   * @param entity エンティティ
-   * @return Success:
-   *         リポジトリインスタンスと削除されたエンティティ
-   *         Failure:
-   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
-   */
-  def delete(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]] = deleteByIdentity(entity.identity)
-
-  def delete(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]] =
-    deleteByIdentities(entities.map(_.identity))
+  def deleteByIdentifiers(identities: Seq[ID])(implicit ctx: Ctx): M[Results]
 
 }
 

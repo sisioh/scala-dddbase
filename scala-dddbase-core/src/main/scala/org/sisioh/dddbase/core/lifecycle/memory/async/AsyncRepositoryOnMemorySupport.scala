@@ -30,8 +30,7 @@ import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSy
  */
 trait AsyncRepositoryOnMemorySupport
 [ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemory[ID, E]
-  with AsyncWrappedSyncRepository[ID, E] {
+  extends AsyncRepositoryOnMemory[ID, E] with AsyncWrappedSyncRepository[ID, E] {
 
   /**
    * 新しい非同期型リポジトリを生成する。

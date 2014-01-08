@@ -25,7 +25,7 @@ trait ForwardingAsyncEntityReaderByPredicate[ID <: Identity[_], E <: Entity[ID]]
   def filterByPredicate
   (predicate: (E) => Boolean,
    index: Option[Int], maxEntities: Option[Int])
-  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] =
+  (implicit ctx: Ctx): Future[EntitiesChunk[ID, E]] =
     delegate.filterByPredicate(predicate, index, maxEntities)
 
 }
