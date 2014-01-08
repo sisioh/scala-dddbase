@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntity, AsyncEntityWriter}
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent.Future
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
@@ -11,7 +11,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
+trait ForwardingAsyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
   extends AsyncEntityWriter[ID, E] {
 
   type Delegate <: AsyncEntityWriter[ID, E]

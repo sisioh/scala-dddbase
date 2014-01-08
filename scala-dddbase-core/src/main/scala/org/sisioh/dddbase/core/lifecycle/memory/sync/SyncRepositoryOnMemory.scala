@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByIterable, SyncRepository}
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 
 /**
  * オンメモリリポジトリを表すトレイト。
@@ -25,7 +25,7 @@ import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
  * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemory
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends SyncRepository[ID, E] with SyncEntityReadableByIterable[ID, E] with Cloneable {
 
 }

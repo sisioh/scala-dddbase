@@ -6,7 +6,7 @@ package org.sisioh.dddbase.core.model
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait EntityCloneable[ID <: Identity[_], E <: Entity[ID]]
+trait EntityCloneable[ID <: Identifier[_], E <: Entity[ID]]
   extends Cloneable {
   this: Entity[ID] =>
 

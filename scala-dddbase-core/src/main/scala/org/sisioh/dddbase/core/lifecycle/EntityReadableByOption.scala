@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
@@ -24,7 +24,7 @@ import scala.language.higherKinds
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait EntityReadableByOption[ID <: Identity[_], E <: Entity[ID], M[+A]] {
+trait EntityReadableByOption[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
   this: EntityReader[ID, E, M] =>
 
   /**

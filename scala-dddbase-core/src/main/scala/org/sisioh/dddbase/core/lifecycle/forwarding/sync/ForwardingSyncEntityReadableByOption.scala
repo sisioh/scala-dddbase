@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByOption, SyncEntityReader}
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
@@ -11,7 +11,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingSyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
+trait ForwardingSyncEntityReadableByOption[ID <: Identifier[_], E <: Entity[ID]]
   extends SyncEntityReadableByOption[ID, E] {
   this: SyncEntityReader[ID, E] =>
 

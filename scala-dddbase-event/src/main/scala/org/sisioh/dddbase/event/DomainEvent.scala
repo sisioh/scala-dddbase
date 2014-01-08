@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.event
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 
 /**
  * ドメインイベントを表すエンティティ。
@@ -9,4 +9,4 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
  *
  * @tparam ID 識別子の型
  */
-trait DomainEvent[ID <: Identity[_]] extends Entity[ID]
+trait DomainEvent[ID <: Identifier[_]] extends Entity[ID]

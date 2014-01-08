@@ -15,12 +15,12 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 import scala.reflect.ClassTag
 
 /**
- * [[org.sisioh.dddbase.core.model.Identity]]を用いて
+ * [[org.sisioh.dddbase.core.model.Identifier]]を用いて
  * [[org.sisioh.dddbase.core.model.Entity]]
  * を書き込むための責務を表すトレイト。
  *
@@ -28,7 +28,7 @@ import scala.reflect.ClassTag
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+ _]]
+trait EntityWriter[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
   extends EntityIO[M] {
 
   type This <: EntityWriter[ID, E, M]

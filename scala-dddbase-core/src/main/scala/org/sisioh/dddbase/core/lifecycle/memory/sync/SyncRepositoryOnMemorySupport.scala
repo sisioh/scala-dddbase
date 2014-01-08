@@ -18,7 +18,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.sync
 import collection.Iterator
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityNotFoundException}
 import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import scala.collection.immutable.HashMap
 import scala.util.Failure
 import scala.util.Success
@@ -31,7 +31,7 @@ import scala.util.Try
  * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupport
-[ID <: Identity[_],
+[ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemory[ID, E] {
 
@@ -70,7 +70,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   override def store(entity: E)(implicit ctx: Ctx): Try[SyncResultWithEntity[This, ID, E]] = synchronized {
     val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
-    result.entities += (entity.identity -> entity)
+    result.entities += (entity.identifier -> entity)
     Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
   }
 

@@ -4,21 +4,21 @@ import java.io._
 import java.util.UUID
 import org.specs2.mutable._
 
-case class TestSerializableId(value: UUID) extends Identity[UUID] // with IdentitySerializable[UUID]
+case class TestSerializableId(value: UUID) extends Identifier[UUID] // with IdentitySerializable[UUID]
 
-class TestSerializableEntity(val identity: TestSerializableId, val name: String)
+class TestSerializableEntity(val identifier: TestSerializableId, val name: String)
 extends Entity[TestSerializableId] with EntitySerializable[TestSerializableId, TestSerializableEntity]
 
 class EntitySpec extends Specification {
 
-  class TestEntity(val identity: Identity[UUID]) extends Entity[Identity[UUID]]
+  class TestEntity(val identifier: Identifier[UUID]) extends Entity[Identifier[UUID]]
 
-  val identity = Identity(UUID.randomUUID)
+  val identity = Identifier(UUID.randomUUID)
 
   "Entity's Identity" should {
     val entity = new TestEntity(identity)
     "equal the identity of the paramter for the constructor" in {
-      entity.identity must_== identity
+      entity.identifier must_== identity
     }
   }
 
@@ -27,7 +27,7 @@ class EntitySpec extends Specification {
       new TestEntity(identity) must_== new TestEntity(identity)
     }
     "is false when each entities have a different identity" in {
-      new TestEntity(identity) must_!= new TestEntity(Identity(UUID.randomUUID))
+      new TestEntity(identity) must_!= new TestEntity(Identifier(UUID.randomUUID))
     }
   }
 
@@ -36,7 +36,7 @@ class EntitySpec extends Specification {
       new TestEntity(identity).hashCode must_== new TestEntity(identity).hashCode
     }
     "is different when each entities have a different identity" in {
-      new TestEntity(identity).hashCode must_!= new TestEntity(Identity(UUID.randomUUID)).hashCode
+      new TestEntity(identity).hashCode must_!= new TestEntity(Identifier(UUID.randomUUID)).hashCode
     }
   }
 

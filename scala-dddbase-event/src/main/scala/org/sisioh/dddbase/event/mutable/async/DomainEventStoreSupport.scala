@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event.mutable.async
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, Repository}
-import org.sisioh.dddbase.core.model.Identity
+import org.sisioh.dddbase.core.model.Identifier
 import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
 import scala.concurrent.{Future, ExecutionContext}
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
@@ -15,7 +15,7 @@ import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
  */
 trait DomainEventStoreSupport
 [+R <: Repository[ID, T, Future],
-ID <: Identity[_],
+ID <: Identifier[_],
 T <: DomainEvent[ID]]
   extends DomainEventStore[R, ID, T, Future, Unit] with AsyncDomainEventSubscriber[T, Unit] {
 

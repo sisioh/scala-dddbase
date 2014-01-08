@@ -2,7 +2,7 @@ package org.sisioh.dddbase.core
 
 import org.sisioh.dddbase.core.lifecycle.EntitiesChunk
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader
-import org.sisioh.dddbase.core.model.{Identity, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, Entity}
 import org.sisioh.dddbase.spec.Specification
 import scala.util.Try
 
@@ -12,7 +12,7 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
  */
-trait SyncEntityReadableBySpecification[ID <: Identity[_], T <: Entity[ID]]
+trait SyncEntityReadableBySpecification[ID <: Identifier[_], T <: Entity[ID]]
   extends EntityReadableBySpecification[ID, T, Try] {
   this: SyncEntityReader[ID, T] =>
 

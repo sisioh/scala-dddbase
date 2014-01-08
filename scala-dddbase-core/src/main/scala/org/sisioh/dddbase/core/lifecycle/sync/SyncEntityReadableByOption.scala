@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByOption}
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 
 /**
@@ -25,7 +25,7 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByOption[ID <: Identity[_], E <: Entity[ID]]
+trait SyncEntityReadableByOption[ID <: Identifier[_], E <: Entity[ID]]
   extends EntityReadableByOption[ID, E, Try] {
   this: SyncEntityReader[ID, E] =>
 

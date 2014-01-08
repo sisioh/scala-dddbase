@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event.lifecycle
 
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntity, AsyncRepository}
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 import org.sisioh.dddbase.event.mutable.async.GenericAsyncDomainEventPublisher
 import scala.concurrent.Future
@@ -13,7 +13,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncRepositoryEventSupport[ID <: Identity[_], E <: Entity[ID]]
+trait AsyncRepositoryEventSupport[ID <: Identifier[_], E <: Entity[ID]]
   extends AsyncRepository[ID, E] {
 
   private val eventPublisher = GenericAsyncDomainEventPublisher[EntityIOEvent[ID, E]]()

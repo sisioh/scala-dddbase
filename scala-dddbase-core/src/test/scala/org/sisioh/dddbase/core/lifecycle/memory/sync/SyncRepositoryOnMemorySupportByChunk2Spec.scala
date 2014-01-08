@@ -7,17 +7,17 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mockito {
 
-  case class IntIdentity(value: Int)
-    extends AbstractOrderedIdentity[Int, IntIdentity]
+  case class IntIdentifier(value: Int)
+    extends AbstractOrderedIdentifier[Int, IntIdentifier]
 
-  class EntityImpl(val identity: IntIdentity)
-    extends Entity[IntIdentity]
-    with EntityCloneable[IntIdentity, EntityImpl]
-    with EntityOrdered[Int, IntIdentity, EntityImpl]
+  class EntityImpl(val identifier: IntIdentifier)
+    extends Entity[IntIdentifier]
+    with EntityCloneable[IntIdentifier, EntityImpl]
+    with EntityOrdered[Int, IntIdentifier, EntityImpl]
 
   class TestSyncRepository
-    extends SyncRepositoryOnMemorySupport[IntIdentity, EntityImpl]()
-    with SyncRepositoryOnMemorySupportByChunk[IntIdentity, EntityImpl] {
+    extends SyncRepositoryOnMemorySupport[IntIdentifier, EntityImpl]()
+    with SyncRepositoryOnMemorySupportByChunk[IntIdentifier, EntityImpl] {
     type This = TestSyncRepository
   }
 
@@ -29,7 +29,7 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
       var repository = new TestSyncRepository
 
       for (i <- 1 to 10) {
-        val entity = new EntityImpl(IntIdentity(i))
+        val entity = new EntityImpl(IntIdentifier(i))
         repository = repository.store(entity).get.result
       }
 
@@ -37,11 +37,11 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
 
       chunk.index must_== 0
       chunk.entities.size must_== 5
-      chunk.entities(0) must_== new EntityImpl(IntIdentity(1))
-      chunk.entities(1) must_== new EntityImpl(IntIdentity(2))
-      chunk.entities(2) must_== new EntityImpl(IntIdentity(3))
-      chunk.entities(3) must_== new EntityImpl(IntIdentity(4))
-      chunk.entities(4) must_== new EntityImpl(IntIdentity(5))
+      chunk.entities(0) must_== new EntityImpl(IntIdentifier(1))
+      chunk.entities(1) must_== new EntityImpl(IntIdentifier(2))
+      chunk.entities(2) must_== new EntityImpl(IntIdentifier(3))
+      chunk.entities(3) must_== new EntityImpl(IntIdentifier(4))
+      chunk.entities(4) must_== new EntityImpl(IntIdentifier(5))
     }
   }
 

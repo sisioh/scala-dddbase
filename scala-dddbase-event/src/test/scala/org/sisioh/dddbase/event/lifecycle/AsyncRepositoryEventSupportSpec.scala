@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event.lifecycle
 
 import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.model.{Entity, EntityCloneable, Identity}
+import org.sisioh.dddbase.core.model.{Entity, EntityCloneable, Identifier}
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
@@ -13,23 +13,23 @@ import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSy
 
 class AsyncRepositoryEventSupportSpec extends Specification {
 
-  class EntityImpl(val identity: Identity[UUID])
-    extends Entity[Identity[UUID]]
-    with EntityCloneable[Identity[UUID], EntityImpl]
+  class EntityImpl(val identifier: Identifier[UUID])
+    extends Entity[Identifier[UUID]]
+    with EntityCloneable[Identifier[UUID], EntityImpl]
     with Ordered[EntityImpl] {
 
     def compare(that: EntityImpl): Int = {
-      identity.value.compareTo(that.identity.value)
+      identifier.value.compareTo(that.identifier.value)
     }
 
   }
 
   class TestRepository
-    extends GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]
-    with AsyncRepositoryEventSupport[Identity[UUID], EntityImpl] {
+    extends GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl]
+    with AsyncRepositoryEventSupport[Identifier[UUID], EntityImpl] {
 
     protected def createEntityIOEvent(entity: EntityImpl, eventType: EventType.Value):
-    EntityIOEvent[Identity[UUID], EntityImpl] = new EntityIOEvent[Identity[UUID], EntityImpl](Identity(UUID.randomUUID()), entity, eventType)
+    EntityIOEvent[Identifier[UUID], EntityImpl] = new EntityIOEvent[Identifier[UUID], EntityImpl](Identifier(UUID.randomUUID()), entity, eventType)
 
   }
 
@@ -41,9 +41,9 @@ class AsyncRepositoryEventSupportSpec extends Specification {
       var resultEntity: EntityImpl = null
       var resultEventType: EventType.Value = null
       val repos = new TestRepository()
-      val entity = new EntityImpl(Identity(UUID.randomUUID()))
-      repos.subscribe(new AsyncDomainEventSubscriber[EntityIOEvent[Identity[UUID], EntityImpl], Unit] {
-        def handleEvent(event: EntityIOEvent[Identity[UUID], EntityImpl])(implicit ctx: EntityIOContext[Future]): Future[Unit] = future {
+      val entity = new EntityImpl(Identifier(UUID.randomUUID()))
+      repos.subscribe(new AsyncDomainEventSubscriber[EntityIOEvent[Identifier[UUID], EntityImpl], Unit] {
+        def handleEvent(event: EntityIOEvent[Identifier[UUID], EntityImpl])(implicit ctx: EntityIOContext[Future]): Future[Unit] = future {
           result = true
           resultEntity = event.entity
           resultEventType = event.eventType

@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.EntityReader
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -25,7 +25,7 @@ import scala.util.{Failure, Success, Try}
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
+trait SyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
   extends EntityReader[ID, E, Try] {
 
   protected def mapValues[A, R](values: Try[A])(f: (A) => R)(implicit ctx: Ctx): Try[R] = {

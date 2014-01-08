@@ -2,7 +2,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReadableByChunk, AsyncEntityReader}
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent.Future
 
 /**
@@ -11,7 +11,7 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
+trait ForwardingAsyncEntityReadableByChunk[ID <: Identifier[_], E <: Entity[ID]]
   extends AsyncEntityReadableByChunk[ID, E] {
   this: AsyncEntityReader[ID, E] =>
 

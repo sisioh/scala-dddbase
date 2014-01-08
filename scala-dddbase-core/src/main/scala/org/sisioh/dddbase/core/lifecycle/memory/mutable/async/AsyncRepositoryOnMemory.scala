@@ -18,7 +18,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
 import org.sisioh.dddbase.core.lifecycle.memory.async.AsyncRepositoryOnMemorySupport
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 
 /**
@@ -28,7 +28,7 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemory
-[ID <: Identity[_],
+[ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends AsyncRepositoryOnMemorySupport[ID, E] {
 

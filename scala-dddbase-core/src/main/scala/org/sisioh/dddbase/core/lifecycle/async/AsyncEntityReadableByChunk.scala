@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByChunk, EntitiesChunk}
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent.Future
 
 /**
@@ -10,7 +10,7 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
+trait AsyncEntityReadableByChunk[ID <: Identifier[_], E <: Entity[ID]]
   extends EntityReadableByChunk[ID, E, Future] {
   this: AsyncEntityReader[ID, E] =>
 

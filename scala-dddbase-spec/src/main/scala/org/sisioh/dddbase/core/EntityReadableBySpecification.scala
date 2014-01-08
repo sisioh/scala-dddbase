@@ -12,7 +12,7 @@ import scala.language.higherKinds
  * @tparam T エンティティの型
  * @tparam M モナドの型
  */
-trait EntityReadableBySpecification[ID <: Identity[_], T <: Entity[ID], M[+A]] {
+trait EntityReadableBySpecification[ID <: Identifier[_], T <: Entity[ID], M[+A]] {
 
   /**
    * [[org.sisioh.dddbase.spec.Specification]]に該当したエンティティを取得する。

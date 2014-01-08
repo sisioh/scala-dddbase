@@ -3,7 +3,7 @@ package org.sisioh.dddbase.event.async
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
 import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
-import org.sisioh.dddbase.core.model.{EntityCloneable, Identity}
+import org.sisioh.dddbase.core.model.{EntityCloneable, Identifier}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
 import scala.concurrent.duration.Duration
@@ -14,12 +14,12 @@ import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSy
 
 class GenericAsyncDomainEventStoreSpec extends Specification {
 
-  class TestDomainEvent(val identity: Identity[UUID])
-    extends DomainEvent[Identity[UUID]]
-    with EntityCloneable[Identity[UUID], TestDomainEvent]
+  class TestDomainEvent(val identifier: Identifier[UUID])
+    extends DomainEvent[Identifier[UUID]]
+    with EntityCloneable[Identifier[UUID], TestDomainEvent]
     with Ordered[TestDomainEvent] {
     def compare(that: TestDomainEvent): Int = {
-      identity.value compareTo that.identity.value
+      identifier.value compareTo that.identifier.value
     }
   }
 
@@ -27,20 +27,20 @@ class GenericAsyncDomainEventStoreSpec extends Specification {
 
   "domain event store" should {
     "get saved event" in {
-      type ID = Identity[UUID]
+      type ID = Identifier[UUID]
       type E = TestDomainEvent
       type REPOS = GenericAsyncRepositoryOnMemory[ID, E]
 
       val repos = new REPOS
       val target = new GenericAsyncDomainEventStore[REPOS, ID, E](repos)
       val publisher = GenericAsyncDomainEventPublisher[E, ResultWithEntity[REPOS, ID, E, Future]]()
-      val event = new E(Identity(UUID.randomUUID()))
+      val event = new E(Identifier(UUID.randomUUID()))
       val futures = publisher.subscribe(target).publish(event)
 
       futures.map {
         future =>
           val result = Await.result(future, Duration.Inf)
-          val contains = Await.result(result.result.existBy(event.identity), Duration.Inf)
+          val contains = Await.result(result.result.existBy(event.identifier), Duration.Inf)
           contains must_== true
       }
     }

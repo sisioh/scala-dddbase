@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
@@ -30,7 +30,7 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナドの型
  */
-trait Repository[ID <: Identity[_], E <: Entity[ID], M[+A]]
+trait Repository[ID <: Identifier[_], E <: Entity[ID], M[+A]]
   extends EntityReader[ID, E, M] with EntityWriter[ID, E, M] {
 
   type This <: Repository[ID, E, M]

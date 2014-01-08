@@ -23,7 +23,7 @@ package org.sisioh.dddbase.core.model
  *
  * @tparam A 識別子の値を表す型
  */
-trait Identity[+A] extends Serializable {
+trait Identifier[+A] extends Serializable {
 
   /**
    * 識別子の値を取得する。
@@ -35,22 +35,22 @@ trait Identity[+A] extends Serializable {
 }
 
 /**
- * 順序をサポートした[[org.sisioh.dddbase.core.model.Identity]]。
+ * 順序をサポートした[[org.sisioh.dddbase.core.model.Identifier]]。
  *
  * @tparam A 識別子の値を表す型
  * @tparam ID 識別子の型
  */
-trait OrderedIdentity[A, ID <: Identity[A]]
-  extends Identity[A] with Ordered[ID]
+trait OrderedIdentifier[A, ID <: Identifier[A]]
+  extends Identifier[A] with Ordered[ID]
 
 /**
- * [[org.sisioh.dddbase.core.model.OrderedIdentity]]の骨格実装。
+ * [[org.sisioh.dddbase.core.model.OrderedIdentifier]]の骨格実装。
  *
  * @tparam A 識別子の値を表す型
  * @tparam ID 識別子の型
  */
-abstract class AbstractOrderedIdentity[A <% Ordered[A], ID <: Identity[A]]
-  extends OrderedIdentity[A, ID] {
+abstract class AbstractOrderedIdentifier[A <% Ordered[A], ID <: Identifier[A]]
+  extends OrderedIdentifier[A, ID] {
 
   def compare(that: ID): Int = {
     value compare that.value
@@ -67,13 +67,13 @@ case class EmptyIdentityException() extends Exception
  * 空の識別子を表す値オブジェクト。
  */
 private[core]
-class EmptyIdentity
-  extends Identity[Nothing] {
+class EmptyIdentifier
+  extends Identifier[Nothing] {
 
   def value = throw EmptyIdentityException()
 
   override def equals(obj: Any): Boolean = obj match {
-    case that: EmptyIdentity => this eq that
+    case that: EmptyIdentifier => this eq that
     case _ => false
   }
 
@@ -82,15 +82,15 @@ class EmptyIdentity
   override def toString = "EmptyIdentity"
 }
 
-object EmptyIdentity extends EmptyIdentity
+object EmptyIdentifier extends EmptyIdentifier
 
 private[core]
-class IdentityImpl[A](val value: A)
-  extends Identity[A] {
+class IdentifierImpl[A](val value: A)
+  extends Identifier[A] {
 
   override def equals(obj: Any) = obj match {
-    case that: EmptyIdentity => false
-    case that: Identity[_] =>
+    case that: EmptyIdentifier => false
+    case that: Identifier[_] =>
       value == that.value
     case _ => false
   }
@@ -104,32 +104,32 @@ class IdentityImpl[A](val value: A)
 /**
  * コンパニオンオブジェクト。
  */
-object Identity {
+object Identifier {
 
   /**
-   * [[org.sisioh.dddbase.core.model.Identity]]を生成する。
+   * [[org.sisioh.dddbase.core.model.Identifier]]を生成する。
    *
    * @param value 識別子の値
    * @tparam A 識別子の値の型
-   * @return [[org.sisioh.dddbase.core.model.Identity]]
+   * @return [[org.sisioh.dddbase.core.model.Identifier]]
    */
-  def apply[A](value: A): Identity[A] = new IdentityImpl(value)
+  def apply[A](value: A): Identifier[A] = new IdentifierImpl(value)
 
   /**
-   * 空の[[org.sisioh.dddbase.core.model.Identity]]を返す。
+   * 空の[[org.sisioh.dddbase.core.model.Identifier]]を返す。
    *
-   * @return [[org.sisioh.dddbase.core.model.Identity]]
+   * @return [[org.sisioh.dddbase.core.model.Identifier]]
    */
-  def empty[A]: Identity[A] = EmptyIdentity
+  def empty[A]: Identifier[A] = EmptyIdentifier
 
   /**
    * 抽出子メソッド。
    *
-   * @param v [[org.sisioh.dddbase.core.model.Identity]]
+   * @param v [[org.sisioh.dddbase.core.model.Identifier]]
    * @tparam A 識別子の値の型
    * @return 識別子の値
    */
-  def unapply[A](v: Identity[A]): Option[A] = Some(v.value)
+  def unapply[A](v: Identifier[A]): Option[A] = Some(v.value)
 
 }
 

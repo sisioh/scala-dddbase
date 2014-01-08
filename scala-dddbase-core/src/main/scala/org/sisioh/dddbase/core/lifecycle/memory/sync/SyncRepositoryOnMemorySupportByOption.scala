@@ -13,7 +13,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupportByOption
-[ID <: Identity[_],
+[ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemorySupport[ID, E]
   with SyncEntityReadableByOption[ID, E] {

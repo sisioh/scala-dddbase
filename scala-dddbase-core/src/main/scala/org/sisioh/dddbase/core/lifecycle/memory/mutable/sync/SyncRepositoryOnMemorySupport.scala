@@ -18,7 +18,7 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, ResultWithEntity}
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 
@@ -30,7 +30,7 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
  * @tparam E エンティティの型
  */
 trait SyncRepositoryOnMemorySupport
-[ID <: Identity[_],
+[ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemory[ID, E] {
 

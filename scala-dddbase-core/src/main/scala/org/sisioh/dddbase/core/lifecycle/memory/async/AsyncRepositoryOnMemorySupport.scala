@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.model.{Identity, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncRepository
 
 /**
@@ -29,7 +29,7 @@ import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSy
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupport
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends AsyncRepositoryOnMemory[ID, E] with AsyncWrappedSyncRepository[ID, E] {
 
   /**

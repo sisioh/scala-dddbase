@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
@@ -11,7 +11,7 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナドの型
  */
-trait ResultWithEntities[+EW <: EntityWriter[ID, E, M], ID <: Identity[_], E <: Entity[ID], M[+A]]  {
+trait ResultWithEntities[+EW <: EntityWriter[ID, E, M], ID <: Identifier[_], E <: Entity[ID], M[+A]]  {
 
   /**
    * 結果

@@ -4,7 +4,7 @@ import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityIOContext, AsyncRepository}
 import org.sisioh.dddbase.core.lifecycle.memory.async.GenericAsyncRepositoryOnMemory
-import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identity}
+import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -14,27 +14,27 @@ import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSy
 
 class ForwardingAsyncRepositorySpec extends Specification with Mockito {
 
-  class EntityImpl(val identity: Identity[UUID])
-    extends Entity[Identity[UUID]]
-    with EntityCloneable[Identity[UUID], EntityImpl]
+  class EntityImpl(val identifier: Identifier[UUID])
+    extends Entity[Identifier[UUID]]
+    with EntityCloneable[Identifier[UUID], EntityImpl]
     with Ordered[EntityImpl] {
 
     def compare(that: EntityImpl): Int = {
-      this.identity.value.compareTo(that.identity.value)
+      this.identifier.value.compareTo(that.identifier.value)
     }
 
   }
 
-  val id = Identity(UUID.randomUUID)
+  val id = Identifier(UUID.randomUUID)
 
   class TestRepForwardingRepositoryImpl
-  (protected val delegate: AsyncRepository[Identity[UUID], EntityImpl])
+  (protected val delegate: AsyncRepository[Identifier[UUID], EntityImpl])
   (implicit val executor: ExecutionContext)
-    extends ForwardingAsyncRepository[Identity[UUID], EntityImpl] {
+    extends ForwardingAsyncRepository[Identifier[UUID], EntityImpl] {
 
     type This = TestRepForwardingRepositoryImpl
 
-    type Delegate = AsyncRepository[Identity[UUID], EntityImpl]
+    type Delegate = AsyncRepository[Identifier[UUID], EntityImpl]
 
     protected def createInstance(state: Future[(Delegate#This, Option[EntityImpl])]): Future[(This, Option[EntityImpl])] = {
       state.map {
@@ -50,12 +50,12 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
 
   "repository" should {
     "have stored entity" in {
-      val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      repository(entity.identity) = entity
+      repository(entity.identifier) = entity
       val future = repository.store(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
-      there was atLeastOne(entity).identity
+      there was atLeastOne(entity).identifier
       (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
@@ -65,11 +65,11 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       Await.result(future2, Duration.Inf) must_== entity
     }
     "resolve entity by using a identity" in {
-      val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
-      there was atLeastOne(entity).identity
+      there was atLeastOne(entity).identifier
       (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
@@ -79,11 +79,11 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       Await.result(future2, Duration.Inf) must_== entity
     }
     "delete entity by using a identity" in {
-      val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val repository = new GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
-      there was atLeastOne(entity).identity
+      there was atLeastOne(entity).identifier
       (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
@@ -93,14 +93,14 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       Await.result(future2, Duration.Inf) must not beNull
     }
     "not resolve a entity by using a non-existent identity" in {
-      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl]())
       val future = repository.resolveBy(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]
     }
     "not delete a entity by using a non-existent identity" in {
-      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
+      val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl]())
       val future = repository.deleteBy(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true

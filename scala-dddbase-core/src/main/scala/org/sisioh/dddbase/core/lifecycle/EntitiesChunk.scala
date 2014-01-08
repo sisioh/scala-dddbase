@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Identity, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, Entity}
 
 /**
  * 複数のエンティティをまとめたIO単位。
@@ -25,5 +25,5 @@ import org.sisioh.dddbase.core.model.{Identity, Entity}
  * @tparam ID 識別子
  * @tparam E エンティティ
  */
-case class EntitiesChunk[ID <: Identity[_], E <: Entity[ID]](index: Int, entities: Seq[E])
+case class EntitiesChunk[ID <: Identifier[_], E <: Entity[ID]](index: Int, entities: Seq[E])
 

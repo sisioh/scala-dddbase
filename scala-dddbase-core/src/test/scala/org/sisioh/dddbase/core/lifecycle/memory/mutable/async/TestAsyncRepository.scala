@@ -2,9 +2,9 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
-import org.sisioh.dddbase.core.model.Identity
+import org.sisioh.dddbase.core.model.Identifier
 
 trait TestAsyncRepository
-  extends AsyncRepository[Identity[UUID], TestEntity] {
+  extends AsyncRepository[Identifier[UUID], TestEntity] {
 
 }

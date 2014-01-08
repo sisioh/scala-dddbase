@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncRepository, SyncEntityWriter, SyncEntityReader}
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncRepository]]のデコレータ。
@@ -9,7 +9,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identity}
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingSyncRepository[ID <: Identity[_], E <: Entity[ID]]
+trait ForwardingSyncRepository[ID <: Identifier[_], E <: Entity[ID]]
   extends ForwardingSyncEntityReader[ID, E]
   with ForwardingSyncEntityWriter[ID, E]
   with SyncRepository[ID, E] {

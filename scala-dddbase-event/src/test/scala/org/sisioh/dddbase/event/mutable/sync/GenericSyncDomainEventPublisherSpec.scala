@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event.mutable.sync
 
 import java.util.UUID
-import org.sisioh.dddbase.core.model.Identity
+import org.sisioh.dddbase.core.model.Identifier
 import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import org.specs2.mutable.Specification
 import scala.util._
@@ -11,8 +11,8 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 class GenericSyncDomainEventPublisherSpec extends Specification {
 
-  class TestDomainEvent(val identity: Identity[UUID])
-    extends DomainEvent[Identity[UUID]]
+  class TestDomainEvent(val identifier: Identifier[UUID])
+    extends DomainEvent[Identifier[UUID]]
 
   val publisher = GenericSyncDomainEventPublisher[TestDomainEvent]()
 
@@ -20,16 +20,16 @@ class GenericSyncDomainEventPublisherSpec extends Specification {
 
   "dep" should {
     "publish" in {
-      var result: Identity[UUID] = null
+      var result: Identifier[UUID] = null
       publisher.subscribe(
         new SyncDomainEventSubscriber[TestDomainEvent, Unit] {
           def handleEvent(event: TestDomainEvent)(implicit ctx: EntityIOContext[Try]): Try[Unit] = {
-            result = event.identity
+            result = event.identifier
             Success(())
           }
         }
       )
-      val id = Identity(UUID.randomUUID())
+      val id = Identifier(UUID.randomUUID())
       publisher.publish(new TestDomainEvent(id))
       id must_== result
     }

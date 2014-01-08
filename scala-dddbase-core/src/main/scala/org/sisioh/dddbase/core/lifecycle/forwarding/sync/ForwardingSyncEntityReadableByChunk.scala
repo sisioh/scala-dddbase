@@ -2,7 +2,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByChunk, SyncEntityReader}
-import org.sisioh.dddbase.core.model.{Identity, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, Entity}
 import scala.util.Try
 
 /**
@@ -11,7 +11,7 @@ import scala.util.Try
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingSyncEntityReadableByChunk[ID <: Identity[_], E <: Entity[ID]]
+trait ForwardingSyncEntityReadableByChunk[ID <: Identifier[_], E <: Entity[ID]]
   extends SyncEntityReadableByChunk[ID, E] {
   this: SyncEntityReader[ID, E] =>
 

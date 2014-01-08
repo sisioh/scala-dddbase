@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.{Success, Try}
 
 /**
@@ -26,10 +26,10 @@ import scala.util.{Success, Try}
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByIterable[ID <: Identity[_], E <: Entity[ID]] extends Iterable[E] {
+trait SyncEntityReadableByIterable[ID <: Identifier[_], E <: Entity[ID]] extends Iterable[E] {
   this: SyncEntityReader[ID, E] =>
 
   def existBy(identifier: ID)
-             (implicit ctx: EntityIOContext[Try]): Try[Boolean] = Success(exists(_.identity == identifier))
+             (implicit ctx: EntityIOContext[Try]): Try[Boolean] = Success(exists(_.identifier == identifier))
 
 }

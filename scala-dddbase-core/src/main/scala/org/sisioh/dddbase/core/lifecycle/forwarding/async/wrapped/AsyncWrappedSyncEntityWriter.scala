@@ -2,7 +2,7 @@ package org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped
 
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntity, AsyncEntityWriter}
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityWriter
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent._
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
@@ -14,7 +14,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncWrappedSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
+trait AsyncWrappedSyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
   extends AsyncEntityWriter[ID, E] with AsyncWrappedSyncEntityIO {
 
   type Delegate <: SyncEntityWriter[ID, E]

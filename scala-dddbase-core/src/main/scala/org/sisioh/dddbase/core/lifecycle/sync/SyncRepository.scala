@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.Repository
-import org.sisioh.dddbase.core.model.{Identity, Entity}
+import org.sisioh.dddbase.core.model.{Identifier, Entity}
 import scala.util._
 
 /**
@@ -30,7 +30,7 @@ import scala.util._
  * @tparam E エンティティの型
  * @tparam ID エンティティの識別子の型
  */
-trait SyncRepository[ID <: Identity[_], E <: Entity[ID]]
+trait SyncRepository[ID <: Identifier[_], E <: Entity[ID]]
   extends Repository[ID, E, Try]
   with SyncEntityReader[ID, E]
   with SyncEntityWriter[ID, E] {

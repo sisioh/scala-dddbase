@@ -15,11 +15,11 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
- * [[org.sisioh.dddbase.core.model.Identity]]を用いて
+ * [[org.sisioh.dddbase.core.model.Identifier]]を用いて
  * [[org.sisioh.dddbase.core.model.Entity]]
  * を読み込むための責務を表すトレイト。
  *
@@ -27,7 +27,7 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+ _]]
+trait EntityReader[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
   extends EntityIO[M] {
   self =>
 
@@ -58,10 +58,10 @@ trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+ _]]
     traverse(identifiers)(existBy).mapValues(_.forall(_ == true))
 
   def exist(entity: E)(implicit ctx: Ctx): M[Boolean] =
-    existBy(entity.identity)
+    existBy(entity.identifier)
 
   def multiExist(entities: E*)(implicit ctx: Ctx): M[Boolean] =
-    multiExistBy(entities.map(_.identity): _*)
+    multiExistBy(entities.map(_.identifier): _*)
 
 
 }

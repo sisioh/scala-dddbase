@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
 import org.sisioh.dddbase.core.lifecycle.EntityReader
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent.Future
 
 /**
@@ -12,7 +12,7 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
+trait AsyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
   extends AsyncEntityIO with EntityReader[ID, E, Future] {
 
   protected def mapValues[A, R](values: Future[A])(f: (A) => R)(implicit ctx: Ctx): Future[R] = {

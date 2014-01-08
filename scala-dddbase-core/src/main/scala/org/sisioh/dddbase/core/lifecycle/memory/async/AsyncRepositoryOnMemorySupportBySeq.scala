@@ -14,7 +14,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportBySeq
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends AsyncRepositoryOnMemorySupport[ID, E] with AsyncEntityReadableBySeq[ID, E] {
 
   type Delegate <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableByOption[ID, E]

@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identity}
+import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
@@ -25,7 +25,7 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReadableByChunk[ID <: Identity[_], E <: Entity[ID], M[+A]] {
+trait EntityReadableByChunk[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
   this: EntityReader[ID, E, M] =>
 
   /**

@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, Repository}
-import org.sisioh.dddbase.core.model.Identity
+import org.sisioh.dddbase.core.model.Identifier
 import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
 import scala.util.Try
 import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
@@ -15,7 +15,7 @@ import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
  */
 trait DomainEventStoreSupport
 [+R <: Repository[ID, T, Try],
-ID <: Identity[_],
+ID <: Identifier[_],
 T <: DomainEvent[ID]]
   extends DomainEventStore[R, ID, T, Try, Unit]
   with SyncDomainEventSubscriber[T, Unit] {

@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event.mutable.async
 
 import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.model.Identity
+import org.sisioh.dddbase.core.model.Identifier
 import java.util.UUID
 import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import scala.concurrent.{Await, Future}
@@ -14,8 +14,8 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 class GenericAsyncDomainEventPublisherSpec extends Specification {
 
-  class TestDomainEvent(val identity: Identity[UUID])
-    extends DomainEvent[Identity[UUID]]
+  class TestDomainEvent(val identifier: Identifier[UUID])
+    extends DomainEvent[Identifier[UUID]]
 
   val publisher = GenericAsyncDomainEventPublisher[TestDomainEvent]()
 
@@ -23,16 +23,16 @@ class GenericAsyncDomainEventPublisherSpec extends Specification {
 
   "dep" should {
     "publish" in {
-      var result: Identity[UUID] = null
+      var result: Identifier[UUID] = null
       publisher.subscribe(
         new AsyncDomainEventSubscriber[TestDomainEvent, Unit] {
           def handleEvent(event: TestDomainEvent)(implicit ctx: EntityIOContext[Future]): Future[Unit] = {
-            result = event.identity
+            result = event.identifier
             Future(())
           }
         }
       )
-      val id = Identity(UUID.randomUUID())
+      val id = Identifier(UUID.randomUUID())
       publisher.publish(new TestDomainEvent(id)).map {
         r =>
           Await.ready(r, Duration.Inf)

@@ -21,17 +21,17 @@ package org.sisioh.dddbase.core.model
  *
  * @tparam ID 識別子の型
  */
-trait Entity[ID <: Identity[_]] {
+trait Entity[ID <: Identifier[_]] {
 
   /** エンティティの識別子。 */
-  val identity: ID
+  val identifier: ID
 
   /**
    * ハッシュコードを返す。
    *
    * @return ハッシュコード
    */
-  override final def hashCode: Int = 31 * identity.##
+  override final def hashCode: Int = 31 * identifier.##
 
   /**
    * 指定されたオブジェクトと等価であるかを判定する。
@@ -40,7 +40,7 @@ trait Entity[ID <: Identity[_]] {
    * @return 等価である場合はtrue
    */
   override final def equals(that: Any): Boolean = that match {
-    case that: Entity[_] => identity == that.identity
+    case that: Entity[_] => identifier == that.identifier
     case _ => false
   }
 

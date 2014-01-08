@@ -15,7 +15,7 @@ import scala.concurrent._
  * @tparam E エンティティの型
  */
 trait AsyncRepositoryOnMemorySupportByChunk
-[ID <: Identity[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends AsyncRepositoryOnMemorySupport[ID, E]
   with AsyncEntityReadableByChunk[ID, E] {
 

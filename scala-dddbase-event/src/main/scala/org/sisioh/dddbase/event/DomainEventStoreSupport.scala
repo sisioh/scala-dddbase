@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event
 
 import org.sisioh.dddbase.core.lifecycle._
-import org.sisioh.dddbase.core.model.Identity
+import org.sisioh.dddbase.core.model.Identifier
 import scala.language.higherKinds
 
 /**
@@ -12,7 +12,7 @@ import scala.language.higherKinds
  * @tparam T エンティティの型
  * @tparam M モナドの型
  */
-trait DomainEventStoreSupport[+R <: Repository[ID, T, M], ID <: Identity[_], T <: DomainEvent[ID], M[+A]]
+trait DomainEventStoreSupport[+R <: Repository[ID, T, M], ID <: Identifier[_], T <: DomainEvent[ID], M[+A]]
   extends DomainEventStore[R, ID, T, M, ResultWithEntity[R#This, ID, T, M]] {
 
   protected val eventRepository: R
