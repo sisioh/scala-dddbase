@@ -56,15 +56,18 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
     }
   }
 
-  def deleteByIdentifier(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
-    core.deleteByIdentifier(identity).map {
+  def deleteByIdentifier(identifier: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+    core.deleteByIdentifier(identifier).map {
       result =>
         SyncResultWithEntity(this.asInstanceOf[This], result.entity)
     }
   }
 
+//  def existByIdentifier(identifier: ID)(implicit ctx: Ctx): Try[Boolean] =
+//    core.existByIdentifier(identifier)
+
   def iterator: Iterator[E] = core.iterator
 
-  def resolve(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = core.resolve(identity)
+  def resolveEntity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = core.resolveEntity(identity)
 
 }

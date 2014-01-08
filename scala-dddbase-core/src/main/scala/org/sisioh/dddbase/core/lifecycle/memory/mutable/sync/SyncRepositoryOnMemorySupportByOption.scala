@@ -18,7 +18,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   with SyncEntityReadableByOption[ID, E] {
 
   def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]): Option[E] = synchronized {
-    resolve(identity).map(Some(_)).recoverWith {
+    resolveEntity(identity).map(Some(_)).recoverWith {
       case ex: EntityNotFoundException =>
         Success(None)
     }.getOrElse(None)

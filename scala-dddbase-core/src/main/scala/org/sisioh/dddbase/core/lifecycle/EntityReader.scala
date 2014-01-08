@@ -45,17 +45,24 @@ trait EntityReader[ID <: Identity[_], E <: Entity[ID], M[+ _]]
 
   }
 
-  def resolve(identifier: ID)(implicit ctx: Ctx): M[E]
+  def resolveEntity(identifier: ID)(implicit ctx: Ctx): M[E]
 
-  def resolves(identifiers: Seq[ID])(implicit ctx: Ctx): M[Seq[E]] =
-    traverse(identifiers)(resolve)
+  def resolveEntities(identifiers: Seq[ID])(implicit ctx: Ctx): M[Seq[E]] =
+    traverse(identifiers)(resolveEntity)
 
-  def apply(identifier: ID)(implicit ctx: Ctx): M[E] = resolve(identifier)
+  def apply(identifier: ID)(implicit ctx: Ctx): M[E] = resolveEntity(identifier)
 
   def existByIdentifier(identifier: ID)(implicit ctx: Ctx): M[Boolean]
 
   def existByIdentifiers(identifiers: ID*)(implicit ctx: Ctx): M[Boolean] =
     traverse(identifiers)(existByIdentifier).mapValues(_.forall(_ == true))
+
+  def existByEntity(entity: E)(implicit ctx: Ctx): M[Boolean] =
+    existByIdentifier(entity.identity)
+
+  def existByEntities(entities: E*)(implicit ctx: Ctx): M[Boolean] =
+    existByIdentifiers(entities.map(_.identity): _*)
+
 
 }
 

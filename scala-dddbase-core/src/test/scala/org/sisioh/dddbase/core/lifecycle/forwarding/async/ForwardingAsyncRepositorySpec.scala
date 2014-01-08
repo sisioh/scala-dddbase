@@ -53,55 +53,55 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       repository(entity.identity) = entity
-      val future = repository.store(entity)
+      val future = repository.storeEntity(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
       there was atLeastOne(entity).identity
       (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
           val tr = new TestRepForwardingRepositoryImpl(r.result)
-          tr.resolve(id)
+          tr.resolveEntity(id)
       }
       Await.result(future2, Duration.Inf) must_== entity
     }
     "resolve entity by using a identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val future = repository.store(entity)
+      val future = repository.storeEntity(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
       there was atLeastOne(entity).identity
       (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
           val tr = new TestRepForwardingRepositoryImpl(r.result)
-          tr.resolve(id)
+          tr.resolveEntity(id)
       }
       Await.result(future2, Duration.Inf) must_== entity
     }
     "delete entity by using a identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
-      val future = repository.store(entity)
+      val future = repository.storeEntity(entity)
       val resultWithEntity = Await.result(future, Duration.Inf)
       there was atLeastOne(entity).identity
       (resultWithEntity.result ne repository) must beTrue
       val future2 = future.flatMap {
         r =>
           val tr = new TestRepForwardingRepositoryImpl(r.result)
-          tr.deleteByIdentity(id)
+          tr.deleteByIdentifier(id)
       }
       Await.result(future2, Duration.Inf) must not beNull
     }
     "not resolve a entity by using a non-existent identity" in {
       val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
-      val future = repository.resolve(id)
+      val future = repository.resolveEntity(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]
     }
     "not delete a entity by using a non-existent identity" in {
       val repository = new TestRepForwardingRepositoryImpl(new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]())
-      val future = repository.deleteByIdentity(id)
+      val future = repository.deleteByIdentifier(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]

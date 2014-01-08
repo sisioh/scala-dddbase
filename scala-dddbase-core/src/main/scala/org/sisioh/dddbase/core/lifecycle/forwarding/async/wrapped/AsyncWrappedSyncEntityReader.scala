@@ -21,16 +21,16 @@ trait AsyncWrappedSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
 
   protected val delegate: Delegate
 
-  def resolve(identity: ID)(implicit ctx: Ctx) = {
+  def resolveEntity(identity: ID)(implicit ctx: Ctx) = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
-      delegate.resolve(identity).get
+      delegate.resolveEntity(identity).get
     }
   }
 
-  def containsByIdentity(identity: ID)(implicit ctx: Ctx): Future[Boolean] = {
+  def existByIdentifier(identity: ID)(implicit ctx: Ctx): Future[Boolean] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {

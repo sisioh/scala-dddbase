@@ -35,7 +35,7 @@ class GenericSyncRepositoryOnMemoryByPredicateSpec extends Specification with Mo
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(Identity[Int](i))
-        repository.store(entity).get.result
+        repository.storeEntity(entity).get.result
       }
 
       val chunk = repository.filterByPredicate({

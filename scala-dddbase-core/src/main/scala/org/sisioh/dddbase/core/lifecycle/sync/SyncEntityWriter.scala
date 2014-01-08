@@ -35,6 +35,16 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
   type Result = SyncResultWithEntity[This, ID, E]
   type Results = SyncResultWithEntities[This, ID, E]
 
+
+  protected def traverseWithThis[A](values: Seq[A])(processor: (This, A) => Try[Result])(implicit ctx: Ctx): Try[Results] = Try {
+    val result = values.foldLeft[(This, Seq[E])]((this.asInstanceOf[This], Seq.empty[E])) {
+      (resultWithEntities, task) =>
+        val resultWithEntity = processor(resultWithEntities._1, task).get
+        (resultWithEntity.result.asInstanceOf[This], resultWithEntities._2 :+ resultWithEntity.entity)
+    }
+    SyncResultWithEntities(result._1, result._2)
+  }
+
   def storeEntities(entities: Seq[E])(implicit ctx: Ctx): Try[Results] =
     traverseWithThis(entities) {
       (repository, entity) =>

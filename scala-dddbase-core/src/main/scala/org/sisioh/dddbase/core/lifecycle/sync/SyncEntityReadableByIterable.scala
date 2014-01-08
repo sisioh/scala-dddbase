@@ -29,7 +29,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 trait SyncEntityReadableByIterable[ID <: Identity[_], E <: Entity[ID]] extends Iterable[E] {
   this: SyncEntityReader[ID, E] =>
 
-  def containsByIdentity(identifier: ID)
+  def existByIdentifier(identifier: ID)
                         (implicit ctx: EntityIOContext[Try]): Try[Boolean] = Success(exists(_.identity == identifier))
 
 }

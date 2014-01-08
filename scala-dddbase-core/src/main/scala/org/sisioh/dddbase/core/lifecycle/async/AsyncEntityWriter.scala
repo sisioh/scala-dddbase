@@ -1,10 +1,8 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntities, EntityIOContext, EntityWriter}
+import org.sisioh.dddbase.core.lifecycle.EntityWriter
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent._
-import scala.collection.mutable.ListBuffer
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntities, SyncResultWithEntity}
 
 /**
  * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityWriter]]。
@@ -20,6 +18,19 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
   type This <: AsyncEntityWriter[ID, E]
   type Result = AsyncResultWithEntity[This, ID, E]
   type Results = AsyncResultWithEntities[This, ID, E]
+
+  protected final def traverseWithThis[A](values: Seq[A])(processor: (This, A) => Future[Result])(implicit ctx: Ctx): Future[Results] = {
+    implicit val executor = getExecutionContext(ctx)
+    values.foldLeft(Future.successful(AsyncResultWithEntities[This, ID, E](this.asInstanceOf[This], Seq.empty[E]))) {
+      case (future, value) =>
+        for {
+          AsyncResultWithEntities(repo, entities) <- future
+          AsyncResultWithEntity(r, e) <- processor(repo, value)
+        } yield {
+          AsyncResultWithEntities(r, entities :+ e)
+        }
+    }
+  }
 
   def storeEntities(entities: Seq[E])(implicit ctx: Ctx): Future[Results] =
     traverseWithThis(entities) {

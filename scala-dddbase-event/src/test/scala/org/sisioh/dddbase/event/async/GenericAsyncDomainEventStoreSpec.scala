@@ -40,7 +40,7 @@ class GenericAsyncDomainEventStoreSpec extends Specification {
       futures.map {
         future =>
           val result = Await.result(future, Duration.Inf)
-          val contains = Await.result(result.result.containsByIdentity(event.identity), Duration.Inf)
+          val contains = Await.result(result.result.existByIdentifier(event.identity), Duration.Inf)
           contains must_== true
       }
     }

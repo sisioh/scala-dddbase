@@ -23,6 +23,6 @@ T <: DomainEvent[ID]]
   protected val eventRepository: R
 
   def handleEvent(event: T)(implicit ctx: EntityIOContext[Try]): Try[Unit] =
-    eventRepository.store(event).map(_ => ())
+    eventRepository.storeEntity(event).map(_ => ())
 
 }

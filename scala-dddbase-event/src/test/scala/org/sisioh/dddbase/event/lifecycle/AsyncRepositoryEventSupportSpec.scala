@@ -51,7 +51,7 @@ class AsyncRepositoryEventSupportSpec extends Specification {
           ()
         }
       })
-      Await.result(repos.store(entity), Duration.Inf)
+      Await.result(repos.storeEntity(entity), Duration.Inf)
       Thread.sleep(100)
       result must beTrue
       resultEntity must_== entity

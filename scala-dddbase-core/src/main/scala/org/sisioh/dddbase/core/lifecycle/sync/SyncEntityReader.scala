@@ -28,6 +28,10 @@ import scala.util.{Failure, Success, Try}
 trait SyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   extends EntityReader[ID, E, Try] {
 
+  protected def mapValues[A, R](values: Try[A])(f: (A) => R)(implicit ctx: Ctx): Try[R] = {
+    values.map(f)
+  }
+
   protected def traverse[A, R](values: Seq[A], forceSuccess: Boolean)(f: (A) => Try[R])(implicit ctx: Ctx): Try[Seq[R]] = {
     values.map(f).foldLeft(Try(Seq.empty[R])) {
       (resultsTry, resultTry) =>

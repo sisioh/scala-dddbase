@@ -38,7 +38,7 @@ trait AsyncWrappedSyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     }
   }
 
-  def deleteByIdentity(identity: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def deleteByIdentifier(identity: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {

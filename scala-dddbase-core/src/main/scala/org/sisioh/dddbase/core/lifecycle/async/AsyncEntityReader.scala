@@ -15,6 +15,11 @@ import scala.concurrent.Future
 trait AsyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   extends AsyncEntityIO with EntityReader[ID, E, Future] {
 
+  protected def mapValues[A, R](values: Future[A])(f: (A) => R)(implicit ctx: Ctx): Future[R] = {
+    implicit val executor = getExecutionContext(ctx)
+    values.map(f)
+  }
+
   protected def traverse[A, R](values: Seq[A], forceSuccess: Boolean)
                               (f: (A) => Future[R])(implicit ctx: Ctx): Future[Seq[R]] = {
     implicit val executor = getExecutionContext(ctx)
