@@ -19,40 +19,40 @@ class IdentitySpec extends Specification {
   "Identity" should {
 
     "throw EmptyIdentityException when get value" in {
-      val identity: Identifier[Long] = Identifier.empty
-      identity.value must throwA[EmptyIdentityException]
+      val identifier: Identifier[Long] = Identifier.empty
+      identifier.value must throwA[EmptyIdentityException]
     }
 
-    "throw NotSerializableExcepption when serialization not serializable identity" in {
-      val identity = Identifier(new DummyValue)
+    "throw NotSerializableExcepption when serialization not serializable identifier" in {
+      val identifier = Identifier(new DummyValue)
       val oos = new ObjectOutputStream(new ByteArrayOutputStream)
-      oos.writeObject(identity) must throwA[NotSerializableException]
+      oos.writeObject(identifier) must throwA[NotSerializableException]
     }
 
-    "deserialize serialized serializable identity" in {
-      val identity = Identifier(new DummySerializableValue)
+    "deserialize serialized serializable identifier" in {
+      val identifier = Identifier(new DummySerializableValue)
       val os = new ByteArrayOutputStream
       val oos = new ObjectOutputStream(os)
-      oos.writeObject(identity)
+      oos.writeObject(identifier)
       val ois = new ObjectInputStream(new ByteArrayInputStream(os.toByteArray))
       val deserializedIdentity = ois.readObject
       deserializedIdentity must beAnInstanceOf[Identifier[DummySerializableValue]]
     }
 
-    "throw NotSerializableExcepption when serialization the identity which have one or more not serializable member" in {
-      val identity = NotSerializableIdentifier(new DummyValue)
+    "throw NotSerializableExcepption when serialization the identifier which have one or more not serializable member" in {
+      val identifier = NotSerializableIdentifier(new DummyValue)
       val oos = new ObjectOutputStream(new ByteArrayOutputStream)
-      oos.writeObject(identity) must throwA[NotSerializableException]
+      oos.writeObject(identifier) must throwA[NotSerializableException]
     }
 
-    "deserialize serialized serializable identity contains primary value" in {
-      val identity = SerializableIdentifier(100L)
+    "deserialize serialized serializable identifier contains primary value" in {
+      val identifier = SerializableIdentifier(100L)
       val os = new ByteArrayOutputStream
       val oos = new ObjectOutputStream(os)
-      oos.writeObject(identity)
+      oos.writeObject(identifier)
       val ois = new ObjectInputStream(new ByteArrayInputStream(os.toByteArray))
       val deserializedIdentity = ois.readObject.asInstanceOf[SerializableIdentifier]
-      identity must_== deserializedIdentity
+      identifier must_== deserializedIdentity
     }
 
   }

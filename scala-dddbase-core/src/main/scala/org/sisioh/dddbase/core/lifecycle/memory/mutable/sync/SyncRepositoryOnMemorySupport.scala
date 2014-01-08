@@ -65,6 +65,6 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   def iterator: Iterator[E] = core.iterator
 
-  def resolveBy(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = core.resolveBy(identity)
+  def resolveBy(identifier: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = core.resolveBy(identifier)
 
 }

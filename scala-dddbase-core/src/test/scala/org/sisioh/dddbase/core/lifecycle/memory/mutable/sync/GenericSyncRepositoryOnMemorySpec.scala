@@ -31,7 +31,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
   import GenericSyncRepositoryOnMemory.Implicits.defaultEntityIOContext
 
   "The repository" should {
-    "have stored entity with empty identity" in {
+    "have stored entity with empty identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentifier))
       val repos = repository.store(entity)
@@ -47,7 +47,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repository.resolveBy(id).get must_== entity
       repos.flatMap(_.result.exist(entity)).getOrElse(false) must_== true
     }
-    "resolve a entity by using identity" in {
+    "resolve a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
@@ -55,7 +55,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repository.resolveBy(id).get must_== entity
       repos.flatMap(_.result.resolveBy(id)).get must_== entity
     }
-    "resolveOption a entity by using identity" in {
+    "resolveOption a entity by using identifier" in {
       class TestSyncRepository
         extends SyncRepositoryOnMemorySupport[Identifier[UUID], EntityImpl]
         with SyncRepositoryOnMemorySupportByOption[Identifier[UUID], EntityImpl] {
@@ -68,7 +68,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repository.resolveOption(id) must_== Some(entity)
       repos.map(_.result.resolveOption(id)).get must_== Some(entity)
     }
-    "delete a entity by using identity" in {
+    "delete a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
@@ -78,12 +78,12 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       resultWithEntity.result must_!= repos
       resultWithEntity.entity must_== entity
     }
-    "fail to resolve a entity by a non-existent identity" in {
+    "fail to resolve a entity by a non-existent identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       repository.resolveBy(id).isFailure must_== true
       repository.resolveBy(id).get must throwA[EntityNotFoundException]
     }
-    "fail to delete a entity by a non-existent identity" in {
+    "fail to delete a entity by a non-existent identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       repository.deleteBy(id).isFailure must_== true
       repository.deleteBy(id).get must throwA[EntityNotFoundException]

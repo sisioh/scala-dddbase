@@ -29,7 +29,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 
   "The repository" should {
 
-    "have stored enitty with empty identity" in {
+    "have stored enitty with empty identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentifier))
       repository(entity.identifier) = entity
@@ -81,7 +81,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       }
       future.value.get.get must_== true
     }
-    "resolve entity by using a identity" in {
+    "resolve entity by using a identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
@@ -95,7 +95,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       }, Duration.Inf) must_== true
       future.value.get.get must_== entity
     }
-    "resolve entities by using a identity" in {
+    "resolve entities by using a identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entities = for (i <- 0 to 9) yield {
         val id = Identifier(i)
@@ -116,7 +116,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       }
       future.value.get.get must_== entities
     }
-    "resolve entities by using a identity" in {
+    "resolve entities by using a identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entities = for (i <- 0 to 9 by 2) yield {
         val id = Identifier(i)
@@ -144,7 +144,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       Await.result(r, Duration.Inf).size must_!= 0
       future.value.get.get must_== entities
     }
-    "delete entity by using a identity" in {
+    "delete entity by using a identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val future = repository.store(entity).flatMap {
@@ -163,7 +163,7 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       ) must_== true
       future.value.get.get must_== false
     }
-    "delete entities by using a identity" in {
+    "delete entities by using a identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entities = for (i <- 0 to 9) yield {
         val id = Identifier(i)
@@ -187,14 +187,14 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       }
       future.value.get.get must_== false
     }
-    "not resolve a entity by using a non-existent identity" in {
+    "not resolve a entity by using a non-existent identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val future = repository.resolveBy(id)
       Await.ready(future, Duration.Inf)
       future.value.get.isFailure must_== true
       future.value.get.get must throwA[EntityNotFoundException]
     }
-    "not delete a entity by using a non-existent identity" in {
+    "not delete a entity by using a non-existent identifier" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val future = repository.deleteBy(id)
       Await.ready(future, Duration.Inf)

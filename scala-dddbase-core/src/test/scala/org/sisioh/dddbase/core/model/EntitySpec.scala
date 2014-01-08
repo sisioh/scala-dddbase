@@ -13,37 +13,37 @@ class EntitySpec extends Specification {
 
   class TestEntity(val identifier: Identifier[UUID]) extends Entity[Identifier[UUID]]
 
-  val identity = Identifier(UUID.randomUUID)
+  val identifier = Identifier(UUID.randomUUID)
 
   "Entity's Identity" should {
-    val entity = new TestEntity(identity)
-    "equal the identity of the paramter for the constructor" in {
-      entity.identifier must_== identity
+    val entity = new TestEntity(identifier)
+    "equal the identifier of the paramter for the constructor" in {
+      entity.identifier must_== identifier
     }
   }
 
   "Entity's equals method return value" should {
-    "is true when each entities have a same identity" in {
-      new TestEntity(identity) must_== new TestEntity(identity)
+    "is true when each entities have a same identifier" in {
+      new TestEntity(identifier) must_== new TestEntity(identifier)
     }
-    "is false when each entities have a different identity" in {
-      new TestEntity(identity) must_!= new TestEntity(Identifier(UUID.randomUUID))
+    "is false when each entities have a different identifier" in {
+      new TestEntity(identifier) must_!= new TestEntity(Identifier(UUID.randomUUID))
     }
   }
 
   "Entity's hashCode method return value" should {
-    "is same when each entities have a same identity" in {
-      new TestEntity(identity).hashCode must_== new TestEntity(identity).hashCode
+    "is same when each entities have a same identifier" in {
+      new TestEntity(identifier).hashCode must_== new TestEntity(identifier).hashCode
     }
-    "is different when each entities have a different identity" in {
-      new TestEntity(identity).hashCode must_!= new TestEntity(Identifier(UUID.randomUUID)).hashCode
+    "is different when each entities have a different identifier" in {
+      new TestEntity(identifier).hashCode must_!= new TestEntity(Identifier(UUID.randomUUID)).hashCode
     }
   }
 
   "not EntitySerializable entity" should {
     "fail to seriarize entity not extends EntitySerializable" in {
       val oos = new ObjectOutputStream(new ByteArrayOutputStream)
-      val entity = new TestEntity(identity)
+      val entity = new TestEntity(identifier)
       oos.writeObject(entity) must throwA[NotSerializableException]
     }
   }

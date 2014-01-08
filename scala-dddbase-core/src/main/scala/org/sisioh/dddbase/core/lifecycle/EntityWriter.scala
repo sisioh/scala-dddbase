@@ -65,7 +65,7 @@ trait EntityWriter[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
    * 更新メソッド。
    *
    * {{{
-   *   entityWriter(identity) = entity
+   *   entityWriter(identifier) = entity
    * }}}
    *
    * @param identifier 識別子

@@ -22,7 +22,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
   import GenericSyncRepositoryOnMemory.Implicits.defaultEntityIOContext
 
   "The repository" should {
-    "have stored enitty with empty identity" in {
+    "have stored enitty with empty identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentifier))
       val resultWithEntity = repository.store(entity)
@@ -52,7 +52,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
         repos.flatMap(_.result.exist(entities(i))).getOrElse(false) must_== true
       }
     }
-    "resolve a entity by using identity" in {
+    "resolve a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
@@ -60,7 +60,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repository.resolveBy(id).isFailure must_== true
       repos.flatMap(_.result.resolveBy(id)).get must_== entity
     }
-    "resolve a entities by using identity" in {
+    "resolve a entities by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entities = for (i <- 0 to 9) yield {
         val id = Identifier(i)
@@ -74,7 +74,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       val _entities = repos.flatMap(_.result.multiResolveBy(entities.map(_.identifier): _*)).get
       _entities must_== entities
     }
-    "resolve a entities by using identity" in {
+    "resolve a entities by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entities = for (i <- 0 to 9 by 2) yield {
         val id = Identifier(i)
@@ -89,7 +89,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       val _entities = repos.flatMap(_.result.multiResolveBy(entities.map(_.identifier): _*)).get
       _entities must_== entities
     }
-    "resolveOption a entity by using identity" in {
+    "resolveOption a entity by using identifier" in {
       class TestSyncRepository
         extends SyncRepositoryOnMemorySupport[Identifier[Int], EntityImpl]
         with SyncRepositoryOnMemorySupportByOption[Identifier[Int], EntityImpl] {
@@ -105,7 +105,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       }.get
       resolveOptionTry.get must_== entity
     }
-    "delete a entity by using identity" in {
+    "delete a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
@@ -115,7 +115,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       (resultWithEntity2.result ne repository) must beTrue
       resultWithEntity2.entity must_== entity
     }
-    "delete a entities by using identity" in {
+    "delete a entities by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       val entities = for (i <- 0 to 9) yield {
         val id = Identifier(i)
@@ -132,12 +132,12 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       (resultWithEntity2.result ne repository) must beTrue
       resultWithEntity2.entities must_== entities
     }
-    "fail to resolve a entity by a non-existent identity" in {
+    "fail to resolve a entity by a non-existent identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       repository.resolveBy(id).isFailure must_== true
       repository.resolveBy(id).get must throwA[EntityNotFoundException]
     }
-    "fail to delete a entity by a non-existent identity" in {
+    "fail to delete a entity by a non-existent identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
       repository.deleteBy(id).isFailure must_== true
       repository.deleteBy(id).get must throwA[EntityNotFoundException]

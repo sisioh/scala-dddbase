@@ -38,9 +38,9 @@ trait SyncWrappedAsyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
     SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
   }
 
-  def deleteBy(identity: ID)(implicit ctx: Ctx): Try[Result] = Try {
+  def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = Try {
     implicit val asyncEntityIOContext =  getAsyncEntityIOContext(ctx)
-    val resultWithEntity = Await.result(delegate.deleteBy(identity), timeOut)
+    val resultWithEntity = Await.result(delegate.deleteBy(identifier), timeOut)
     val _entity = Some(resultWithEntity.entity.asInstanceOf[E])
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], _entity))
     SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)

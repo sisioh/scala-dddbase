@@ -18,11 +18,11 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemorySupport[ID, E]
   with SyncEntityReadableByOption[ID, E] {
 
-  override def resolveOption(identity: ID)(implicit ctx: EntityIOContext[Try]) = synchronized {
-    existBy(identity).map {
+  override def resolveOption(identifier: ID)(implicit ctx: EntityIOContext[Try]) = synchronized {
+    existBy(identifier).map {
       result =>
         if (result) {
-          Some(entities(identity).clone)
+          Some(entities(identifier).clone)
         } else {
           None
         }

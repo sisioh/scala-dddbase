@@ -59,7 +59,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
           tr.exist(entity)
       }.getOrElse(false) must_== true
     }
-    "resolve a entity by using identity" in {
+    "resolve a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
@@ -72,7 +72,7 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
           tr.resolveBy(id)
       }.get must_== entity
     }
-    "delete a entity by using identity" in {
+    "delete a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val resultWithEntity = repository.store(entity)
@@ -87,12 +87,12 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
       resultWithEntity2.result must_!= repository
       resultWithEntity2.entity must_== entity
     }
-    "fail to resolve a entity by a non-existent identity" in {
+    "fail to resolve a entity by a non-existent identifier" in {
       val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]())
       repository.resolveBy(id).isFailure must_== true
       repository.resolveBy(id).get must throwA[EntityNotFoundException]
     }
-    "fail to delete a entity by a non-existent identity" in {
+    "fail to delete a entity by a non-existent identifier" in {
       val repository = new TestRepForwardingSyncRepositoryImpl(new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]())
       repository.deleteBy(id).isFailure must_== true
       repository.deleteBy(id).get must throwA[EntityNotFoundException]

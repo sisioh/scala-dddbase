@@ -56,8 +56,8 @@ trait SyncRepositoryEventSupport[ID <: Identifier[_], E <: Entity[ID]]
     result.asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
   }
 
-  abstract override def deleteBy(identity: ID)(implicit ctx: Ctx): Try[Result] = {
-    val result = super.deleteBy(identity).map{
+  abstract override def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = {
+    val result = super.deleteBy(identifier).map{
       resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Delete)
         eventPublisher.publish(event)

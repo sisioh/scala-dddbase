@@ -38,12 +38,12 @@ trait AsyncWrappedSyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
     }
   }
 
-  def deleteBy(identity: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def deleteBy(identifier: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
-      val resultWithEntity = delegate.deleteBy(identity).get
+      val resultWithEntity = delegate.deleteBy(identifier).get
       val _entity: Option[E] = Some(resultWithEntity.entity.asInstanceOf[E])
       val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], _entity))
       AsyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
