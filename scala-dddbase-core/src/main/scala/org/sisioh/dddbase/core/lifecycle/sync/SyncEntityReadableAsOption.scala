@@ -1,6 +1,5 @@
 /*
- * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
- * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
+ * Copyright 2011-2013 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +15,24 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByPredicate, EntitiesChunk}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableAsOption}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 
 /**
- * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableByPredicate]]。
+ * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableAsOption]]。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByPredicate[ID <: Identifier[_], E <: Entity[ID]]
-  extends EntityReadableByPredicate[ID, E, Try] {
+trait SyncEntityReadableAsOption[ID <: Identifier[_], E <: Entity[ID]]
+  extends EntityReadableAsOption[ID, E, Try] {
   this: SyncEntityReader[ID, E] =>
 
   /**
-   * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
-   *         Faliure: [[org.sisioh.dddbase.core.lifecycle.RepositoryException]]
+   * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
+   *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
    */
-  def filterByPredicate
-  (predicate: E => Boolean,
-   index: Option[Int] = None, maxEntities: Option[Int] = None)
-  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
+  def resolveAsOptionBy(identifier: ID)(implicit ctx: EntityIOContext[Try]): Option[E]
 
 }

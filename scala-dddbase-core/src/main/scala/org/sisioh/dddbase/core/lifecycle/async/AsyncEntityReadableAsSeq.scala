@@ -10,7 +10,7 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncEntityReadableBySeq[ID <: Identifier[_], E <: Entity[ID]] {
+trait AsyncEntityReadableAsSeq[ID <: Identifier[_], E <: Entity[ID]] {
   this: AsyncEntityReader[ID, E] =>
 
   /**

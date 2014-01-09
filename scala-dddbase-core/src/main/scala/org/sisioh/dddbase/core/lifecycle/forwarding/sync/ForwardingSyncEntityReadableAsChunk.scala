@@ -1,30 +1,30 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.sync
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableByChunk, SyncEntityReader}
+import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableAsChunk, SyncEntityReader}
 import org.sisioh.dddbase.core.model.{Identifier, Entity}
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByChunk]]のデコレータ。
+ * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableAsChunk]]のデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingSyncEntityReadableByChunk[ID <: Identifier[_], E <: Entity[ID]]
-  extends SyncEntityReadableByChunk[ID, E] {
+trait ForwardingSyncEntityReadableAsChunk[ID <: Identifier[_], E <: Entity[ID]]
+  extends SyncEntityReadableAsChunk[ID, E] {
   this: SyncEntityReader[ID, E] =>
 
-  type Delegate <: SyncEntityReadableByChunk[ID, E]
+  type Delegate <: SyncEntityReadableAsChunk[ID, E]
 
   /**
    * デリゲート。
    */
   protected val delegate: Delegate
 
-  def resolveChunk(index: Int, maxEntities: Int)
+  def resolveAsChunk(index: Int, maxEntities: Int)
                   (implicit ctx: Ctx): Try[EntitiesChunk[ID, E]] =
-    delegate.resolveChunk(index, maxEntities)
+    delegate.resolveAsChunk(index, maxEntities)
 
 }
 

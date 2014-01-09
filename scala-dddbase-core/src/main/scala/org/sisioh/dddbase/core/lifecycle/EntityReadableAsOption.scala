@@ -19,22 +19,22 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]による検索を行うためのトレイト。
+ * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
- * @tparam M モナド
  */
-trait EntityReadableByChunk[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
+trait EntityReadableAsOption[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
   this: EntityReader[ID, E, M] =>
 
   /**
-   * エンティティをチャンク単位で検索する。
+   * 識別子に該当するエンティティを解決する。
    *
-   * @param index 検索するチャンクのインデックス
-   * @param maxEntities 1チャンクの件数
-   * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
+   *
+   * @param identifier 識別子
+   * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
    */
-  def resolveChunk(index: Int, maxEntities: Int)(implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
+  def resolveAsOptionBy(identifier: ID)(implicit ctx: Ctx): Option[E]
 
 }

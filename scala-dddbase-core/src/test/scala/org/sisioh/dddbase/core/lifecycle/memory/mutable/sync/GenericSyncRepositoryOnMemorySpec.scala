@@ -58,15 +58,15 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     "resolveOption a entity by using identifier" in {
       class TestSyncRepository
         extends SyncRepositoryOnMemorySupport[Identifier[UUID], EntityImpl]
-        with SyncRepositoryOnMemorySupportByOption[Identifier[UUID], EntityImpl] {
+        with SyncRepositoryOnMemorySupportAsOption[Identifier[UUID], EntityImpl] {
         type This = TestSyncRepository
       }
       val repository = new TestSyncRepository
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identifier
-      repository.resolveOption(id) must_== Some(entity)
-      repos.map(_.result.resolveOption(id)).get must_== Some(entity)
+      repository.resolveAsOptionBy(id) must_== Some(entity)
+      repos.map(_.result.resolveAsOptionBy(id)).get must_== Some(entity)
     }
     "delete a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()

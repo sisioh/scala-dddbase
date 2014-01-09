@@ -30,6 +30,7 @@ trait SyncEntityReadableByIterable[ID <: Identifier[_], E <: Entity[ID]] extends
   this: SyncEntityReader[ID, E] =>
 
   def existBy(identifier: ID)
-             (implicit ctx: EntityIOContext[Try]): Try[Boolean] = Success(exists(_.identifier == identifier))
+             (implicit ctx: EntityIOContext[Try]): Try[Boolean] =
+    Success(exists(_.identifier == identifier))
 
 }

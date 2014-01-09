@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.lifecycle.async._
-import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByOption
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableAsOption
 import org.sisioh.dddbase.core.model._
 import scala.concurrent._
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
@@ -13,11 +13,11 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncRepositoryOnMemorySupportBySeq
+trait AsyncRepositoryOnMemorySupportAsSeq
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemorySupport[ID, E] with AsyncEntityReadableBySeq[ID, E] {
+  extends AsyncRepositoryOnMemorySupport[ID, E] with AsyncEntityReadableAsSeq[ID, E] {
 
-  type Delegate <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableByOption[ID, E]
+  type Delegate <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableAsOption[ID, E]
 
   def resolveAll(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)

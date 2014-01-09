@@ -7,18 +7,18 @@ import scala.util._
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.SyncRepositoryOnMemorySupport]]に
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableByPredicate]]ための機能を追加するトレイト。
+ * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableAsPredicate]]ための機能を追加するトレイト。
  *
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemorySupportByPredicate
+trait SyncRepositoryOnMemorySupportAsPredicate
 [ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemorySupport[ID, E]
-  with SyncEntityReadableByPredicate[ID, E] {
+  with SyncEntityReadableAsPredicate[ID, E] {
 
-  def filterByPredicate
+  def filterBy
   (predicate: (E) => Boolean, indexOpt: Option[Int], maxEntitiesOpt: Option[Int])
   (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] = {
     val filteredSubEntities = toList.filter(predicate)

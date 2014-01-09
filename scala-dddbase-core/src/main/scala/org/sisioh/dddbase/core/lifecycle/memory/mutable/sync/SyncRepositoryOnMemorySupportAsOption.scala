@@ -11,13 +11,13 @@ import scala.util._
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemorySupportByOption
+trait SyncRepositoryOnMemorySupportAsOption
 [ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemorySupport[ID, E]
-  with SyncEntityReadableByOption[ID, E] {
+  with SyncEntityReadableAsOption[ID, E] {
 
-  def resolveOption(identifier: ID)(implicit ctx: EntityIOContext[Try]): Option[E] = synchronized {
+  def resolveAsOptionBy(identifier: ID)(implicit ctx: Ctx): Option[E] = synchronized {
     resolveBy(identifier).map(Some(_)).recoverWith {
       case ex: EntityNotFoundException =>
         Success(None)

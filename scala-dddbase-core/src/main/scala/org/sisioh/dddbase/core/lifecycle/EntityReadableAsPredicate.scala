@@ -19,22 +19,23 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
- * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
+ * 述語関数に該当したエンティティを検索することができるトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait EntityReadableByOption[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
+trait EntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
   this: EntityReader[ID, E, M] =>
 
   /**
-   * 識別子に該当するエンティティを解決する。
+   * 述語関数に該当したエンティティを取得する。
    *
-   * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
-   *
-   * @param identifier 識別子
-   * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。
+   * @param predicate 述語関数
+   * @param index チャンクのインデックス
+   * @param maxEntities 1チャンク内の件数
+   * @return モナドにラップした[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
-  def resolveOption(identifier: ID)(implicit ctx: Ctx): Option[E]
+  def filterBy(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
+                       (implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
 
 }

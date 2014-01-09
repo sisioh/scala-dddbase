@@ -5,7 +5,7 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
-class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mockito {
+class SyncRepositoryOnMemorySupportAsChunk2Spec extends Specification with Mockito {
 
   case class IntIdentifier(value: Int)
     extends AbstractOrderedIdentifier[Int, IntIdentifier]
@@ -17,7 +17,7 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
 
   class TestSyncRepository
     extends SyncRepositoryOnMemorySupport[IntIdentifier, EntityImpl]()
-    with SyncRepositoryOnMemorySupportByChunk[IntIdentifier, EntityImpl] {
+    with SyncRepositoryOnMemorySupportAsChunk[IntIdentifier, EntityImpl] {
     type This = TestSyncRepository
   }
 
@@ -33,7 +33,7 @@ class SyncRepositoryOnMemorySupportByChunk2Spec extends Specification with Mocki
         repository = repository.store(entity).get.result
       }
 
-      val chunk = repository.resolveChunk(0, 5).get
+      val chunk = repository.resolveAsChunk(0, 5).get
 
       chunk.index must_== 0
       chunk.entities.size must_== 5

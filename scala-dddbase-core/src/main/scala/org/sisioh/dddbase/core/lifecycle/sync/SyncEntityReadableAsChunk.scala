@@ -13,29 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle
+package org.sisioh.dddbase.core.lifecycle.sync
 
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableAsChunk, EntitiesChunk}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
-import scala.language.higherKinds
+import scala.util.Try
 
 /**
- * 述語関数に該当したエンティティを検索することができるトレイト。
+ * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableAsChunk]]。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait EntityReadableByPredicate[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
-  this: EntityReader[ID, E, M] =>
+trait SyncEntityReadableAsChunk[ID <: Identifier[_], E <: Entity[ID]]
+  extends EntityReadableAsChunk[ID, E, Try] {
+  this: SyncEntityReader[ID, E] =>
 
   /**
-   * 述語関数に該当したエンティティを取得する。
-   *
-   * @param predicate 述語関数
-   * @param index チャンクのインデックス
-   * @param maxEntities 1チャンク内の件数
-   * @return モナドにラップした[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
-  def filterByPredicate(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
-                       (implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
+  def resolveAsChunk(index: Int, maxEntities: Int)
+                  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
 
 }

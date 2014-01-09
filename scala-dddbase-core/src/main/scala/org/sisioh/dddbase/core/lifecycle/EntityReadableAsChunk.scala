@@ -13,26 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.sisioh.dddbase.core.lifecycle.sync
+package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByOption}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
-import scala.util.Try
+import scala.language.higherKinds
 
 /**
- * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableByOption]]。
+ * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]による検索を行うためのトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
+ * @tparam M モナド
  */
-trait SyncEntityReadableByOption[ID <: Identifier[_], E <: Entity[ID]]
-  extends EntityReadableByOption[ID, E, Try] {
-  this: SyncEntityReader[ID, E] =>
+trait EntityReadableAsChunk[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
+  this: EntityReader[ID, E, M] =>
 
   /**
-   * @return Success: Some: エンティティが存在する場合、None: エンティティが存在しない場合
-   *         Failure: RepositoryExceptionは、リポジトリにアクセスできなかった場合
+   * エンティティをチャンク単位で検索する。
+   *
+   * @param index 検索するチャンクのインデックス
+   * @param maxEntities 1チャンクの件数
+   * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
    */
-  def resolveOption(identifier: ID)(implicit ctx: EntityIOContext[Try]): Option[E]
+  def resolveAsChunk(index: Int, maxEntities: Int)(implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
 
 }

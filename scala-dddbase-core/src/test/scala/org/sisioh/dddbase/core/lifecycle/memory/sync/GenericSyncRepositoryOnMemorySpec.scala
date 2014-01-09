@@ -92,7 +92,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     "resolveOption a entity by using identifier" in {
       class TestSyncRepository
         extends SyncRepositoryOnMemorySupport[Identifier[Int], EntityImpl]
-        with SyncRepositoryOnMemorySupportByOption[Identifier[Int], EntityImpl] {
+        with SyncRepositoryOnMemorySupportAsOption[Identifier[Int], EntityImpl] {
         type This = TestSyncRepository
       }
       val repository = new TestSyncRepository
@@ -101,7 +101,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       there was atLeastOne(entity).identifier
       val resolveOptionTry = repos.map {
         r =>
-          r.result.resolveOption(id)
+          r.result.resolveAsOptionBy(id)
       }.get
       resolveOptionTry.get must_== entity
     }

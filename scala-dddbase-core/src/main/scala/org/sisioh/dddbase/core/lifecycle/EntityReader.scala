@@ -41,7 +41,7 @@ trait EntityReader[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
 
   protected def mapValues[A, R](values: M[A])(f: (A) => R)(implicit ctx: Ctx): M[R]
 
-  protected implicit def MapExtension[A](values: M[A]) = new {
+  private implicit def MapExtension[A](values: M[A]) = new {
 
     def mapValues[R](f: (A) => R)(implicit ctx: Ctx): M[R] = self.mapValues(values)(f)
 
@@ -64,7 +64,6 @@ trait EntityReader[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
 
   def multiExist(entities: E*)(implicit ctx: Ctx): M[Boolean] =
     multiExistBy(entities.map(_.identifier): _*)
-
 
 }
 

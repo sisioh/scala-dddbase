@@ -1,5 +1,6 @@
 /*
- * Copyright 2011-2013 Sisioh Project and others. (http://www.sisioh.org/)
+ * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
+ * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +16,27 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableByChunk, EntitiesChunk}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableAsPredicate, EntitiesChunk}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 
 /**
- * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableByChunk]]。
+ * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableAsPredicate]]。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait SyncEntityReadableByChunk[ID <: Identifier[_], E <: Entity[ID]]
-  extends EntityReadableByChunk[ID, E, Try] {
+trait SyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
+  extends EntityReadableAsPredicate[ID, E, Try] {
   this: SyncEntityReader[ID, E] =>
 
   /**
    * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
-   *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
+   *         Faliure: [[org.sisioh.dddbase.core.lifecycle.RepositoryException]]
    */
-  def resolveChunk(index: Int, maxEntities: Int)
-                  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
+  def filterBy
+  (predicate: E => Boolean,
+   index: Option[Int] = None, maxEntities: Option[Int] = None)
+  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
 
 }

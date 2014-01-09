@@ -20,7 +20,7 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
 
   class TestSyncRepository
     extends SyncRepositoryOnMemorySupport[Identifier[Int], EntityImpl]()
-    with SyncRepositoryOnMemorySupportByPredicate[Identifier[Int], EntityImpl] {
+    with SyncRepositoryOnMemorySupportAsPredicate[Identifier[Int], EntityImpl] {
     override type This = TestSyncRepository
   }
 
@@ -36,7 +36,7 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
         repository = repository.store(entity).get.result
       }
 
-      val chunk = repository.filterByPredicate(
+      val chunk = repository.filterBy(
       {
         e => e.identifier.value % 2 == 0
       }, Some(0), Some(5)).get

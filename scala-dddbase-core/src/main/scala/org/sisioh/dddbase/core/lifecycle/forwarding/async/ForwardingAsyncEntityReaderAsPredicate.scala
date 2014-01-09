@@ -1,31 +1,31 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.async
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
-import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReadableByPredicate, AsyncEntityReader}
+import org.sisioh.dddbase.core.lifecycle.async.{AsyncEntityReadableAsPredicate, AsyncEntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent.Future
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReadableByPredicate]]のデコレータ。
+ * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReadableAsPredicate]]のデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReaderByPredicate[ID <: Identifier[_], E <: Entity[ID]]
-  extends AsyncEntityReadableByPredicate[ID, E] {
+trait ForwardingAsyncEntityReaderAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
+  extends AsyncEntityReadableAsPredicate[ID, E] {
   this: AsyncEntityReader[ID, E] =>
 
-  type Delegate <: AsyncEntityReadableByPredicate[ID, E]
+  type Delegate <: AsyncEntityReadableAsPredicate[ID, E]
 
   /**
    * デリゲート。
    */
   protected val delegate: Delegate
 
-  def filterByPredicate
+  def filterBy
   (predicate: (E) => Boolean,
    index: Option[Int], maxEntities: Option[Int])
   (implicit ctx: Ctx): Future[EntitiesChunk[ID, E]] =
-    delegate.filterByPredicate(predicate, index, maxEntities)
+    delegate.filterBy(predicate, index, maxEntities)
 
 }
