@@ -12,6 +12,8 @@ import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 
 class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 
+  sequential
+
   class EntityImpl(val identifier: Identifier[Int])
     extends Entity[Identifier[Int]]
     with EntityCloneable[Identifier[Int], EntityImpl]

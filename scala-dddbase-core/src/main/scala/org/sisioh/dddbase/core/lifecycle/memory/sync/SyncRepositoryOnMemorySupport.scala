@@ -63,7 +63,7 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
           entities(identifier).clone
         }.recoverWith {
           case ex: NoSuchElementException =>
-            Failure(new EntityNotFoundException())
+            Failure(new EntityNotFoundException(Some(s"identifier = $identifier")))
         }
     }
   }

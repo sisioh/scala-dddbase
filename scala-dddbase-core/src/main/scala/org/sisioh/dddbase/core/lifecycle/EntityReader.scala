@@ -50,14 +50,14 @@ trait EntityReader[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
   def resolveBy(identifier: ID)(implicit ctx: Ctx): M[E]
 
   def multiResolveBy(identifiers: ID*)(implicit ctx: Ctx): M[Seq[E]] =
-    traverse(identifiers)(resolveBy)
+    traverseWithoutFailures(identifiers)(resolveBy)
 
   def apply(identifier: ID)(implicit ctx: Ctx): M[E] = resolveBy(identifier)
 
   def existBy(identifier: ID)(implicit ctx: Ctx): M[Boolean]
 
   def multiExistBy(identifiers: ID*)(implicit ctx: Ctx): M[Boolean] =
-    traverse(identifiers)(existBy).mapValues(_.forall(_ == true))
+    traverseWithoutFailures(identifiers)(existBy).mapValues(_.forall(_ == true))
 
   def exist(entity: E)(implicit ctx: Ctx): M[Boolean] =
     existBy(entity.identifier)

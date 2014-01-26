@@ -35,13 +35,13 @@ trait AsyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
   def multiStore(entities: E*)(implicit ctx: Ctx): Future[Results] =
     traverseWithThis(entities) {
       (repository, entity) =>
-        repository.multiStore(entity).asInstanceOf[Future[Result]]
+        repository.store(entity).asInstanceOf[Future[Result]]
     }
 
   def multiDeleteBy(identifiers: ID*)(implicit ctx: Ctx): Future[Results] =
     traverseWithThis(identifiers) {
       (repository, identifier) =>
-        repository.multiDeleteBy(identifier).asInstanceOf[Future[Result]]
+        repository.deleteBy(identifier).asInstanceOf[Future[Result]]
     }
 
 }
