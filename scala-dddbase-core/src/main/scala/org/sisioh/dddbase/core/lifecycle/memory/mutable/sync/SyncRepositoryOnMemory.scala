@@ -16,11 +16,10 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, ResultWithEntity}
-import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
+import org.sisioh.dddbase.core.lifecycle.memory.sync.{SyncRepositoryOnMemory => SROM}
+import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import scala.util.Try
-import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 
 
 /**
@@ -29,34 +28,34 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemorySupport
+trait SyncRepositoryOnMemory
 [ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemory[ID, E] {
+  extends SROM[ID, E] {
 
   /**
    * 内部で利用されるオンメモリリポジトリ
    */
-  protected var core: SyncRepositoryOnMemory[ID, E] =
+  protected var core: SROM[ID, E] =
     new org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory[ID, E]()
 
   override def equals(obj: Any) = obj match {
-    case that: SyncRepositoryOnMemorySupport[_, _] =>
+    case that: SyncRepositoryOnMemory[_, _] =>
       this.core == that.core
     case _ => false
   }
 
   override def hashCode = 31 * core.##
 
-  def store(entity: E)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: Ctx): Try[SyncResultWithEntity[This, ID, E]] = {
     core.store(entity).map {
       resultWithEntity =>
-        core = resultWithEntity.result.asInstanceOf[SyncRepositoryOnMemory[ID, E]]
+        core = resultWithEntity.result.asInstanceOf[SROM[ID, E]]
         SyncResultWithEntity(this.asInstanceOf[This], resultWithEntity.entity)
     }
   }
 
-  def deleteBy(identifier: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
+  def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[SyncResultWithEntity[This, ID, E]] = {
     core.deleteBy(identifier).map {
       result =>
         SyncResultWithEntity(this.asInstanceOf[This], result.entity)
@@ -65,6 +64,6 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   def iterator: Iterator[E] = core.iterator
 
-  def resolveBy(identifier: ID)(implicit ctx: EntityIOContext[Try]): Try[E] = core.resolveBy(identifier)
+  def resolveBy(identifier: ID)(implicit ctx: Ctx): Try[E] = core.resolveBy(identifier)
 
 }

@@ -20,7 +20,7 @@ class GenericSyncRepositoryOnMemoryAsChunkSpec extends Specification with Mockit
   }
 
   class TestSyncRepository
-    extends SyncRepositoryOnMemorySupport[Identifier[Int], EntityImpl]
+    extends SyncRepositoryOnMemory[Identifier[Int], EntityImpl]
     with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
 
     type This = TestSyncRepository

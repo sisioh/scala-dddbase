@@ -29,12 +29,10 @@ import scala.concurrent.ExecutionContext
  * @tparam E エンティティの型
  */
 class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-(protected val delegate: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
-  extends AsyncRepositoryOnMemorySupport[ID, E] {
+(delegate: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
+  extends AbstractAsyncRepositoryOnMemory[ID, E](delegate) {
 
   type This = GenericAsyncRepositoryOnMemory[ID, E]
-
-  type Delegate = GenericSyncRepositoryOnMemory[ID, E]
 
   protected def createInstance(state: (GenericSyncRepositoryOnMemory[ID, E], Option[E])): (GenericAsyncRepositoryOnMemory[ID, E], Option[E]) =
     (new GenericAsyncRepositoryOnMemory[ID, E](state._1), state._2)

@@ -68,13 +68,13 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
     }
   }
 
-  override def store(entity: E)(implicit ctx: Ctx): Try[SyncResultWithEntity[This, ID, E]] = synchronized {
+  override def store(entity: E)(implicit ctx: Ctx): Try[Result] = synchronized {
     val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
     result.entities += (entity.identifier -> entity)
     Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
   }
 
-  override def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[SyncResultWithEntity[This, ID, E]] = synchronized {
+  override def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = synchronized {
     resolveBy(identifier).flatMap {
       entity =>
         val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]

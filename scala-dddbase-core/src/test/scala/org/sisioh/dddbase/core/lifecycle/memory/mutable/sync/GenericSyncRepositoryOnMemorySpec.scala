@@ -57,7 +57,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     }
     "resolveOption a entity by using identifier" in {
       class TestSyncRepository
-        extends SyncRepositoryOnMemorySupport[Identifier[UUID], EntityImpl]
+        extends SyncRepositoryOnMemory[Identifier[UUID], EntityImpl]
         with SyncRepositoryOnMemorySupportAsOption[Identifier[UUID], EntityImpl] {
         type This = TestSyncRepository
       }

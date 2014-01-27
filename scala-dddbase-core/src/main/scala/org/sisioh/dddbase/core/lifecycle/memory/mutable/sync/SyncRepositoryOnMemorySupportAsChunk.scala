@@ -6,7 +6,7 @@ import org.sisioh.dddbase.core.model._
 import scala.util._
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.SyncRepositoryOnMemorySupport]]に
+ * [[org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.SyncRepositoryOnMemory]]に
  * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]ための機能を追加するトレイト。
  *
  * @tparam ID エンティティの識別子の型
@@ -15,9 +15,10 @@ import scala.util._
 trait SyncRepositoryOnMemorySupportAsChunk
 [ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemorySupport[ID, E] with SyncEntityReadableAsChunk[ID, E] {
+  extends SyncEntityReadableAsChunk[ID, E] {
+  this: SyncRepositoryOnMemory[ID, E] =>
 
-  def resolveAsChunk(index: Int, maxEntities: Int)(implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] = {
+  def resolveAsChunk(index: Int, maxEntities: Int)(implicit ctx: Ctx): Try[EntitiesChunk[ID, E]] = {
     val subEntities = toList.slice(index * maxEntities, index * maxEntities + maxEntities)
     Success(EntitiesChunk(index, subEntities))
   }

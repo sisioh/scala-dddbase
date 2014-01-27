@@ -19,7 +19,7 @@ class GenericSyncRepositoryOnMemoryAsPredicateSpec extends Specification with Mo
   }
 
   class TestSyncRepository
-    extends SyncRepositoryOnMemorySupport[Identifier[Int], EntityImpl]
+    extends SyncRepositoryOnMemory[Identifier[Int], EntityImpl]
     with SyncRepositoryOnMemorySupportAsPredicate[Identifier[Int], EntityImpl] {
 
     type This = TestSyncRepository

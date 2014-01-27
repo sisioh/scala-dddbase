@@ -27,7 +27,7 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
  * @tparam E エンティティの型
  */
 class GenericSyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemorySupport[ID, E] {
+  extends AbstractSyncRepositoryOnMemory[ID, E] {
 
   type This = GenericSyncRepositoryOnMemory[ID, E]
 
