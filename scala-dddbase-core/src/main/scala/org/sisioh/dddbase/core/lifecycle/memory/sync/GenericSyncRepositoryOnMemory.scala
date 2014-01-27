@@ -16,9 +16,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
-import org.sisioh.dddbase.core.lifecycle.memory.sync
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 
 /**
  * 汎用的な非同期型オンメモリ不変リポジトリ。
@@ -27,10 +26,13 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
  * @tparam E エンティティの型
  */
 class GenericSyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends AbstractSyncRepositoryOnMemory[ID, E] {
+(entities: Map[ID, E] = Map.empty[ID, E])
+  extends AbstractSyncRepositoryOnMemory[ID, E](entities) {
 
   type This = GenericSyncRepositoryOnMemory[ID, E]
 
+  override protected def createInstance(entities: Map[ID, E]): GenericSyncRepositoryOnMemory[ID, E]#This =
+    new GenericSyncRepositoryOnMemory(entities)
 }
 
 /**
@@ -48,10 +50,10 @@ object GenericSyncRepositoryOnMemory {
    * ファクトリメソッド。
    *
    * @tparam ID 識別子の型
-   * @tparam T エンティティの型
+   * @tparam E エンティティの型
    * @return [[org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory]]
    */
-  def apply[ID <: Identifier[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]() =
-    new GenericSyncRepositoryOnMemory[ID, T]
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]() =
+    new GenericSyncRepositoryOnMemory[ID, E]()
 
 }

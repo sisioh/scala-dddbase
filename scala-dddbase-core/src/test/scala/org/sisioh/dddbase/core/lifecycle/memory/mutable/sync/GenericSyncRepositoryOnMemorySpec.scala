@@ -57,9 +57,10 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     }
     "resolveOption a entity by using identifier" in {
       class TestSyncRepository
-        extends SyncRepositoryOnMemory[Identifier[UUID], EntityImpl]
+        extends AbstractSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]
         with SyncRepositoryOnMemorySupportAsOption[Identifier[UUID], EntityImpl] {
         type This = TestSyncRepository
+
       }
       val repository = new TestSyncRepository
       val entity = spy(new EntityImpl(id))

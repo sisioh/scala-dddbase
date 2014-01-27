@@ -18,10 +18,13 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
 
   }
 
-  class TestSyncRepository
-    extends SyncRepositoryOnMemorySupport[Identifier[Int], EntityImpl]()
+  class TestSyncRepository(entities: Map[Identifier[Int], EntityImpl] = Map.empty)
+    extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
     with SyncRepositoryOnMemorySupportAsPredicate[Identifier[Int], EntityImpl] {
-    override type This = TestSyncRepository
+    type This = TestSyncRepository
+
+    override protected def createInstance(entities: Map[Identifier[Int], EntityImpl]): TestSyncRepository#This =
+      new TestSyncRepository(entities)
   }
 
   implicit val ctx = SyncEntityIOContext

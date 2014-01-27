@@ -16,10 +16,11 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.memory.sync.{SyncRepositoryOnMemory => SROM}
 import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
-import scala.util.Try
+import scala.util.{Success, Failure, Try}
 
 
 /**
@@ -34,36 +35,43 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SROM[ID, E] {
 
   /**
-   * 内部で利用されるオンメモリリポジトリ
+   * エンティティを保存するためのマップ。
    */
-  protected var core: SROM[ID, E] =
-    new org.sisioh.dddbase.core.lifecycle.memory.sync.GenericSyncRepositoryOnMemory[ID, E]()
+  protected val entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty
 
   override def equals(obj: Any) = obj match {
     case that: SyncRepositoryOnMemory[_, _] =>
-      this.core == that.core
+      this.entities == that.entities
     case _ => false
   }
 
-  override def hashCode = 31 * core.##
+  override def hashCode = 31 * entities.##
 
-  def store(entity: E)(implicit ctx: Ctx): Try[SyncResultWithEntity[This, ID, E]] = {
-    core.store(entity).map {
-      resultWithEntity =>
-        core = resultWithEntity.result.asInstanceOf[SROM[ID, E]]
-        SyncResultWithEntity(this.asInstanceOf[This], resultWithEntity.entity)
+  override def resolveBy(identifier: ID)(implicit ctx: Ctx) = synchronized {
+    existBy(identifier).flatMap {
+      _ =>
+        Try {
+          entities(identifier).clone
+        }.recoverWith {
+          case ex: NoSuchElementException =>
+            Failure(new EntityNotFoundException(Some(s"identifier = $identifier")))
+        }
     }
   }
 
-  def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[SyncResultWithEntity[This, ID, E]] = {
-    core.deleteBy(identifier).map {
-      result =>
-        SyncResultWithEntity(this.asInstanceOf[This], result.entity)
+  override def store(entity: E)(implicit ctx: Ctx): Try[Result] = synchronized {
+    entities += (entity.identifier -> entity)
+    Success(SyncResultWithEntity(this.asInstanceOf[This], entity))
+  }
+
+  override def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = synchronized {
+    resolveBy(identifier).flatMap {
+      entity =>
+        entities -= identifier
+        Success(SyncResultWithEntity(this.asInstanceOf[This], entity))
     }
   }
 
-  def iterator: Iterator[E] = core.iterator
-
-  def resolveBy(identifier: ID)(implicit ctx: Ctx): Try[E] = core.resolveBy(identifier)
-
+  def iterator =
+    entities.map(_._2.clone).toSeq.sorted.iterator
 }

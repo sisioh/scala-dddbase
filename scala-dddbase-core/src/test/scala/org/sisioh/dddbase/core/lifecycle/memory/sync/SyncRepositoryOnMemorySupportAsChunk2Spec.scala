@@ -15,10 +15,13 @@ class SyncRepositoryOnMemorySupportAsChunk2Spec extends Specification with Mocki
     with EntityCloneable[IntIdentifier, EntityImpl]
     with EntityOrdered[Int, IntIdentifier, EntityImpl]
 
-  class TestSyncRepository
-    extends SyncRepositoryOnMemorySupport[IntIdentifier, EntityImpl]()
+  class TestSyncRepository(entities: Map[IntIdentifier, EntityImpl] = Map.empty)
+    extends AbstractSyncRepositoryOnMemory[IntIdentifier, EntityImpl](entities)
     with SyncRepositoryOnMemorySupportAsChunk[IntIdentifier, EntityImpl] {
     type This = TestSyncRepository
+
+    override protected def createInstance(entities: Map[IntIdentifier, EntityImpl]): This =
+      new TestSyncRepository(entities)
   }
 
   implicit val ctx = SyncEntityIOContext
@@ -26,7 +29,7 @@ class SyncRepositoryOnMemorySupportAsChunk2Spec extends Specification with Mocki
   "The repository" should {
     "have stored entities" in {
 
-      var repository = new TestSyncRepository
+      var repository = new TestSyncRepository()
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(IntIdentifier(i))

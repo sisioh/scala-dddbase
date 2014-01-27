@@ -16,10 +16,9 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
 import collection.Iterator
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityNotFoundException}
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
-import scala.collection.immutable.HashMap
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -38,7 +37,9 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   /**
    * エンティティを保存するためのマップ。
    */
-  protected[core] var entities = new HashMap[ID, E]()
+  val entities: Map[ID, E]
+
+  protected def createInstance(entities: Map[ID, E]): This
 
   override def equals(obj: Any) = obj match {
     case that: SyncRepositoryOnMemorySupport[_, _] =>
@@ -47,14 +48,6 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   }
 
   override def hashCode = 31 * entities.hashCode()
-
-  override def clone: This = synchronized {
-    val result = super.clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
-    val array = result.entities.toArray
-    result.entities = HashMap(array: _*).map(e => e._1 -> e._2.clone)
-    result.asInstanceOf[This]
-  }
-
 
   override def resolveBy(identifier: ID)(implicit ctx: Ctx) = synchronized {
     existBy(identifier).flatMap {
@@ -69,16 +62,14 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   }
 
   override def store(entity: E)(implicit ctx: Ctx): Try[Result] = synchronized {
-    val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
-    result.entities += (entity.identifier -> entity)
+    val result = createInstance(entities + (entity.identifier -> entity))
     Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
   }
 
   override def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = synchronized {
     resolveBy(identifier).flatMap {
       entity =>
-        val result = clone.asInstanceOf[SyncRepositoryOnMemorySupport[ID, E]]
-        result.entities -= identifier
+        val result = createInstance(entities - identifier)
         Success(SyncResultWithEntity(result.asInstanceOf[This], entity))
     }
   }

@@ -99,15 +99,15 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
     }
   }
 
-  "The cloned repository" should {
-    val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
-    "equals the repository before clone" in {
-      repository must_== repository.clone
-    }
-    "have unequal values to the repository before clone" in {
-      val cloneRepository = repository.clone
-      val r = repository.entities ne cloneRepository.entities
-      r must beTrue
-    }
-  }
+//  "The cloned repository" should {
+//    val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
+//    "equals the repository before clone" in {
+//      repository must_== repository.clone
+//    }
+//    "have unequal values to the repository before clone" in {
+//      val cloneRepository = repository.clone
+//      val r = repository.entities ne cloneRepository.entities
+//      r must beTrue
+//    }
+//  }
 }

@@ -20,7 +20,7 @@ class GenericSyncRepositoryOnMemoryAsChunkSpec extends Specification with Mockit
   }
 
   class TestSyncRepository
-    extends SyncRepositoryOnMemory[Identifier[Int], EntityImpl]
+    extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl]
     with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
 
     type This = TestSyncRepository
@@ -32,7 +32,7 @@ class GenericSyncRepositoryOnMemoryAsChunkSpec extends Specification with Mockit
   "The repository" should {
     "have stored entities" in {
 
-      val repository = new TestSyncRepository
+      val repository = new TestSyncRepository()
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(Identifier[Int](i))

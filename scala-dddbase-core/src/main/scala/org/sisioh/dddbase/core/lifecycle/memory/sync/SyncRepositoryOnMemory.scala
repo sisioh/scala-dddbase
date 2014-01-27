@@ -26,7 +26,9 @@ import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
  */
 trait SyncRepositoryOnMemory
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends SyncRepository[ID, E] with SyncEntityReadableByIterable[ID, E] with Cloneable {
+  extends SyncRepository[ID, E] with SyncEntityReadableByIterable[ID, E] {
+
+
 
 }
 

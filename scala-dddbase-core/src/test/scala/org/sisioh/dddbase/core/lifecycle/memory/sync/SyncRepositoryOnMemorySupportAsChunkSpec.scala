@@ -18,10 +18,13 @@ class SyncRepositoryOnMemorySupportAsChunkSpec extends Specification with Mockit
 
   }
 
-  class TestSyncRepository
-    extends SyncRepositoryOnMemorySupport[Identifier[Int], EntityImpl]()
+  class TestSyncRepository(entities: Map[Identifier[Int], EntityImpl] = Map.empty)
+    extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
     with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
     type This = TestSyncRepository
+
+    override protected def createInstance(entities: Map[Identifier[Int], EntityImpl]): TestSyncRepository#This =
+      new TestSyncRepository(entities)
   }
 
   implicit val ctx = SyncEntityIOContext
@@ -29,7 +32,7 @@ class SyncRepositoryOnMemorySupportAsChunkSpec extends Specification with Mockit
   "The repository" should {
     "have stored entities" in {
 
-      var repository = new TestSyncRepository
+      var repository = new TestSyncRepository()
 
       for (i <- 1 to 10) {
         val entity = new EntityImpl(Identifier[Int](i))
