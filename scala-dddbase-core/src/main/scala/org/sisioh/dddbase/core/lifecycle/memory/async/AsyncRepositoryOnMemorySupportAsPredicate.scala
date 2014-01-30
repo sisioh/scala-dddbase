@@ -6,6 +6,7 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableAsPredicate
 import org.sisioh.dddbase.core.model._
 import scala.concurrent._
 import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
+import scala.util.Success
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.async.AsyncRepositoryOnMemorySupport]]に
@@ -16,20 +17,20 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
  */
 trait AsyncRepositoryOnMemorySupportAsPredicate
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemorySupport[ID, E]
-  with AsyncEntityReadableAsPredicate[ID, E] {
-
-  type Delegate <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableAsPredicate[ID, E]
+  extends AsyncEntityReadableAsPredicate[ID, E] {
+  this: AsyncRepositoryOnMemory[ID, E] =>
 
   def filterBy
-  (predicate: (E) => Boolean, index: Option[Int], maxEntities: Option[Int])
+  (predicate: (E) => Boolean, indexOpt: Option[Int], maxEntitiesOpt: Option[Int])
   (implicit ctx: EntityIOContext[Future])
   : Future[EntitiesChunk[ID, E]] = {
-    val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
-    implicit val executor = asyncCtx.executor
+    implicit val executor = getExecutionContext(ctx)
     future {
-      implicit val syncCtx = asyncCtx.syncEntityIOContext
-      delegate.filterBy(predicate, index, maxEntities).get
+      val filteredSubEntities = getEntities.values.toList.filter(predicate)
+      val index = indexOpt.getOrElse(0)
+      val maxEntities = maxEntitiesOpt.getOrElse(filteredSubEntities.size)
+      val subEntities = filteredSubEntities.slice(index * maxEntities, index * maxEntities + maxEntities)
+      EntitiesChunk(index, subEntities)
     }
   }
 

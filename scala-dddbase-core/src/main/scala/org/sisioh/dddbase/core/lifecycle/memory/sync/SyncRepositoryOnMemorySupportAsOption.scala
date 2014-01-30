@@ -1,10 +1,10 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
+import org.sisioh.dddbase.core.lifecycle.{EntityNotFoundException, EntityIOContext}
 import org.sisioh.dddbase.core.lifecycle.sync._
 import org.sisioh.dddbase.core.model._
 import scala.Some
 import scala.util._
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemorySupport]]にOption型のサポートを追加するトレイト。
@@ -15,17 +15,13 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 trait SyncRepositoryOnMemorySupportAsOption
 [ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemorySupport[ID, E]
-  with SyncEntityReadableAsOption[ID, E] {
+  extends SyncEntityReadableAsOption[ID, E] {
+  this: SyncRepositoryOnMemory[ID, E] =>
 
-  override def resolveAsOptionBy(identifier: ID)(implicit ctx: EntityIOContext[Try]) = synchronized {
-    existBy(identifier).map {
-      result =>
-        if (result) {
-          Some(entities(identifier).clone)
-        } else {
-          None
-        }
+  override def resolveAsOptionBy(identifier: ID)(implicit ctx: Ctx) = synchronized {
+    resolveBy(identifier).map(Some(_)).recoverWith {
+      case ex: EntityNotFoundException =>
+        Success(None)
     }.getOrElse(None)
   }
 

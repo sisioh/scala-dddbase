@@ -16,7 +16,11 @@
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
-import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncRepository
+import scala.util.Try
+import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
+import scala.concurrent._
+import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
 
 /**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
@@ -30,22 +34,47 @@ import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSy
  */
 trait AsyncRepositoryOnMemorySupport
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemory[ID, E] with AsyncWrappedSyncRepository[ID, E] {
+  extends AsyncRepositoryOnMemory[ID, E] {
 
-  /**
-   * 新しい非同期型リポジトリを生成する。
-   *
-   * @param state 新しい同期型リポジトリ
-   * @return 新しい非同期型のリポジトリ
-   */
-  protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
+  protected def createInstance(entities: Map[ID, E]): This
 
   override def equals(obj: Any) = obj match {
     case that: AsyncRepositoryOnMemorySupport[_, _] =>
-      this.delegate == that.delegate
+      this.entities == that.entities
     case _ => false
   }
 
-  override def hashCode = 31 * delegate.hashCode()
+  override def hashCode = 31 * entities.hashCode()
+
+  override def resolveBy(identifier: ID)(implicit ctx: Ctx) = {
+    implicit val executor = getExecutionContext(ctx)
+    existBy(identifier).flatMap {
+      _ =>
+        Future {
+          entities(identifier).clone
+        }.recoverWith {
+          case ex: NoSuchElementException =>
+            Future.failed(new EntityNotFoundException(Some(s"identifier = $identifier")))
+        }
+    }
+  }
+
+  override def store(entity: E)(implicit ctx: Ctx): Future[Result] = {
+    val result = createInstance(entities + (entity.identifier -> entity))
+    Future.successful(AsyncResultWithEntity[This, ID, E](result.asInstanceOf[This], entity))
+  }
+
+  override def existBy(identifier: ID)(implicit ctx: Ctx): Future[Boolean] =
+    Future.successful(entities.contains(identifier))
+
+  override def deleteBy(identifier: ID)(implicit ctx: Ctx): Future[Result] = {
+    implicit val executor = getExecutionContext(ctx)
+    resolveBy(identifier).flatMap {
+      entity =>
+        val result = createInstance(entities - identifier)
+        Future.successful(AsyncResultWithEntity[This, ID, E](result.asInstanceOf[This], entity))
+    }
+  }
+
 
 }

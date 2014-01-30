@@ -15,16 +15,13 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
  */
 trait AsyncRepositoryOnMemorySupportAsSeq
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemorySupport[ID, E] with AsyncEntityReadableAsSeq[ID, E] {
-
-  type Delegate <: SyncRepositoryOnMemory[ID, E] with SyncEntityReadableAsOption[ID, E]
+  extends AsyncEntityReadableAsSeq[ID, E] {
+  this: AsyncRepositoryOnMemory[ID, E] =>
 
   def resolveAll(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
-    val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
-    implicit val executor = asyncCtx.executor
+    implicit val executor = getExecutionContext(ctx)
     future {
-      implicit val syncCtx = asyncCtx.syncEntityIOContext
-      delegate.toSeq
+      getEntities.values.toSeq
     }
   }
 

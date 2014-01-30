@@ -16,21 +16,18 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import scala.concurrent.ExecutionContext
-import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 
 /**
  * 汎用的な非同期型オンメモリ可変リポジトリ。
  *
- * @param delegate 内部で利用するオンメモリ可変リポジトリ。
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-(delegate: GenericSyncRepositoryOnMemory[ID, E] = GenericSyncRepositoryOnMemory[ID, E]())
-  extends AbstractAsyncRepositoryOnMemory[ID, E](delegate) {
+case class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]()
+  extends AbstractAsyncRepositoryOnMemory[ID, E] {
 
   type This = GenericAsyncRepositoryOnMemory[ID, E]
 
@@ -57,29 +54,6 @@ object GenericAsyncRepositoryOnMemory {
    */
   def createEntityIOContext(implicit executor: ExecutionContext) = AsyncWrappedSyncEntityIOContext()
 
-  /**
-   * ファクトリメソッド。
-   *
-   * @param delegate 内部で利用するオンメモリ可変リポジトリ。
-   * @tparam ID 識別子の型
-   * @tparam T エンティティの型
-   * @return [[org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory]]
-   */
-  def apply[ID <: Identifier[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (delegate: GenericSyncRepositoryOnMemory[ID, T] = GenericSyncRepositoryOnMemory[ID, T]()) =
-    new GenericAsyncRepositoryOnMemory(delegate)
-
-  /**
-   * エクストラクタメソッド。
-   *
-   * @param repository [[org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory]]
-   * @tparam ID 識別子の型
-   * @tparam T エンティティの型
-   * @return 構成要素
-   */
-  def unapply[ID <: Identifier[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (repository: GenericAsyncRepositoryOnMemory[ID, T]): Option[GenericSyncRepositoryOnMemory[ID, T]] =
-    Some(repository.delegate)
 
 }
 

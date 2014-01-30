@@ -16,12 +16,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.memory.sync.{SyncRepositoryOnMemory => SROM}
-import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
-import scala.util.{Success, Failure, Try}
-
 
 /**
  * オンメモリで動作する可変リポジトリの実装。
@@ -34,44 +30,4 @@ trait SyncRepositoryOnMemory
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SROM[ID, E] {
 
-  /**
-   * エンティティを保存するためのマップ。
-   */
-  protected val entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty
-
-  override def equals(obj: Any) = obj match {
-    case that: SyncRepositoryOnMemory[_, _] =>
-      this.entities == that.entities
-    case _ => false
-  }
-
-  override def hashCode = 31 * entities.##
-
-  override def resolveBy(identifier: ID)(implicit ctx: Ctx) = synchronized {
-    existBy(identifier).flatMap {
-      _ =>
-        Try {
-          entities(identifier).clone
-        }.recoverWith {
-          case ex: NoSuchElementException =>
-            Failure(new EntityNotFoundException(Some(s"identifier = $identifier")))
-        }
-    }
-  }
-
-  override def store(entity: E)(implicit ctx: Ctx): Try[Result] = synchronized {
-    entities += (entity.identifier -> entity)
-    Success(SyncResultWithEntity(this.asInstanceOf[This], entity))
-  }
-
-  override def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = synchronized {
-    resolveBy(identifier).flatMap {
-      entity =>
-        entities -= identifier
-        Success(SyncResultWithEntity(this.asInstanceOf[This], entity))
-    }
-  }
-
-  def iterator =
-    entities.map(_._2.clone).toSeq.sorted.iterator
 }

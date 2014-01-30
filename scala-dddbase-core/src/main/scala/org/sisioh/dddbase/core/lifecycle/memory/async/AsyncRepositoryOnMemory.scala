@@ -29,4 +29,8 @@ trait AsyncRepositoryOnMemory
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends AsyncRepository[ID, E] {
 
+  protected def getEntities: collection.Map[ID,E]
+
+  def entities: Map[ID, E] = getEntities.toMap
+
 }

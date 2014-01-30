@@ -16,10 +16,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
-import org.sisioh.dddbase.core.lifecycle.memory.async.AsyncRepositoryOnMemorySupport
-import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
+import org.sisioh.dddbase.core.lifecycle.memory.async.{AsyncRepositoryOnMemory => AROM}
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
-import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 
 /**
  * 非同期型オンメモリ可変リポジトリのためのトレイト。
@@ -30,11 +28,6 @@ import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemory
 trait AsyncRepositoryOnMemory
 [ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends AsyncRepositoryOnMemorySupport[ID, E] {
-
-  type Delegate <: SyncRepositoryOnMemory[ID, E]
-
-  protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E]) =
-    (this.asInstanceOf[This], state._2)
+  extends AROM[ID, E] {
 
 }

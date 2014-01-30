@@ -34,11 +34,6 @@ trait SyncRepositoryOnMemorySupport
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemory[ID, E] {
 
-  /**
-   * エンティティを保存するためのマップ。
-   */
-  val entities: Map[ID, E]
-
   protected def createInstance(entities: Map[ID, E]): This
 
   override def equals(obj: Any) = obj match {
