@@ -5,6 +5,7 @@ import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemorySupportAsChunk
 
 class GenericSyncRepositoryOnMemoryAsChunkSpec extends Specification with Mockito {
 
