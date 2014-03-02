@@ -31,9 +31,4 @@ import scala.language.higherKinds
  * @tparam M モナドの型
  */
 trait Repository[ID <: Identity[_], E <: Entity[ID], M[+A]]
-  extends EntityReader[ID, E, M] with EntityWriter[ID, E, M] {
-
-  type This <: Repository[ID, E, M]
-
-}
-
+  extends BaseRepository[ID, E, M] with EntityReader[ID, E, M] with EntityWriter[ID, E, M]
