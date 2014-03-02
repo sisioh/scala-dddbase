@@ -11,7 +11,7 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナドの型
  */
-trait ResultWithEntities[+EW <: EntityWriter[ID, E, M], ID <: Identity[_], E <: Entity[ID], M[+A]]  {
+trait ResultWithEntities[+EW <: BaseEntityWriter[ID, E, M], ID <: Identity[_], E <: Entity[ID], M[+A]]  {
 
   /**
    * 結果

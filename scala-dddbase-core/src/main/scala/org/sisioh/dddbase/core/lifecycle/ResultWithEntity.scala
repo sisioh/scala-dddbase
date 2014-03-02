@@ -15,8 +15,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Identity, Entity}
+import scala.language.higherKinds
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]の新しい状態とエンティティを保持する値オブジェクト。
@@ -26,7 +26,7 @@ import org.sisioh.dddbase.core.model.{Identity, Entity}
  * @tparam E エンティティの型
  * @tparam M モナドの型
  */
-trait ResultWithEntity[+EW <: EntityWriter[ID, E, M], ID <: Identity[_], E <: Entity[ID], M[+A]] {
+trait ResultWithEntity[+EW <: BaseEntityWriter[ID, E, M], ID <: Identity[_], E <: Entity[ID], M[+A]] {
 
   /**
    * 結果
@@ -39,8 +39,3 @@ trait ResultWithEntity[+EW <: EntityWriter[ID, E, M], ID <: Identity[_], E <: En
   val entity: E
 
 }
-
-
-
-
-
