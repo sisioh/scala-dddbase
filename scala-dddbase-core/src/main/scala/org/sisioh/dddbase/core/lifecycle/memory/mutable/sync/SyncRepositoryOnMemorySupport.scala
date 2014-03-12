@@ -58,8 +58,9 @@ E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
 
   def deleteByIdentity(identity: ID)(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntity[This, ID, E]] = {
     core.deleteByIdentity(identity).map {
-      result =>
-        SyncResultWithEntity(this.asInstanceOf[This], result.entity)
+      resultWithEntity =>
+        core = resultWithEntity.result.asInstanceOf[SyncRepositoryOnMemory[ID, E]]
+        SyncResultWithEntity(this.asInstanceOf[This], resultWithEntity.entity)
     }
   }
 
