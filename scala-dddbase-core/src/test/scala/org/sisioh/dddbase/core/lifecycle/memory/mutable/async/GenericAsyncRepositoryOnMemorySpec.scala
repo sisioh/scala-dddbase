@@ -65,6 +65,15 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
       Await.result(repository.resolve(id), Duration.Inf) must_== entity
       Await.result(repos.flatMap(_.result.deleteByIdentity(id)), Duration.Inf) must_!= repos
     }
+    "contains a entity by using identity" in {
+      val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
+      val entity = spy(new EntityImpl(id))
+      val repos = repository.store(entity)
+      Await.ready(repos, Duration.Inf)
+      Await.result(repository.containsByIdentity(entity.identity), Duration.Inf) must_== true
+      Await.result(repository.deleteByIdentity(entity.identity), Duration.Inf)
+      Await.result(repository.containsByIdentity(entity.identity), Duration.Inf) must_== false
+    }
     "fail to resolve a entity by a non-existent identity" in {
       val repository = new GenericAsyncRepositoryOnMemory[Identity[UUID], EntityImpl]()
       Await.result(repository.resolve(id).recover {

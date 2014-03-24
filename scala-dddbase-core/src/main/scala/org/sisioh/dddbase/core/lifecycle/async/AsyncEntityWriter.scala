@@ -100,7 +100,7 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   def deleteByIdentities(identities: Seq[ID])
-                        (implicit ctx: EntityIOContext[Future]): Future[ResultWithEntities[This, ID, E, Future]] = {
+                        (implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntities[This, ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
     forEachEntities(this.asInstanceOf[This], identities.toList, ListBuffer[E]()) {
       (repository, identity) =>
