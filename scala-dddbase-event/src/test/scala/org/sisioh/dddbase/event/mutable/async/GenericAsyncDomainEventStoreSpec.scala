@@ -6,7 +6,7 @@ import org.sisioh.dddbase.lifecycle.memory.mutable.async.GenericAsyncRepositoryO
 import org.sisioh.dddbase.core.model.{EntityCloneable, Identifier}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
@@ -35,11 +35,8 @@ class GenericAsyncDomainEventStoreSpec extends Specification {
       val event = new E(Identifier(UUID.randomUUID()))
       val futures = publisher.subscribe(target).publish(event)
 
-      futures.map {
-        future =>
-          val result = Await.result(future, Duration.Inf)
-          result must_==()
-      }
+      Await.result(Future.sequence(futures), Duration.Inf)
+      success
     }
   }
 }

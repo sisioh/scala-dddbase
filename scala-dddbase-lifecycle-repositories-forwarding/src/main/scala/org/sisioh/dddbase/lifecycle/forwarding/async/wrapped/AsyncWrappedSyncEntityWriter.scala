@@ -43,7 +43,7 @@ trait AsyncWrappedSyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
   def store(entity: E)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
       val resultWithEntity = delegate.store(entity).get
       val _entity: Option[E] = Some(resultWithEntity.entity.asInstanceOf[E])
@@ -55,7 +55,7 @@ trait AsyncWrappedSyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
   def deleteBy(identifier: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
       val resultWithEntity = delegate.deleteBy(identifier).get
       val _entity: Option[E] = Some(resultWithEntity.entity.asInstanceOf[E])
