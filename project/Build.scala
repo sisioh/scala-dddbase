@@ -56,7 +56,7 @@ object DDDBaseBuild extends Build {
     id = "scala-dddbase",
     base = file("."),
     settings = commonSettings,
-    aggregate = Seq(core, spec, event)
+    aggregate = Seq(core, forwarding, memory, spec, event)
   )
 
   val core = Project(
@@ -64,6 +64,19 @@ object DDDBaseBuild extends Build {
     base = file("scala-dddbase-core"),
     settings = commonSettings
   )
+
+  val forwarding: Project = Project(
+    id = "scala-dddbase-lifecycle-repositories-forwarding",
+    base = file("scala-dddbase-lifecycle-repositories-forwarding"),
+    settings = commonSettings
+  ) dependsOn (core)
+
+  val memory: Project = Project(
+    id = "scala-dddbase-lifecycle-repositories-memory",
+    base = file("scala-dddbase-lifecycle-repositories-memory"),
+    settings = commonSettings
+  ) dependsOn (core, forwarding)
+
 
   val spec = Project(
     id = "scala-dddbase-spec",
@@ -75,7 +88,7 @@ object DDDBaseBuild extends Build {
     id = "scala-dddbase-event",
     base = file("scala-dddbase-event"),
     settings = commonSettings
-  ) dependsOn (core)
+  ) dependsOn (core, memory % "test", forwarding % "test")
 
   def projectId(state: State) = extracted(state).currentProject.id
 

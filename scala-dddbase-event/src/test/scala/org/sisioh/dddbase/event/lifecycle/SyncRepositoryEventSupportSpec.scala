@@ -2,7 +2,7 @@ package org.sisioh.dddbase.event.lifecycle
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory
+import org.sisioh.dddbase.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
 import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber

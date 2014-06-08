@@ -2,8 +2,8 @@ package org.sisioh.dddbase.event.lifecycle
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
-import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
+import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
+import org.sisioh.dddbase.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{Entity, EntityCloneable, Identifier}
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 import org.specs2.mutable.Specification

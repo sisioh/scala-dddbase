@@ -2,14 +2,14 @@ package org.sisioh.dddbase.event.async
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
-import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
 import org.sisioh.dddbase.core.model.{EntityCloneable, Identifier}
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Future, Await}
+import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
+import org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class GenericAsyncDomainEventStoreSpec extends Specification {
 
