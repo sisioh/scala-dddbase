@@ -25,7 +25,7 @@ trait SyncRepositoryOnMemorySupport
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends SyncRepositoryOnMemory[ID, E] {
 
-  private val _entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty
+  protected val _entities: collection.mutable.Map[ID, E]
 
   override protected def getEntities: Map[ID, E] = _entities
 

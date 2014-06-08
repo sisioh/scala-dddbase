@@ -18,5 +18,6 @@ package org.sisioh.dddbase.lifecycle.memory.mutable.sync
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
 
 abstract class AbstractSyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+(override protected val _entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty[ID, E])
   extends SyncRepositoryOnMemorySupport[ID, E]
 

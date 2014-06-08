@@ -46,24 +46,28 @@ trait AsyncRepositoryOnMemorySupport
 
   override def resolveBy(identifier: ID)(implicit ctx: Ctx) = {
     implicit val executor = getExecutionContext(ctx)
-    existBy(identifier).flatMap {
-      _ =>
-        Future {
-          entities(identifier).clone
-        }.recoverWith {
-          case ex: NoSuchElementException =>
-            Future.failed(new EntityNotFoundException(Some(s"identifier = $identifier")))
-        }
+    Future {
+      entities(identifier).clone
+    }.recoverWith {
+      case ex: NoSuchElementException =>
+        Future.failed(new EntityNotFoundException(Some(s"identifier = $identifier")))
     }
   }
 
   override def store(entity: E)(implicit ctx: Ctx): Future[Result] = {
-    val result = createInstance(entities + (entity.identifier -> entity))
-    Future.successful(AsyncResultWithEntity[This, ID, E](result.asInstanceOf[This], entity))
+    implicit val executor = getExecutionContext(ctx)
+    Future {
+      val result = createInstance(entities + (entity.identifier -> entity))
+      AsyncResultWithEntity[This, ID, E](result.asInstanceOf[This], entity)
+    }
   }
 
-  override def existBy(identifier: ID)(implicit ctx: Ctx): Future[Boolean] =
-    Future.successful(entities.contains(identifier))
+  override def existBy(identifier: ID)(implicit ctx: Ctx): Future[Boolean] = {
+    implicit val executor = getExecutionContext(ctx)
+    Future {
+      entities.contains(identifier)
+    }
+  }
 
   override def deleteBy(identifier: ID)(implicit ctx: Ctx): Future[Result] = {
     implicit val executor = getExecutionContext(ctx)

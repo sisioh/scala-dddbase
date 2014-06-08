@@ -53,7 +53,12 @@ object GenericSyncRepositoryOnMemory {
    * @tparam E エンティティの型
    * @return [[org.sisioh.dddbase.lifecycle.memory.sync.GenericSyncRepositoryOnMemory]]
    */
-  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]() =
-    new GenericSyncRepositoryOnMemory[ID, E]()
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  (entities: Map[ID, E] = Map.empty[ID, E]) =
+    new GenericSyncRepositoryOnMemory[ID, E](entities)
+
+  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  (repository: GenericSyncRepositoryOnMemory[ID, E]): Option[(Map[ID, E])] =
+    Some(repository.entities)
 
 }

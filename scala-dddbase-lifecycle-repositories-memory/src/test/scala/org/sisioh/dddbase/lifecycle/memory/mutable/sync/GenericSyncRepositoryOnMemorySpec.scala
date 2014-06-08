@@ -27,7 +27,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 
   "The repository" should {
     "have stored entity with empty identifier" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
+      val repository = GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(EmptyIdentifier))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identifier
@@ -35,7 +35,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repos.flatMap(_.result.exist(entity)).getOrElse(false) must_== true
     }
     "have stored entity" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
+      val repository = GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identifier
@@ -43,7 +43,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repos.flatMap(_.result.exist(entity)).getOrElse(false) must_== true
     }
     "resolve a entity by using identifier" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
+      val repository = GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identifier
@@ -65,7 +65,7 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       repos.map(_.result.resolveAsOptionBy(id)).get must_== Some(entity)
     }
     "delete a entity by using identifier" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
+      val repository = GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       val entity = spy(new EntityImpl(id))
       val repos = repository.store(entity)
       there was atLeastOne(entity).identifier
@@ -75,12 +75,12 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
       resultWithEntity.entity must_== entity
     }
     "fail to resolve a entity by a non-existent identifier" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
+      val repository = GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       repository.resolveBy(id).isFailure must_== true
       repository.resolveBy(id).get must throwA[EntityNotFoundException]
     }
     "fail to delete a entity by a non-existent identifier" in {
-      val repository = new GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
+      val repository = GenericSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]()
       repository.deleteBy(id).isFailure must_== true
       repository.deleteBy(id).get must throwA[EntityNotFoundException]
     }

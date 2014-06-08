@@ -16,8 +16,11 @@
 package org.sisioh.dddbase.lifecycle.memory.mutable.async
 
 import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
+import java.util.concurrent.ConcurrentHashMap
+import scala.collection.JavaConverters._
 
 abstract class AbstractAsyncRepositoryOnMemory
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+(protected val _entities: collection.concurrent.Map[ID, E] = new ConcurrentHashMap[ID, E]().asScala)
   extends AsyncRepositoryOnMemorySupport[ID, E]
 

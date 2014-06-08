@@ -10,6 +10,8 @@ import org.specs2.mutable.Specification
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import java.util.concurrent.ConcurrentHashMap
+import scala.collection.JavaConverters._
 
 class AsyncRepositoryEventSupportSpec extends Specification {
 
@@ -24,8 +26,8 @@ class AsyncRepositoryEventSupportSpec extends Specification {
 
   }
 
-  class TestRepository
-    extends GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl]
+  class TestRepository(entities: collection.concurrent.Map[Identifier[UUID], EntityImpl] = new ConcurrentHashMap[Identifier[UUID],EntityImpl]().asScala)
+    extends GenericAsyncRepositoryOnMemory[Identifier[UUID], EntityImpl](entities)
     with AsyncRepositoryEventSupport[Identifier[UUID], EntityImpl] {
 
     protected def createEntityIOEvent(entity: EntityImpl, eventType: EventType.Value):

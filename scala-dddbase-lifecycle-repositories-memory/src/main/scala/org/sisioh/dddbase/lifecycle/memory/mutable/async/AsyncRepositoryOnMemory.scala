@@ -28,6 +28,5 @@ import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 trait AsyncRepositoryOnMemory
 [ID <: Identifier[_],
 E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends AROM[ID, E] {
+  extends AROM[ID, E]
 
-}

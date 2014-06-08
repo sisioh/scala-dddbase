@@ -26,7 +26,8 @@ import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
  * @tparam E エンティティの型
  */
 class GenericSyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends AbstractSyncRepositoryOnMemory[ID, E] {
+(entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty[ID, E])
+  extends AbstractSyncRepositoryOnMemory[ID, E](entities) {
 
   type This = GenericSyncRepositoryOnMemory[ID, E]
 
@@ -47,10 +48,23 @@ object GenericSyncRepositoryOnMemory {
    * ファクトリメソッド。
    *
    * @tparam ID 識別子の型
-   * @tparam T エンティティの型
+   * @tparam E エンティティの型
    * @return [[org.sisioh.dddbase.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory]]
    */
-  def apply[ID <: Identifier[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]() =
-    new GenericSyncRepositoryOnMemory[ID, T]
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  (entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty[ID, E]) =
+    new GenericSyncRepositoryOnMemory[ID, E](entities)
+
+  /**
+   * エクストラクタメソッド。
+   *
+   * @param repository [[org.sisioh.dddbase.lifecycle.memory.sync.GenericSyncRepositoryOnMemory]]
+   * @tparam ID 識別子の型
+   * @tparam E エンティティの型
+   * @return 構成要素
+   */
+  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  (repository: GenericSyncRepositoryOnMemory[ID, E]): Option[(collection.mutable.Map[ID, E])] =
+    Some(repository._entities)
 
 }

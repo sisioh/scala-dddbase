@@ -27,10 +27,9 @@ class GenericAsyncDomainEventStoreSpec extends Specification {
     "get saved event" in {
       type ID = Identifier[UUID]
       type E = TestDomainEvent
-      type REPOS = GenericAsyncRepositoryOnMemory[ID, E]
 
-      val repos = new REPOS
-      val target = new GenericAsyncDomainEventStore[REPOS, ID, E](repos)
+      val repos = GenericAsyncRepositoryOnMemory[ID, E]()
+      val target = new GenericAsyncDomainEventStore[GenericAsyncRepositoryOnMemory[ID, E], ID, E](repos)
       val publisher = GenericAsyncDomainEventPublisher[E]()
       val event = new E(Identifier(UUID.randomUUID()))
       val futures = publisher.subscribe(target).publish(event)

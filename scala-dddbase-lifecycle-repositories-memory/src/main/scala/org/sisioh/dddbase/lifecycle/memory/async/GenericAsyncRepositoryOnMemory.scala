@@ -16,8 +16,8 @@
  */
 package org.sisioh.dddbase.lifecycle.memory.async
 
-import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 import scala.concurrent.ExecutionContext
 
 /**
@@ -28,7 +28,8 @@ import scala.concurrent.ExecutionContext
  * @tparam E エンティティの型
  */
 class GenericAsyncRepositoryOnMemory
-[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: Map[ID, E] = Map.empty[ID, E])
+[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+(entities: Map[ID, E] = Map.empty[ID, E])
   extends AbstractAsyncRepositoryOnMemory[ID, E](entities) {
 
   type This = GenericAsyncRepositoryOnMemory[ID, E]
@@ -64,11 +65,11 @@ object GenericAsyncRepositoryOnMemory {
    *
    * @param entities マップ
    * @tparam ID 識別子の型
-   * @tparam T エンティティの型
+   * @tparam E エンティティの型
    * @return [[org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory]]
    */
-  def apply[ID <: Identifier[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (entities: Map[ID, T]) =
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  (entities: Map[ID, E]) =
     new GenericAsyncRepositoryOnMemory(entities)
 
   /**
@@ -76,11 +77,11 @@ object GenericAsyncRepositoryOnMemory {
    *
    * @param repository [[org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory]]
    * @tparam ID 識別子の型
-   * @tparam T エンティティの型
+   * @tparam E エンティティの型
    * @return 構成要素
    */
-  def unapply[ID <: Identifier[_], T <: Entity[ID] with EntityCloneable[ID, T] with Ordered[T]]
-  (repository: GenericAsyncRepositoryOnMemory[ID, T]): Option[Map[ID, T]] =
+  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+  (repository: GenericAsyncRepositoryOnMemory[ID, E]): Option[Map[ID, E]] =
     Some(repository.entities)
 
 }
