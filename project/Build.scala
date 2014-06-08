@@ -12,7 +12,6 @@ object DDDBaseBuild extends Build {
     version := "0.2.0-SNAPSHOT",
     scalaVersion := "2.10.4",
     crossScalaVersions := Seq("2.10.4", "2.11.1"),
-    libraryDependencies ++= Seq(junit, scalaTest, mockito, scalaTest, specs2),
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
     shellPrompt := {
       "sbt (%s)> " format projectId(_)
@@ -63,26 +62,34 @@ object DDDBaseBuild extends Build {
   val core = Project(
     id = "scala-dddbase-core",
     base = file("scala-dddbase-core"),
-    settings = commonSettings
+    settings = commonSettings ++ Seq(
+      libraryDependencies ++= Seq(mockito, specs2)
+    )
   )
 
   val forwarding: Project = Project(
     id = "scala-dddbase-lifecycle-repositories-forwarding",
     base = file("scala-dddbase-lifecycle-repositories-forwarding"),
-    settings = commonSettings
+    settings = commonSettings ++ Seq(
+      libraryDependencies ++= Seq(mockito, specs2)
+    )
   ) dependsOn (core)
 
   val memory: Project = Project(
     id = "scala-dddbase-lifecycle-repositories-memory",
     base = file("scala-dddbase-lifecycle-repositories-memory"),
-    settings = commonSettings
+    settings = commonSettings ++ Seq(
+      libraryDependencies ++= Seq(mockito, specs2)
+    )
   ) dependsOn (core, forwarding)
 
 
   val spec = Project(
     id = "scala-dddbase-spec",
     base = file("scala-dddbase-spec"),
-    settings = commonSettings
+    settings = commonSettings ++ Seq(
+      libraryDependencies ++= Seq(junit, scalaTest, mockito, specs2)
+    )
   ) dependsOn (core)
 
   def projectId(state: State) = extracted(state).currentProject.id
