@@ -24,7 +24,7 @@ trait AsyncWrappedSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   def resolve(identity: ID)(implicit ctx: EntityIOContext[Future]) = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
       delegate.resolve(identity).get
     }
@@ -33,7 +33,7 @@ trait AsyncWrappedSyncEntityReader[ID <: Identity[_], E <: Entity[ID]]
   def containsByIdentity(identity: ID)(implicit ctx: EntityIOContext[Future]): Future[Boolean] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
        delegate.containsByIdentity(identity).get
     }

@@ -21,7 +21,7 @@ trait AsyncRepositoryOnMemorySupportBySeq
   def resolveAll(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
       delegate.toSeq
     }
