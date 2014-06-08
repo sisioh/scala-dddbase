@@ -25,7 +25,7 @@ trait AsyncRepositoryOnMemorySupportByChunk
                   (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
       delegate.resolveChunk(index, maxEntities).get
     }
