@@ -46,11 +46,11 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
         spy(new EntityImpl(id))
       }
       val repos = repository.multiStore(entities: _*)
-      for (i <- 0 to 9) yield {
-        there was atLeastOne(entities(i)).identifier
-        repository.resolveBy(entities(i).identifier).isFailure must_== true
-        repos.flatMap(_.result.exist(entities(i))).getOrElse(false) must_== true
-      }
+      entities must contain { (e: Entity[Identifier[Int]]) =>
+        there was atLeastOne(e).identifier
+        repository.resolveBy(e.identifier).isFailure must_== true
+        repos.map(_.entities.contains(e)).getOrElse(false) must_== true
+      }.forall
     }
     "resolve a entity by using identifier" in {
       val repository = new GenericSyncRepositoryOnMemory[Identifier[Int], EntityImpl]()
@@ -67,9 +67,9 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
         spy(new EntityImpl(id))
       }
       val repos = repository.multiStore(entities: _*)
-      for (i <- 0 to 9) {
-        there was atLeastOne(entities(i)).identifier
-      }
+      entities must contain((e: Entity[Identifier[Int]]) =>
+        there was atLeastOne(e).identifier
+      ).forall
       repository.multiResolveBy(entities.map(_.identifier): _*).isSuccess must_== true
       val _entities = repos.flatMap(_.result.multiResolveBy(entities.map(_.identifier): _*)).get
       _entities must_== entities
@@ -81,9 +81,9 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
         spy(new EntityImpl(id))
       }
       val repos = repository.multiStore(entities: _*)
-      for (i <- 0 to 4) {
-        there was atLeastOne(entities(i)).identifier
-      }
+      entities must contain((e: Entity[Identifier[Int]]) =>
+        there was atLeastOne(e).identifier
+      ).forall
       repository.multiResolveBy((0 to 9 by 2).map(Identifier(_)).toSeq: _*).isSuccess must_== true
       repos.get.result.multiResolveBy((0 to 9).map(Identifier(_)).toSeq: _*).isSuccess must_== true
       val _entities = repos.flatMap(_.result.multiResolveBy(entities.map(_.identifier): _*)).get
@@ -125,10 +125,10 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
         spy(new EntityImpl(id))
       }
       val resultWithEntity = repository.multiStore(entities: _*)
-      for (i <- 0 to 9) {
-        there was atLeastOne(entities(i)).identifier
-        repository.resolveBy(entities(i).identifier).isFailure must_== true
-      }
+      entities must contain { (e: Entity[Identifier[Int]]) =>
+        there was atLeastOne(e).identifier
+        repository.resolveBy(e.identifier).isFailure must_== true
+      }.forall
       val resultWithEntity2 = resultWithEntity.flatMap {
         _.result.multiDeleteBy(entities.map(_.identifier): _*)
       }.get

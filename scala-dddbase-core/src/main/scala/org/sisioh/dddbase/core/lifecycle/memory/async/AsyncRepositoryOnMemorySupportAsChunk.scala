@@ -20,7 +20,7 @@ trait AsyncRepositoryOnMemorySupportAsChunk
   def resolveAsChunk(index: Int, maxEntities: Int)
                     (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
-    future {
+    Future {
       val subEntities = getEntities.values.toList.slice(index * maxEntities, index * maxEntities + maxEntities)
       EntitiesChunk(index, subEntities)
     }

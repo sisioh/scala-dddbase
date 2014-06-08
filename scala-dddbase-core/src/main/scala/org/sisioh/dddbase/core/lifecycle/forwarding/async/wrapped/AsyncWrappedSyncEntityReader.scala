@@ -24,7 +24,7 @@ trait AsyncWrappedSyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
   def resolveBy(identifier: ID)(implicit ctx: Ctx) = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
       delegate.resolveBy(identifier).get
     }
@@ -33,7 +33,7 @@ trait AsyncWrappedSyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
   def existBy(identifier: ID)(implicit ctx: Ctx): Future[Boolean] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
-    future {
+    Future {
       implicit val syncCtx = asyncCtx.syncEntityIOContext
        delegate.existBy(identifier).get
     }

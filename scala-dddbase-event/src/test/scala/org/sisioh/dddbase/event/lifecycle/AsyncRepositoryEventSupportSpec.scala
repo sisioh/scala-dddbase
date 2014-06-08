@@ -43,7 +43,7 @@ class AsyncRepositoryEventSupportSpec extends Specification {
       val repos = new TestRepository()
       val entity = new EntityImpl(Identifier(UUID.randomUUID()))
       repos.subscribe(new AsyncDomainEventSubscriber[EntityIOEvent[Identifier[UUID], EntityImpl], Unit] {
-        def handleEvent(event: EntityIOEvent[Identifier[UUID], EntityImpl])(implicit ctx: EntityIOContext[Future]): Future[Unit] = future {
+        def handleEvent(event: EntityIOEvent[Identifier[UUID], EntityImpl])(implicit ctx: EntityIOContext[Future]): Future[Unit] = Future {
           result = true
           resultEntity = event.entity
           resultEventType = event.eventType

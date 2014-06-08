@@ -2,15 +2,16 @@ import sbt._
 import Keys._
 
 object DDDBaseBuild extends Build {
-  val specs2 = "org.specs2" %% "specs2" % "2.0" % "test"
-  val scalaTest = "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+  val specs2 = "org.specs2" %% "specs2" % "2.3.12" % "test"
+  val scalaTest = "org.scalatest" %% "scalatest" % "2.2.0" % "test"
   val junit = "junit" % "junit" % "4.8.1" % "test"
   val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
 
   lazy val commonSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.sisioh",
     version := "0.2.0-SNAPSHOT",
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.10.4",
+    crossScalaVersions := Seq("2.10.4", "2.11.1"),
     libraryDependencies ++= Seq(junit, scalaTest, mockito, scalaTest, specs2),
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
     shellPrompt := {
