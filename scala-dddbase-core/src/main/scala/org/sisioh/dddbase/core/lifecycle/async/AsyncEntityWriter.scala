@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntities, EntityIOContext, EntityWriter}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.concurrent._
 import scala.collection.mutable.ListBuffer
@@ -105,6 +105,24 @@ trait AsyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
     forEachEntities(this.asInstanceOf[This], identities.toList, ListBuffer[E]()) {
       (repository, identity) =>
         repository.deleteByIdentity(identity).asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
+    }
+  }
+
+  /**
+   * 指定した複数の識別子のエンティティを削除する。
+   *
+   * @param entities 削除する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンスと削除されたエンティティ
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def delete(entities: Seq[E])
+            (implicit ctx: EntityIOContext[Future]): Future[AsyncResultWithEntities[This, ID, E]] = {
+    implicit val executor = getExecutionContext(ctx)
+    forEachEntities(this.asInstanceOf[This], entities.toList, ListBuffer[E]()) {
+      (repository, entity) =>
+        repository.delete(entity).asInstanceOf[Future[AsyncResultWithEntity[This, ID, E]]]
     }
   }
 

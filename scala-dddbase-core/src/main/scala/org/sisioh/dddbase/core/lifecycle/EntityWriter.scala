@@ -17,7 +17,6 @@ package org.sisioh.dddbase.core.lifecycle
 
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.language.higherKinds
-import scala.reflect.ClassTag
 
 /**
  * [[org.sisioh.dddbase.core.model.Identity]]を用いて
@@ -97,7 +96,7 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
   /**
    * エンティティを削除する。
    *
-   * @param entity エンティティ
+   * @param entity 削除する対象のエンティティ
    * @return Success:
    *         リポジトリインスタンスと削除されたエンティティ
    *         Failure:
@@ -105,8 +104,16 @@ trait EntityWriter[ID <: Identity[_], E <: Entity[ID], M[+A]]
    */
   def delete(entity: E)(implicit ctx: EntityIOContext[M]): M[ResultWithEntity[This, ID, E, M]] = deleteByIdentity(entity.identity)
 
-  def delete(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]] =
-    deleteByIdentities(entities.map(_.identity))
+  /**
+   * 複数のエンティティを削除する。
+   *
+   * @param entities 削除する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンスと削除されたエンティティ
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def delete(entities: Seq[E])(implicit ctx: EntityIOContext[M]): M[ResultWithEntities[This, ID, E, M]]
 
 }
 

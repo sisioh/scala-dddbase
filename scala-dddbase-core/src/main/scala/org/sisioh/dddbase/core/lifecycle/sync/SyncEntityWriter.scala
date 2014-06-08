@@ -57,7 +57,7 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
   protected final def forEachEntities[A](tasks: Seq[A])(processor: (This, A) => Try[SyncResultWithEntity[This, ID, E]])
-                                  (implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] = Try {
+                                        (implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] = Try {
     val result = tasks.foldLeft[(This, Seq[E])]((this.asInstanceOf[This], Seq.empty[E])) {
       (resultWithEntities, task) =>
         val resultWithEntity = processor(resultWithEntities._1, task).get
@@ -106,5 +106,21 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
       (repository, identity) =>
         repository.deleteByIdentity(identity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
     }
+
+  /**
+   * 指定した複数の識別子のエンティティを削除する。
+   *
+   * @param entities 削除する対象のエンティティ
+   * @return Success:
+   *         リポジトリインスタンスと削除されたエンティティ
+   *         Failure:
+   *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
+   */
+  def delete(entities: Seq[E])(implicit ctx: EntityIOContext[Try]): Try[ResultWithEntities[This, ID, E, Try]] = {
+    forEachEntities(entities) {
+      (repository, entity) =>
+        repository.delete(entity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
+    }
+  }
 
 }
