@@ -19,6 +19,7 @@ import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent._
+import scala.util.Try
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]を
@@ -35,7 +36,7 @@ trait AsyncWrappedSyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
 
   protected val delegate: Delegate
 
-  def resolveBy(identifier: ID)(implicit ctx: Ctx) = {
+  def resolveBy(identifier: ID)(implicit ctx: Ctx): Future[E] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     Future {

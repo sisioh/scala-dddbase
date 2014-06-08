@@ -43,7 +43,7 @@ trait ForwardingAsyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
    */
   protected def createInstance(state: Future[(Delegate#This, Option[E])]): Future[(This, Option[E])]
 
-  def store(entity: E)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: Ctx): Future[Result] = {
     implicit val executor = getExecutionContext(ctx)
     val state = delegate.store(entity).map {
       result =>

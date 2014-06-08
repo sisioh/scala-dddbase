@@ -40,7 +40,7 @@ trait AsyncWrappedSyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
 
   protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
-  def store(entity: E)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def store(entity: E)(implicit ctx: Ctx): Future[Result] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     Future {
@@ -52,7 +52,7 @@ trait AsyncWrappedSyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
     }
   }
 
-  def deleteBy(identifier: ID)(implicit ctx: Ctx): Future[AsyncResultWithEntity[This, ID, E]] = {
+  def deleteBy(identifier: ID)(implicit ctx: Ctx): Future[Result] = {
     val asyncCtx = getAsyncWrappedEntityIOContext(ctx)
     implicit val executor = asyncCtx.executor
     Future {

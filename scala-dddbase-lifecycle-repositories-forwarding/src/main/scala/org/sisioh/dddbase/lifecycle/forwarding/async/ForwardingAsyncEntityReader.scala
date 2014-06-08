@@ -36,7 +36,7 @@ trait ForwardingAsyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolveBy(identifier: ID)(implicit ctx: Ctx) =
+  def resolveBy(identifier: ID)(implicit ctx: Ctx): Future[E] =
     delegate.resolveBy(identifier)
 
   def existBy(identifier: ID)(implicit ctx: Ctx): Future[Boolean] =
