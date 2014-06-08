@@ -33,7 +33,7 @@ trait AsyncRepositoryOnMemorySupportAsSeq
 
   def resolveAll(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {
     implicit val executor = getExecutionContext(ctx)
-    future {
+    Future {
       getEntities.values.toSeq
     }
   }

@@ -34,7 +34,7 @@ trait AsyncRepositoryOnMemorySupport
 
   override def resolveBy(identifier: ID)(implicit ctx: Ctx): Future[E] = {
     implicit val executor = getExecutionContext(ctx)
-    future {
+    Future {
       _entities.get(identifier).getOrElse(throw new EntityNotFoundException(Some(s"identifier = $identifier")))
     }
   }

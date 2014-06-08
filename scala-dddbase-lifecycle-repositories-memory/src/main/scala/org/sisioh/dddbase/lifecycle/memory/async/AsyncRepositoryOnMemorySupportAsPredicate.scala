@@ -37,7 +37,7 @@ trait AsyncRepositoryOnMemorySupportAsPredicate
   (implicit ctx: EntityIOContext[Future])
   : Future[EntitiesChunk[ID, E]] = {
     implicit val executor = getExecutionContext(ctx)
-    future {
+    Future {
       val filteredSubEntities = getEntities.values.toList.filter(predicate)
       val index = indexOpt.getOrElse(0)
       val maxEntities = maxEntitiesOpt.getOrElse(filteredSubEntities.size)
