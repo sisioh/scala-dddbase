@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.event.async
 
-import org.sisioh.dddbase.event.{DomainEventPublisherSupport, DomainEventSubscriber, DomainEvent}
+import org.sisioh.dddbase.event.{DomainEventPublisherSupport, DomainEvent}
 import scala.concurrent.Future
 
 /**

@@ -1,6 +1,5 @@
 /*
- * Copyright 2010 TRICREO, Inc. (http://tricreo.jp/)
- * Copyright 2011 Sisioh Project and others. (http://www.sisioh.org/)
+ * Copyright 2011-2013 Sisioh Project and others. (http://www.sisioh.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +19,16 @@ import org.sisioh.dddbase.core.lifecycle.async._
 import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 
 /**
- * オンメモリで動作する[[org.sisioh.dddbase.core.lifecycle.async.AsyncRepository]]。
+ * Represents async repository that have entities on memories.
  *
- * @tparam ID 識別子の型
- * @tparam E エンティティの型
+ * @tparam ID id type
+ * @tparam E entity type
  */
 trait AsyncRepositoryOnMemory
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends AsyncRepository[ID, E] {
 
-  protected def getEntities: collection.Map[ID,E]
+  protected def getEntities: collection.Map[ID, E]
 
   def entities: Map[ID, E] = getEntities.toMap
 

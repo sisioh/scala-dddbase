@@ -1,6 +1,6 @@
 package org.sisioh.dddbase.event.async
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntity, Repository}
+import org.sisioh.dddbase.core.lifecycle.Repository
 import org.sisioh.dddbase.core.model.Identifier
 import org.sisioh.dddbase.event.{DomainEventStoreSupport, DomainEvent}
 import scala.concurrent.Future

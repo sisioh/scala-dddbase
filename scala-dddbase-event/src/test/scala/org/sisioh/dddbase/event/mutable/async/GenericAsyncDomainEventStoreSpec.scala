@@ -1,17 +1,17 @@
 package org.sisioh.dddbase.event.mutable.async
 
-import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.model.{EntityCloneable, Identifier}
 import java.util.UUID
-import org.sisioh.dddbase.event.DomainEvent
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-import scala.concurrent.ExecutionContext.Implicits.global
-import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
 import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
+import org.sisioh.dddbase.core.model.{EntityCloneable, Identifier}
+import org.sisioh.dddbase.event.DomainEvent
+import org.specs2.mutable.Specification
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 class GenericAsyncDomainEventStoreSpec extends Specification {
+
   class TestDomainEvent(val identifier: Identifier[UUID])
     extends DomainEvent[Identifier[UUID]]
     with EntityCloneable[Identifier[UUID], TestDomainEvent]
@@ -38,7 +38,7 @@ class GenericAsyncDomainEventStoreSpec extends Specification {
       futures.map {
         future =>
           val result = Await.result(future, Duration.Inf)
-          result must_== ()
+          result must_==()
       }
     }
   }

@@ -4,10 +4,12 @@ import java.io._
 import java.util.UUID
 import org.specs2.mutable._
 
-case class TestSerializableId(value: UUID) extends Identifier[UUID] // with IdentitySerializable[UUID]
+case class TestSerializableId(value: UUID) extends Identifier[UUID]
+
+// with IdentitySerializable[UUID]
 
 class TestSerializableEntity(val identifier: TestSerializableId, val name: String)
-extends Entity[TestSerializableId] with EntitySerializable[TestSerializableId, TestSerializableEntity]
+  extends Entity[TestSerializableId] with EntitySerializable[TestSerializableId, TestSerializableEntity]
 
 class EntitySpec extends Specification {
 

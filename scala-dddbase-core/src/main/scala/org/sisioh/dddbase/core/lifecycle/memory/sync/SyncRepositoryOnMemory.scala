@@ -28,7 +28,7 @@ trait SyncRepositoryOnMemory
 [ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
   extends SyncRepository[ID, E] with SyncEntityReadableByIterable[ID, E] {
 
-  protected def getEntities: collection.Map[ID,E]
+  protected def getEntities: collection.Map[ID, E]
 
   def entities: Map[ID, E] = getEntities.toMap
 

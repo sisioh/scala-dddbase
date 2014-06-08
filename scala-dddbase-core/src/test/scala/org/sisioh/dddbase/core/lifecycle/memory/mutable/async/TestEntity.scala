@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import java.util.UUID
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 
 trait TestEntity
   extends Entity[Identifier[UUID]]

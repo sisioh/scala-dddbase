@@ -1,9 +1,9 @@
 package org.sisioh.dddbase.event.mutable
 
-import scala.language.higherKinds
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 import org.sisioh.dddbase.event._
 import scala.collection.mutable.ArrayBuffer
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.language.higherKinds
 
 /**
  * [[org.sisioh.dddbase.event.DomainEventPublisher]]の骨格実装。

@@ -2,17 +2,11 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync._
+import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemorySupportAsOption
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.Some
-import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import scala.Some
-import org.sisioh.dddbase.core.lifecycle.memory.sync.SyncRepositoryOnMemorySupportAsOption
 
 class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 

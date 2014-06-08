@@ -3,17 +3,21 @@ package org.sisioh.dddbase.core.model
 import java.io._
 import org.specs2.mutable._
 
-class DummyValue extends Ordered[DummyValue]{
+class DummyValue extends Ordered[DummyValue] {
   def compare(that: DummyValue): Int = 0
 }
 
-class DummySerializableValue extends Serializable with Ordered[DummySerializableValue]{
+class DummySerializableValue extends Serializable with Ordered[DummySerializableValue] {
   def compare(that: DummySerializableValue): Int = 0
 }
 
-case class NotSerializableIdentifier(value: DummyValue) extends Identifier[DummyValue] //with IdentitySerializable[DummyValue]
+case class NotSerializableIdentifier(value: DummyValue) extends Identifier[DummyValue]
 
-case class SerializableIdentifier(value: Long) extends Identifier[Long] // with IdentitySerializable[Long]
+//with IdentitySerializable[DummyValue]
+
+case class SerializableIdentifier(value: Long) extends Identifier[Long]
+
+// with IdentitySerializable[Long]
 
 class IdentitySpec extends Specification {
   "Identity" should {

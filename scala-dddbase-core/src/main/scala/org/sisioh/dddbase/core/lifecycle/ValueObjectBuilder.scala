@@ -54,7 +54,7 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
   def build(vo: T): T = {
     val builder = newInstance
     apply(vo, builder)
-    configurators.foreach(builder.addConfigurator(_))
+    configurators.foreach(builder.addConfigurator)
     builder.build
   }
 
@@ -94,4 +94,5 @@ trait ValueObjectBuilder[T, S <: ValueObjectBuilder[T, S]] {
   protected def createValueObject: T
 
   private val configurators = new ListBuffer[Configure]
+
 }

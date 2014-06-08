@@ -16,8 +16,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.mutable.sync
 
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 
 /**
  * 汎用的な同期型オンメモリ可変リポジトリ。

@@ -1,12 +1,12 @@
 package org.sisioh.dddbase.event.sync
 
 import java.util.UUID
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 import org.sisioh.dddbase.core.model.Identifier
-import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
+import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
 import scala.util._
-import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 class GenericSyncDomainEventPublisherSpec extends Specification {
 

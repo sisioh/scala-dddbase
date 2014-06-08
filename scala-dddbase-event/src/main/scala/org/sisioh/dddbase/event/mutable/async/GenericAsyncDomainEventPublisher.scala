@@ -1,10 +1,10 @@
 package org.sisioh.dddbase.event.mutable.async
 
+import org.sisioh.dddbase.event.DomainEvent
+import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 import org.sisioh.dddbase.event.mutable.DomainEventPublisherSupport
-import org.sisioh.dddbase.event.{DomainEventSubscriber, DomainEvent}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
-import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 
 /**
  * 汎用的な[[org.sisioh.dddbase.event.DomainEventPublisher]]の非同期型実装。

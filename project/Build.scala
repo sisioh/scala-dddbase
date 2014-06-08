@@ -1,5 +1,5 @@
+import sbt.Keys._
 import sbt._
-import Keys._
 
 object DDDBaseBuild extends Build {
   val specs2 = "org.specs2" %% "specs2" % "2.0" % "test"
@@ -69,13 +69,13 @@ object DDDBaseBuild extends Build {
     id = "scala-dddbase-spec",
     base = file("scala-dddbase-spec"),
     settings = commonSettings
-  ) dependsOn(core)
+  ) dependsOn (core)
 
   val event = Project(
     id = "scala-dddbase-event",
     base = file("scala-dddbase-event"),
     settings = commonSettings
-  ) dependsOn(core)
+  ) dependsOn (core)
 
   def projectId(state: State) = extracted(state).currentProject.id
 

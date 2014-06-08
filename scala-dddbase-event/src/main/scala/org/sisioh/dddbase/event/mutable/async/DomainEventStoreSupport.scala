@@ -2,9 +2,9 @@ package org.sisioh.dddbase.event.mutable.async
 
 import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, Repository}
 import org.sisioh.dddbase.core.model.Identifier
+import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 import org.sisioh.dddbase.event.{DomainEventStore, DomainEvent}
 import scala.concurrent.{Future, ExecutionContext}
-import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 
 /**
  * [[org.sisioh.dddbase.event.DomainEventStore]]のための骨格実装。

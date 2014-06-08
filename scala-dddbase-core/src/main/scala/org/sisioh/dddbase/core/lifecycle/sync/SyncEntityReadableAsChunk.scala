@@ -34,6 +34,6 @@ trait SyncEntityReadableAsChunk[ID <: Identifier[_], E <: Entity[ID]]
    *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
   def resolveAsChunk(index: Int, maxEntities: Int)
-                  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
+                    (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
 
 }

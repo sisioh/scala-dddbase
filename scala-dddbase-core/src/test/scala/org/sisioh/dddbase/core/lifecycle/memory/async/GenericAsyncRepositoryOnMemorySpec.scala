@@ -8,7 +8,6 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 
 class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 

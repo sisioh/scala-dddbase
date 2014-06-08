@@ -17,7 +17,6 @@ package org.sisioh.dddbase.core.lifecycle
 
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
-import scala.reflect.ClassTag
 
 /**
  * [[org.sisioh.dddbase.core.model.Identifier]]を用いて

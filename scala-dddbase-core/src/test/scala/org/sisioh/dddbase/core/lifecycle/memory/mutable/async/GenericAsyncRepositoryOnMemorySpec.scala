@@ -2,15 +2,13 @@ package org.sisioh.dddbase.core.lifecycle.memory.mutable.async
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 
 class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
 

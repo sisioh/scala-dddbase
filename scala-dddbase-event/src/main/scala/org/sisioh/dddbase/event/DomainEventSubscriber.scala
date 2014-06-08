@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.event
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import scala.language.higherKinds
 
 /**
  * イベントの通知をハンドリングするためのトレイト。

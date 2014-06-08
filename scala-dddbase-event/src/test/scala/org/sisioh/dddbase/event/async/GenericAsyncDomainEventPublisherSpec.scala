@@ -1,14 +1,14 @@
 package org.sisioh.dddbase.event.async
 
 import java.util.UUID
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
 import org.sisioh.dddbase.core.model.Identifier
 import org.sisioh.dddbase.event.DomainEvent
 import org.specs2.mutable.Specification
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
-import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 class GenericAsyncDomainEventPublisherSpec extends Specification {
 

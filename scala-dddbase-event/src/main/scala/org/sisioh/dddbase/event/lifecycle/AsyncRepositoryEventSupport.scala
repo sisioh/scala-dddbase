@@ -1,11 +1,11 @@
 package org.sisioh.dddbase.event.lifecycle
 
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntity, AsyncRepository}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
 import org.sisioh.dddbase.event.mutable.async.GenericAsyncDomainEventPublisher
 import scala.concurrent.Future
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * 非同期型リポジトリにイベント管理機能を追加するためのトレイト。

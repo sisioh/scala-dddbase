@@ -15,8 +15,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import scala.language.higherKinds
 import org.sisioh.dddbase.core.model.{Identifier, Entity}
+import scala.language.higherKinds
 
 /**
  * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]の新しい状態とエンティティを保持する値オブジェクト。

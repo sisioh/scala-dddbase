@@ -1,16 +1,15 @@
 package org.sisioh.dddbase.core.lifecycle.forwarding.sync.wrapped
 
-import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.model._
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
-import scala.concurrent.duration.Duration
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.specs2.mock.Mockito
-import scala.concurrent.ExecutionContext
-import ExecutionContext.Implicits.global
 import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
+import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
+import org.sisioh.dddbase.core.model._
+import org.specs2.mock.Mockito
+import org.specs2.mutable.Specification
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
 

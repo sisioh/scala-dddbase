@@ -1,15 +1,15 @@
 package org.sisioh.dddbase.event.lifecycle
 
-import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.model.{Entity, EntityCloneable, Identifier}
 import java.util.UUID
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
-import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
-import scala.concurrent._
-import scala.concurrent.duration.Duration
-import ExecutionContext.Implicits.global
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 import org.sisioh.dddbase.core.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
+import org.sisioh.dddbase.core.lifecycle.memory.mutable.async.GenericAsyncRepositoryOnMemory
+import org.sisioh.dddbase.core.model.{Entity, EntityCloneable, Identifier}
+import org.sisioh.dddbase.event.async.AsyncDomainEventSubscriber
+import org.specs2.mutable.Specification
+import scala.concurrent._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 class AsyncRepositoryEventSupportSpec extends Specification {
 

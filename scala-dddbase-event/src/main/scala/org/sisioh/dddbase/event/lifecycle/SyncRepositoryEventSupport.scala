@@ -2,10 +2,9 @@ package org.sisioh.dddbase.event.lifecycle
 
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntity, SyncRepository}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
-import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
 import org.sisioh.dddbase.event.mutable.sync.GenericSyncDomainEventPublisher
+import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
 import scala.util.Try
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 
 /**
  * 同期型リポジトリにイベント管理機能を追加するためのトレイト。
@@ -48,7 +47,7 @@ trait SyncRepositoryEventSupport[ID <: Identifier[_], E <: Entity[ID]]
   protected def createEntityIOEvent(entity: E, eventType: EventType.Value): EntityIOEvent[ID, E]
 
   abstract override def store(entity: E)(implicit ctx: Ctx): Try[Result] = {
-    val result = super.store(entity).map{
+    val result = super.store(entity).map {
       resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Store)
         eventPublisher.publish(event)
@@ -57,7 +56,7 @@ trait SyncRepositoryEventSupport[ID <: Identifier[_], E <: Entity[ID]]
   }
 
   abstract override def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = {
-    val result = super.deleteBy(identifier).map{
+    val result = super.deleteBy(identifier).map {
       resultWithEntity =>
         val event = createEntityIOEvent(resultWithEntity.entity, EventType.Delete)
         eventPublisher.publish(event)

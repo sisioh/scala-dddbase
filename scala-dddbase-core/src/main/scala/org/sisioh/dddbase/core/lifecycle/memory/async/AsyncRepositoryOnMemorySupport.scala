@@ -15,12 +15,10 @@
  */
 package org.sisioh.dddbase.core.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
-import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
-import scala.concurrent._
 import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import scala.concurrent._
 
 /**
  * 非同期型オンメモリ不変リポジトリの骨格実装を提供するためのトレイト。
@@ -69,10 +67,10 @@ trait AsyncRepositoryOnMemorySupport
 
   override def deleteBy(identifier: ID)(implicit ctx: Ctx): Future[Result] = {
     implicit val executor = getExecutionContext(ctx)
-    resolveBy(identifier).flatMap {
+    resolveBy(identifier).map {
       entity =>
         val result = createInstance(entities - identifier)
-        Future.successful(AsyncResultWithEntity[This, ID, E](result.asInstanceOf[This], entity))
+        AsyncResultWithEntity[This, ID, E](result.asInstanceOf[This], entity)
     }
   }
 

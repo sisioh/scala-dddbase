@@ -6,11 +6,9 @@ import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericSyncReposito
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
-import ExecutionContext.Implicits.global
-import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
-import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 
 class AsyncWrappedSyncRepositorySpec extends Specification with Mockito {
 

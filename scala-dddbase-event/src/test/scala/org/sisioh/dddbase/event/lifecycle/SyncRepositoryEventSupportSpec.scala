@@ -1,19 +1,19 @@
 package org.sisioh.dddbase.event.lifecycle
 
-import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory
-import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
 import java.util.UUID
-import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
-import scala.util.{Success, Try}
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
+import org.sisioh.dddbase.core.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
+import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
+import org.sisioh.dddbase.event.sync.SyncDomainEventSubscriber
+import org.specs2.mutable.Specification
+import scala.util.{Success, Try}
 
 class SyncRepositoryEventSupportSpec extends Specification {
 
   class EntityImpl(val identifier: Identifier[UUID]) extends Entity[Identifier[UUID]]
-    with EntityCloneable[Identifier[UUID], EntityImpl]
-    with Ordered[EntityImpl] {
+  with EntityCloneable[Identifier[UUID], EntityImpl]
+  with Ordered[EntityImpl] {
     def compare(that: EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)
     }

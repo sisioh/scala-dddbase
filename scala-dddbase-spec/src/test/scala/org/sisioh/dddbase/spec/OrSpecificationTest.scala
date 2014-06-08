@@ -16,11 +16,11 @@
  */
 package org.sisioh.dddbase.spec
 
-import org.scalatest.mock.MockitoSugar
-import org.scalatest.junit.AssertionsForJUnit
 import org.junit.Test
-import org.mockito.Mockito._
 import org.mockito.Matchers._
+import org.mockito.Mockito._
+import org.scalatest.junit.AssertionsForJUnit
+import org.scalatest.mock.MockitoSugar
 
 class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
   /**

@@ -1,9 +1,9 @@
 package org.sisioh.dddbase.core.lifecycle.memory.sync
 
+import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
-import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mockito {
 
