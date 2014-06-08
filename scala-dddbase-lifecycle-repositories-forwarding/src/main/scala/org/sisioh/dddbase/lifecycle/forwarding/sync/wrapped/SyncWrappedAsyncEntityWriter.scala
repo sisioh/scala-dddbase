@@ -40,13 +40,13 @@ trait SyncWrappedAsyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  protected val timeOut: Duration
+  protected val timeout: Duration
 
   protected def createInstance(state: (Delegate#This, Option[E])): (This, Option[E])
 
   def store(entity: E)(implicit ctx: Ctx): Try[Result] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
-    val resultWithEntity = Await.result(delegate.store(entity), timeOut)
+    val resultWithEntity = Await.result(delegate.store(entity), timeout)
     val _entity = Some(resultWithEntity.entity.asInstanceOf[E])
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], _entity))
     SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)
@@ -54,7 +54,7 @@ trait SyncWrappedAsyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
 
   def deleteBy(identifier: ID)(implicit ctx: Ctx): Try[Result] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
-    val resultWithEntity = Await.result(delegate.deleteBy(identifier), timeOut)
+    val resultWithEntity = Await.result(delegate.deleteBy(identifier), timeout)
     val _entity = Some(resultWithEntity.entity.asInstanceOf[E])
     val result = createInstance((resultWithEntity.result.asInstanceOf[Delegate#This], _entity))
     SyncResultWithEntity[This, ID, E](result._1.asInstanceOf[This], result._2.get)

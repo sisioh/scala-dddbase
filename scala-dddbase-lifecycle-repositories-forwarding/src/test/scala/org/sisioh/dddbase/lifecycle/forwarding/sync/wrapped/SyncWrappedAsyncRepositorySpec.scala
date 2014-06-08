@@ -35,7 +35,7 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
       (this.asInstanceOf[This], state._2)
     }
 
-    protected val timeOut: Duration = Duration.Inf
+    protected val timeout: Duration = Duration.Inf
   }
 
   val id = Identifier(UUID.randomUUID)

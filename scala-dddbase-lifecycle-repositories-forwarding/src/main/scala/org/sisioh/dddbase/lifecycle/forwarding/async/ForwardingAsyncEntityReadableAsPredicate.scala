@@ -26,7 +26,7 @@ import scala.concurrent.Future
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait ForwardingAsyncEntityReaderAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
+trait ForwardingAsyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
   extends AsyncEntityReadableAsPredicate[ID, E] {
   this: AsyncEntityReader[ID, E] =>
 

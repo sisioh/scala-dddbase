@@ -37,16 +37,16 @@ trait SyncWrappedAsyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
 
   protected val delegate: Delegate
 
-  protected val timeOut: Duration
+  protected val timeout: Duration
 
   def resolveBy(identifier: ID)(implicit ctx: Ctx): Try[E] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
-    Await.result(delegate.resolveBy(identifier), timeOut)
+    Await.result(delegate.resolveBy(identifier), timeout)
   }
 
   def existBy(identifier: ID)(implicit ctx: Ctx): Try[Boolean] = Try {
     implicit val asyncEntityIOContext = getAsyncEntityIOContext(ctx)
-    Await.result(delegate.existBy(identifier), timeOut)
+    Await.result(delegate.existBy(identifier), timeout)
   }
 
 }

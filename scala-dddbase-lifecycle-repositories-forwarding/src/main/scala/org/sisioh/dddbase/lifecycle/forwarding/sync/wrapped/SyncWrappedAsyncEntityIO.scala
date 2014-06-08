@@ -32,7 +32,7 @@ trait SyncWrappedAsyncEntityIO extends SyncEntityIO {
    * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
    * @return [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]
    */
-  protected def getAsyncEntityIOContext(ctx: EntityIOContext[Try]): AsyncEntityIOContext =
+  protected def getAsyncEntityIOContext(ctx: Ctx): AsyncEntityIOContext =
     ctx match {
       case SyncWrappedAsyncEntityIOContext(async) => async
       case _ => throw new IllegalArgumentException(s"$ctx is type miss match. please set to SyncWrappedAsyncEntityIOContext.")

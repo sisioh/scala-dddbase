@@ -40,7 +40,7 @@ trait ForwardingSyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[I
   def filterBy
   (predicate: (E) => Boolean,
    index: Option[Int], maxEntities: Option[Int])
-  (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]] =
+  (implicit ctx: Ctx): Try[EntitiesChunk[ID, E]] =
     delegate.filterBy(predicate, index, maxEntities)
 
 }

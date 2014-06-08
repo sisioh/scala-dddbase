@@ -36,7 +36,6 @@ trait ForwardingAsyncRepository[ID <: Identifier[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-
 }
 
 
