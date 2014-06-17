@@ -7,7 +7,7 @@ object DDDBaseBuild extends Build {
   val junit = "junit" % "junit" % "4.8.1" % "test"
   val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
 
-  lazy val commonSettings = Defaults.defaultSettings ++ Seq(
+  lazy val commonSettings = Seq(
     organization := "org.sisioh",
     version := "0.1.27",
     scalaVersion := "2.10.4",
