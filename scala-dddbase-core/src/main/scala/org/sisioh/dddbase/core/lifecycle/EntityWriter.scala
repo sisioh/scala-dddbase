@@ -58,7 +58,7 @@ trait EntityWriter[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
    *         Failure
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def multiStore(entities: E*)(implicit ctx: Ctx): M[Results]
+  def storeMulti(entities: E*)(implicit ctx: Ctx): M[Results]
 
   /**
    * 更新メソッド。
@@ -96,7 +96,7 @@ trait EntityWriter[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def multiDeleteBy(identifiers: ID*)(implicit ctx: Ctx): M[Results]
+  def deleteByMulti(identifiers: ID*)(implicit ctx: Ctx): M[Results]
 
 }
 

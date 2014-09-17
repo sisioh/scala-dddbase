@@ -66,10 +66,10 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identifier(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.multiStore(entities: _*).flatMap {
+      val future = repository.storeMulti(entities: _*).flatMap {
         resultWithEntities =>
           val identities = resultWithEntities.entities.map(_.identifier)
-          resultWithEntities.result.multiExistBy(identities: _*)
+          resultWithEntities.result.existByMulti(identities: _*)
       }
       Await.ready(future, Duration.Inf)
       for (i <- 0 to 9) {
@@ -102,9 +102,9 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identifier(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.multiStore(entities: _*).flatMap {
+      val future = repository.storeMulti(entities: _*).flatMap {
         asyncRepos =>
-          asyncRepos.result.multiResolveBy(entities.map(_.identifier): _*)
+          asyncRepos.result.resolveByMulti(entities.map(_.identifier): _*)
       }
       Await.ready(future, Duration.Inf)
       for (i <- 0 to 9) {
@@ -123,9 +123,9 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identifier(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.multiStore(entities: _*).flatMap {
+      val future = repository.storeMulti(entities: _*).flatMap {
         asyncRepos =>
-          asyncRepos.result.multiResolveBy(entities.map(_.identifier): _*)
+          asyncRepos.result.resolveByMulti(entities.map(_.identifier): _*)
       }
       Await.ready(future, Duration.Inf)
       entities.foreach {
@@ -137,10 +137,10 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
             }, Duration.Inf
           ) must_== true
       }
-      Await.result(repository.multiResolveBy(entities.map(_.identifier): _*), Duration.Inf) must_== Seq.empty
-      val r = repository.multiStore(entities: _*).flatMap {
+      Await.result(repository.resolveByMulti(entities.map(_.identifier): _*), Duration.Inf) must_== Seq.empty
+      val r = repository.storeMulti(entities: _*).flatMap {
         resultWithEntities =>
-          resultWithEntities.result.multiResolveBy((0 to 9).map(e => Identifier(e)).toSeq: _*)
+          resultWithEntities.result.resolveByMulti((0 to 9).map(e => Identifier(e)).toSeq: _*)
       }
       Await.result(r, Duration.Inf).size must_!= 0
       future.value.get.get must_== entities
@@ -170,11 +170,11 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
         val id = Identifier(i)
         spy(new EntityImpl(id))
       }
-      val future = repository.multiStore(entities: _*).flatMap {
+      val future = repository.storeMulti(entities: _*).flatMap {
         case AsyncResultWithEntities(repos1, _) =>
-          repos1.multiDeleteBy(entities.map(_.identifier): _*).flatMap {
+          repos1.deleteByMulti(entities.map(_.identifier): _*).flatMap {
             case AsyncResultWithEntities(repos2, _) =>
-              repos2.multiExistBy(entities.map(_.identifier): _*)
+              repos2.existByMulti(entities.map(_.identifier): _*)
           }
       }
       Await.ready(future, Duration.Inf)
