@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{ResultWithEntities, EntityIOContext, EntityWriter}
+import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityWriter}
 import org.sisioh.dddbase.core.model.{Entity, Identity}
 import scala.util.Try
 
@@ -101,7 +101,7 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def deleteByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[ResultWithEntities[This, ID, E, Try]] =
+  def deleteByIdentities(identities: Seq[ID])(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] =
     forEachEntities(identities) {
       (repository, identity) =>
         repository.deleteByIdentity(identity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
@@ -116,7 +116,7 @@ trait SyncEntityWriter[ID <: Identity[_], E <: Entity[ID]]
    *         Failure:
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def delete(entities: Seq[E])(implicit ctx: EntityIOContext[Try]): Try[ResultWithEntities[This, ID, E, Try]] = {
+  def delete(entities: Seq[E])(implicit ctx: EntityIOContext[Try]): Try[SyncResultWithEntities[This, ID, E]] = {
     forEachEntities(entities) {
       (repository, entity) =>
         repository.delete(entity).asInstanceOf[Try[SyncResultWithEntity[This, ID, E]]]
