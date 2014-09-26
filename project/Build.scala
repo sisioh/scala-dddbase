@@ -9,7 +9,7 @@ object DDDBaseBuild extends Build {
 
   lazy val commonSettings = Seq(
     organization := "org.sisioh",
-    version := "0.1.28-SNAPSHOT",
+    version := "0.1.29",
     scalaVersion := "2.10.4",
     crossScalaVersions := Seq("2.10.4", "2.11.1"),
     libraryDependencies ++= Seq(junit, scalaTest, mockito, scalaTest, specs2),
