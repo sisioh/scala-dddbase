@@ -29,6 +29,9 @@ object SyncResultWithEntities {
   SyncResultWithEntities[R, ID, T] =
     SyncResultWithEntitiesImpl(result, entities)
 
+  def unapply[R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]]
+  (target: SyncResultWithEntities[R, ID, T]): Option[(R, Seq[T])] = Some(target.result, target.entities)
+
 }
 
 private[sync]
