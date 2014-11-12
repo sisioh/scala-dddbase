@@ -35,7 +35,6 @@ trait SyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
   type Result = SyncResultWithEntity[This, ID, E]
   type Results = SyncResultWithEntities[This, ID, E]
 
-
   protected def traverseWithThis[A](values: Seq[A])(processor: (This, A) => Try[Result])(implicit ctx: Ctx): Try[Results] = Try {
     val result = values.foldLeft[(This, Seq[E])]((this.asInstanceOf[This], Seq.empty[E])) {
       (resultWithEntities, task) =>
@@ -44,17 +43,5 @@ trait SyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
     }
     SyncResultWithEntities(result._1, result._2)
   }
-
-  def storeMulti(entities: E*)(implicit ctx: Ctx): Try[Results] =
-    traverseWithThis(entities) {
-      (repository, entity) =>
-        repository.store(entity).asInstanceOf[Try[Result]]
-    }
-
-  def deleteByMulti(identifiers: ID*)(implicit ctx: Ctx): Try[Results] =
-    traverseWithThis(identifiers) {
-      (repository, identifier) =>
-        repository.deleteBy(identifier).asInstanceOf[Try[Result]]
-    }
 
 }
