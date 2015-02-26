@@ -17,14 +17,27 @@ case class NotSerializableIdentifier(value: DummyValue) extends Identifier[Dummy
 
 case class SerializableIdentifier(value: Long) extends Identifier[Long]
 
-// with IdentitySerializable[Long]
+trait UserId extends Identifier[Long]
+
+case object EmptyUserId extends EmptyIdentifier with UserId
+
+case class UserIdImpl(value: Long) extends UserId
+
+// with IdentitySerializable[Long]]
 
 class IdentitySpec extends Specification {
   "Identity" should {
+    def getUserId(n: Int): Identifier[Long] = {
+      if (n % 2 ==0)
+        new UserIdImpl(1)
+      else
+        EmptyUserId
+    }
+    val id: Identifier[Long]  = getUserId(1)
 
     "throw EmptyIdentityException when get value" in {
       val identifier: Identifier[Long] = Identifier.empty
-      identifier.value must throwA[EmptyIdentityException]
+      identifier.value must throwA[EmptyIdentifierException]
     }
 
     "throw NotSerializableExcepption when serialization not serializable identifier" in {
