@@ -61,16 +61,15 @@ abstract class AbstractOrderedIdentifier[A <% Ordered[A], ID <: Identifier[A]]
 /**
  * 識別子の値が空だった場合の例外。
  */
-case class EmptyIdentityException() extends Exception
+case class EmptyIdentifierException() extends Exception
 
 /**
  * 空の識別子を表す値オブジェクト。
  */
-private[core]
 class EmptyIdentifier
   extends Identifier[Nothing] {
 
-  def value = throw EmptyIdentityException()
+  def value = throw EmptyIdentifierException()
 
   override def equals(obj: Any): Boolean = obj match {
     case that: EmptyIdentifier => this eq that
@@ -79,7 +78,7 @@ class EmptyIdentifier
 
   override def hashCode(): Int = 31 * 1
 
-  override def toString = "EmptyIdentity"
+  override def toString = "EmptyIdentifier"
 }
 
 object EmptyIdentifier extends EmptyIdentifier
@@ -97,7 +96,7 @@ class IdentifierImpl[A](val value: A)
 
   override def hashCode = 31 * value.##
 
-  override def toString = s"Identity($value)"
+  override def toString = s"Identifier($value)"
 
 }
 
