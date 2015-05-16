@@ -20,10 +20,10 @@ package org.sisioh.dddbase.spec
  * 仕様を表すモデル。
  *
  * <p>DDD本の中で説明している Specification パターンに則ったオブジェクトを表すインターフェイス。
- * {@link Specification}の実装は、 {@link AbstractSpecification}を基底クラスとして実装するとよい。
- * その場合、 {@link #isSatisfiedBy(Object)} を実装する必要しかない。</p>
+ * Specificationの実装は、 AbstractSpecification を基底クラスとして実装するとよい。
+ * その場合、 `#isSatisfiedBy(Object)` を実装する必要しかない。</p>
  *
- * @param <T> { @link Specification}の型
+ * @tparam T { @link Specification}の型
  * @author j5ik2o
  */
 trait Specification[T] {
@@ -33,7 +33,7 @@ trait Specification[T] {
    *
    * @param t Object to test.
    * @return { @code true} if { @code t} satisfies the specification.
-   * @throws IllegalArgumentException 引数に{ @code null}を与えた場合
+   * @throws `IllegalArgumentException` 引数に{ @code null}を与えた場合
    */
   def isSatisfiedBy(t: T): Boolean
 
@@ -49,7 +49,7 @@ trait Specification[T] {
    *
    * @param specification Specification to AND.
    * @return A new specification.
-   * @throws IllegalArgumentException 引数に{ @code null}を与えた場合
+   * @throws `IllegalArgumentException` 引数に{ @code null}を与えた場合
    */
   def and(specification: Specification[T]): Specification[T] = new AndSpecification(this, specification)
 
@@ -58,7 +58,7 @@ trait Specification[T] {
    *
    * @param specification Specification to OR.
    * @return A new specification.
-   * @throws IllegalArgumentException 引数に{ @code null}を与えた場合
+   * @throws `IllegalArgumentException` 引数に{ @code null}を与えた場合
    */
   def or(specification: Specification[T]): Specification[T] = new OrSpecification(this, specification)
 
