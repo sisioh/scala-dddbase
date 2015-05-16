@@ -1,7 +1,19 @@
 language: scala
-scala:
- - 2.10.4
- - 2.11.1
 
+scala:
+  - "2.11.6"
+  - "2.10.5"
+
+jdk:
+  - oraclejdk8
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
 script:
- - "sbt ++$TRAVIS_SCALA_VERSION test"
+  - sbt ++${TRAVIS_SCALA_VERSION} test
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
+  - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
+  - if [[ ${JAVA_HOME} == $(jdk_switcher home oraclejdk7) ]]; then rm -rf $HOME/.ivy2/cache ; fi
