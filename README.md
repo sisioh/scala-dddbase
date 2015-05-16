@@ -4,10 +4,31 @@
 
 If you use this library, you can develop applications based on Domain Driven Design advocated by Eric Evans.
 
-[![Build Status](https://travis-ci.org/sisioh/aws4s.png?branch=master)](https://travis-ci.org/sisioh/aws4s)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.sisioh/aws4s_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.sisioh/aws4s_2.11)
-[![Scaladoc](http://javadoc-badge.appspot.com/org.sisioh/aws4s.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.sisioh/aws4s_2.11)
-[![Reference Status](https://www.versioneye.com/java/org.sisioh:aws4s_2.11/reference_badge.svg?style=flat)](https://www.versioneye.com/java/org.sisioh:aws4s_2.11/references)
+[![Build Status](https://travis-ci.org/sisioh/scala-dddbase.png?branch=master)](https://travis-ci.org/sisioh/aws4s)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.sisioh/scala-dddbase_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.sisioh/aws4s_2.11)
+[![Scaladoc](http://javadoc-badge.appspot.com/org.sisioh/scala-dddbase.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.sisioh/aws4s_2.11)
+[![Reference Status](https://www.versioneye.com/java/org.sisioh:scala-dddbase_2.11/reference_badge.svg?style=flat)](https://www.versioneye.com/java/org.sisioh:aws4s_2.11/references)
+
+
+## Installation
+
+Add the following to your sbt build (Scala 2.10.x, and Scala 2.11.x):
+
+### Release Version
+
+```scala
+resolvers += "Sonatype OSS Release Repository" at "https://oss.sonatype.org/content/repositories/releases/"
+
+libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.6"
+```
+
+### Snapshot Version
+
+```scala
+resolvers += "Sonatype OSS Snapshot Repository" at "https://oss.sonatype.org/content/repositories/snapshots/"
+
+libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.7-SNAPSHOT"
+```
 
 ## Short url
 
