@@ -19,7 +19,7 @@ Add the following to your sbt build (Scala 2.10.x, and Scala 2.11.x):
 ```scala
 resolvers += "Sonatype OSS Release Repository" at "https://oss.sonatype.org/content/repositories/releases/"
 
-libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.6"
+libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.7"
 ```
 
 ### Snapshot Version
