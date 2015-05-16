@@ -39,6 +39,7 @@ releaseProcess := Seq[ReleaseStep](
   runTest,
   setReleaseVersion,
   commitReleaseVersion,
+  updateReadmeProcess,
   tagRelease,
   ReleaseStep(
     action = { state =>
