@@ -19,7 +19,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]による検索を行うためのトレイト。
+ * `EntitiesChunk`による検索を行うためのトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
@@ -33,7 +33,7 @@ trait EntityReadableAsChunk[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
    *
    * @param index 検索するチャンクのインデックス
    * @param maxEntities 1チャンクの件数
-   * @return Mにラップされた[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   * @return Mにラップされた`EntitiesChunk`
    */
   def resolveAsChunk(index: Int, maxEntities: Int)(implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
 

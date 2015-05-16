@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]のデコレータ実装
+ * `SyncEntityReader`のデコレータ実装
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

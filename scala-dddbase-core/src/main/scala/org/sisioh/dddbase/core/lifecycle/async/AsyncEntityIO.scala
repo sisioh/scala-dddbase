@@ -19,16 +19,16 @@ import org.sisioh.dddbase.core.lifecycle.EntityIO
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.EntityIO]]の非同期版。
+ * `org.sisioh.dddbase.core.lifecycle.EntityIO`の非同期版。
  */
 trait AsyncEntityIO extends EntityIO[Future] {
 
   /**
-   * [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]から
-   * [[scala.concurrent.ExecutionContext]]を取得する。
+   * `org.sisioh.dddbase.core.lifecycle.EntityIOContext`から
+   * `scala.concurrent.ExecutionContext`を取得する。
    *
-   * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
-   * @return [[scala.concurrent.ExecutionContext]]
+   * @param ctx `org.sisioh.dddbase.core.lifecycle.EntityIOContext`
+   * @return `scala.concurrent.ExecutionContext`
    */
   protected def getExecutionContext(ctx: Ctx): ExecutionContext = {
     ctx match {

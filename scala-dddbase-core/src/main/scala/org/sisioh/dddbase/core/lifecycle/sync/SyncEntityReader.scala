@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.{Failure, Success, Try}
 
 /**
- * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]
+ * 同期的に読み込むための`EntityReader`
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

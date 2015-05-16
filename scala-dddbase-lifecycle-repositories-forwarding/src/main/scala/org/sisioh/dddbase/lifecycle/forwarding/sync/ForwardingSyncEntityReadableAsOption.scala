@@ -15,13 +15,11 @@
  */
 package org.sisioh.dddbase.lifecycle.forwarding.sync
 
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableAsOption, SyncEntityReader}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
-import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableAsOption]]のデコレータ。
+ * `SyncEntityReadableAsOption`のデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

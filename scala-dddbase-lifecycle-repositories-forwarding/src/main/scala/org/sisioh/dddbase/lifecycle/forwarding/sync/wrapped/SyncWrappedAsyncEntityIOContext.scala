@@ -19,14 +19,14 @@ import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]を
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext]]として
+ * `org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext`を
+ * `org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext`として
  * ラップするトレイト。
  */
 trait SyncWrappedAsyncEntityIOContext extends SyncEntityIOContext {
 
   /**
-   * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]
+   * `org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext`
    */
   val asyncEntityIOContext: AsyncEntityIOContext
 
@@ -40,8 +40,8 @@ object SyncWrappedAsyncEntityIOContext {
   /**
    * ファクトリメソッド。
    *
-   * @param asyncEntityIOContext [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]
-   * @return [[org.sisioh.dddbase.lifecycle.forwarding.sync.wrapped.SyncWrappedAsyncEntityIOContext]]
+   * @param asyncEntityIOContext `org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext`
+   * @return `org.sisioh.dddbase.lifecycle.forwarding.sync.wrapped.SyncWrappedAsyncEntityIOContext`
    */
   def apply(asyncEntityIOContext: AsyncEntityIOContext): SyncWrappedAsyncEntityIOContext =
     new SyncWrappedEntityIOContextImpl(asyncEntityIOContext)
@@ -49,7 +49,7 @@ object SyncWrappedAsyncEntityIOContext {
   /**
    * エクストラクタメソッド。
    *
-   * @param syncWrappedEntityIOContext [[org.sisioh.dddbase.lifecycle.forwarding.sync.wrapped.SyncWrappedAsyncEntityIOContext]]
+   * @param syncWrappedEntityIOContext `org.sisioh.dddbase.lifecycle.forwarding.sync.wrapped.SyncWrappedAsyncEntityIOContext`
    * @return 構成要素
    */
   def unapply(syncWrappedEntityIOContext: SyncWrappedAsyncEntityIOContext): Option[(AsyncEntityIOContext)] =

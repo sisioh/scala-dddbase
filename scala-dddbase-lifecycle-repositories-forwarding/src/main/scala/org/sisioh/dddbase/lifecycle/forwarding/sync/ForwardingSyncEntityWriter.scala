@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityWriter]]のデリゲート。
+ * `SyncEntityWriter`のデリゲート。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

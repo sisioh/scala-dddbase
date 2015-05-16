@@ -19,9 +19,9 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]の新しい状態と複数のエンティティを保持する値オブジェクト。
+ * `EntityWriter`の新しい状態と複数のエンティティを保持する値オブジェクト。
  *
- * @tparam EW [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]の型
+ * @tparam EW `EntityWriter`の型
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  * @tparam M モナドの型

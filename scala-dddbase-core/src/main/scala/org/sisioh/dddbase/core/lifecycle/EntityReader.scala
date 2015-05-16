@@ -21,9 +21,7 @@ import scala.language.implicitConversions
 import scala.language.reflectiveCalls
 
 /**
- * [[org.sisioh.dddbase.core.model.Identifier]]を用いて
- * [[org.sisioh.dddbase.core.model.Entity]]
- * を読み込むための責務を表すトレイト。
+ * `Identifier` を用いて `Entity` を読み込むための責務を表すトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

@@ -23,9 +23,7 @@ import scala.concurrent.duration.Duration
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader]]を
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]として
- * ラップするためのデコレータ。
+ * `AsyncEntityReader`を`SyncEntityReader`としてラップするためのデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

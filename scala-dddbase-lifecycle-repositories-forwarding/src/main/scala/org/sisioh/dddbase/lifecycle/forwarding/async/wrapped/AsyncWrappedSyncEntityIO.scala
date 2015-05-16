@@ -16,18 +16,18 @@
 package org.sisioh.dddbase.lifecycle.forwarding.async.wrapped
 
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIO
-
+import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 /**
- * ラッパー用の[[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIO]]の実装。
+ * ラッパー用の`AsyncEntityIO`の実装。
  */
 trait AsyncWrappedSyncEntityIO extends AsyncEntityIO {
 
   /**
-   * [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]を
-   * [[org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext]]に変換する。
+   * `EntityIOContext`を
+   * `AsyncWrappedSyncEntityIOContext`に変換する。
    *
-   * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
-   * @return [[org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext]]
+   * @param ctx `EntityIOContext`
+   * @return `AsyncWrappedSyncEntityIOContext`
    */
   protected def getAsyncWrappedEntityIOContext(ctx: Ctx): AsyncWrappedSyncEntityIOContext =
     ctx match {

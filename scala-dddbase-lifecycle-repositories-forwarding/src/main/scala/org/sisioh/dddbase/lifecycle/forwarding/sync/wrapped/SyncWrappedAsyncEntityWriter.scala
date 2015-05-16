@@ -16,16 +16,15 @@
 package org.sisioh.dddbase.lifecycle.forwarding.sync.wrapped
 
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityWriter
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntity, SyncEntityWriter}
+import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityWriter, SyncResultWithEntity}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
+
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityWriter]]を
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityWriter]]として
- * ラップするためのデコレータ。
+ * `AsyncEntityWriter`を`SyncEntityWriter`としてラップするためのデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

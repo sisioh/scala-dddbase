@@ -22,9 +22,7 @@ import scala.concurrent._
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]を
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader]]として
- * ラップするためのデコレータ。
+ * `SyncEntityReader`を`AsyncEntityReader`としてラップするためのデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

@@ -35,7 +35,7 @@ trait Identifier[+A] extends Serializable {
 }
 
 /**
- * 順序をサポートした[[org.sisioh.dddbase.core.model.Identifier]]。
+ * 順序をサポートした`Identifier`。
  *
  * @tparam A 識別子の値を表す型
  * @tparam ID 識別子の型
@@ -44,7 +44,7 @@ trait OrderedIdentifier[A, ID <: Identifier[A]]
   extends Identifier[A] with Ordered[ID]
 
 /**
- * [[org.sisioh.dddbase.core.model.OrderedIdentifier]]の骨格実装。
+ * `OrderedIdentifier`の骨格実装。
  *
  * @tparam A 識別子の値を表す型
  * @tparam ID 識別子の型
@@ -106,25 +106,25 @@ class IdentifierImpl[A](val value: A)
 object Identifier {
 
   /**
-   * [[org.sisioh.dddbase.core.model.Identifier]]を生成する。
+   * `Identifier`を生成する。
    *
    * @param value 識別子の値
    * @tparam A 識別子の値の型
-   * @return [[org.sisioh.dddbase.core.model.Identifier]]
+   * @return `Identifier`
    */
   def apply[A](value: A): Identifier[A] = new IdentifierImpl(value)
 
   /**
-   * 空の[[org.sisioh.dddbase.core.model.Identifier]]を返す。
+   * 空の`Identifier`を返す。
    *
-   * @return [[org.sisioh.dddbase.core.model.Identifier]]
+   * @return `Identifier`
    */
   def empty[A]: Identifier[A] = EmptyIdentifier
 
   /**
    * 抽出子メソッド。
    *
-   * @param v [[org.sisioh.dddbase.core.model.Identifier]]
+   * @param v `Identifier`
    * @tparam A 識別子の値の型
    * @return 識別子の値
    */

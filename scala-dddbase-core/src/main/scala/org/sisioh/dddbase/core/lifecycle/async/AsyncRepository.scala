@@ -21,9 +21,9 @@ import org.sisioh.dddbase.core.model.{Identifier, Entity}
 import scala.concurrent._
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.lifecycle.Repository]]。
+ * 非同期版`org.sisioh.dddbase.core.lifecycle.Repository`。
  *
- * @see [[org.sisioh.dddbase.core.lifecycle.Repository]]
+ * @see `org.sisioh.dddbase.core.lifecycle.Repository`
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

@@ -7,7 +7,7 @@ import org.sisioh.dddbase.spec.Specification
 import scala.util.Try
 
 /**
- * 同期I/O[[org.sisioh.dddbase.core.EntityReadableBySpecification]]
+ * 同期I/O`EntityReadableBySpecification`
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -17,9 +17,9 @@ trait SyncEntityReadableBySpecification[ID <: Identifier[_], T <: Entity[ID]]
   this: SyncEntityReader[ID, T] =>
 
   /**
-   * [[org.sisioh.dddbase.spec.Specification]]に該当したエンティティを取得する。
+   * `Specification` に該当したエンティティを取得する。
    *
-   * @param specification [[org.sisioh.dddbase.spec.Specification]]
+   * @param specification `Specification`
    * @return Success:
    *         チャンク
    *         Failure:

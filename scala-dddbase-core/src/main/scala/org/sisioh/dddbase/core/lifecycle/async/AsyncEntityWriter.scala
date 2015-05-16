@@ -20,9 +20,9 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent._
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityWriter]]。
+ * 非同期版`org.sisioh.dddbase.core.lifecycle.EntityWriter`。
  *
- * @see [[org.sisioh.dddbase.core.lifecycle.EntityWriter]]
+ * @see `org.sisioh.dddbase.core.lifecycle.EntityWriter`
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

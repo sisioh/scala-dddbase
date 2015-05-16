@@ -20,12 +20,12 @@ import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 import scala.concurrent.ExecutionContext
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]のラッパー版。
+ * `AsyncEntityIOContext`のラッパー版。
  */
 trait AsyncWrappedSyncEntityIOContext extends AsyncEntityIOContext {
 
   /**
-   * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext]]
+   * `SyncEntityIOContext`
    */
   val syncEntityIOContext: SyncEntityIOContext
 
@@ -39,9 +39,9 @@ object AsyncWrappedSyncEntityIOContext {
   /**
    * ファクトリメソッド。
    *
-   * @param syncEntityIOContext [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext]]
-   * @param executor [[scala.concurrent.ExecutionContext]]
-   * @return [[org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext]]
+   * @param syncEntityIOContext `SyncEntityIOContext`
+   * @param executor `ExecutionContext`
+   * @return `AsyncWrappedSyncEntityIOContext`
    */
   def apply(syncEntityIOContext: SyncEntityIOContext = SyncEntityIOContext)
            (implicit executor: ExecutionContext): AsyncWrappedSyncEntityIOContext =
@@ -50,7 +50,7 @@ object AsyncWrappedSyncEntityIOContext {
   /**
    * エクストラクタメソッド。
    *
-   * @param asyncWrappedEntityIOContext [[org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext]]
+   * @param asyncWrappedEntityIOContext `AsyncWrappedSyncEntityIOContext`
    * @return 構成要素
    */
   def unapply(asyncWrappedEntityIOContext: AsyncWrappedSyncEntityIOContext): Option[(SyncEntityIOContext)] =

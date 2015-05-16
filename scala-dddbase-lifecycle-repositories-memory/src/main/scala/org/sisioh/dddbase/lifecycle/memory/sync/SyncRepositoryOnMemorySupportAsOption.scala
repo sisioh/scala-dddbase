@@ -22,7 +22,7 @@ import scala.Some
 import scala.util._
 
 /**
- * [[org.sisioh.dddbase.lifecycle.memory.sync.SyncRepositoryOnMemorySupport]]にOption型のサポートを追加するトレイト。
+ * `SyncRepositoryOnMemorySupport`にOption型のサポートを追加するトレイト。
  *
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型

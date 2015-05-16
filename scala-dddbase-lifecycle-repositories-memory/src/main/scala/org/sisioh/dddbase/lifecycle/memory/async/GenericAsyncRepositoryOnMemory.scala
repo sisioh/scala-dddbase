@@ -53,10 +53,10 @@ object GenericAsyncRepositoryOnMemory {
   }
 
   /**
-   * [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]を生成する。
+   * `org.sisioh.dddbase.core.lifecycle.EntityIOContext`を生成する。
    *
    * @param executor `ExecutionContext`
-   * @return [[org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext]]
+   * @return `org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext`
    */
   def createEntityIOContext(implicit executor: ExecutionContext) = AsyncWrappedSyncEntityIOContext()
 
@@ -66,7 +66,7 @@ object GenericAsyncRepositoryOnMemory {
    * @param entities マップ
    * @tparam ID 識別子の型
    * @tparam E エンティティの型
-   * @return [[org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory]]
+   * @return `org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory`
    */
   def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   (entities: Map[ID, E]) =
@@ -75,7 +75,7 @@ object GenericAsyncRepositoryOnMemory {
   /**
    * エクストラクタメソッド。
    *
-   * @param repository [[org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory]]
+   * @param repository `org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory`
    * @tparam ID 識別子の型
    * @tparam E エンティティの型
    * @return 構成要素

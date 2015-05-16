@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 
 /**
- * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableAsChunk]]。
+ * 同期的に読み込むための`EntityReadableAsChunk`。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
@@ -30,7 +30,7 @@ trait SyncEntityReadableAsChunk[ID <: Identifier[_], E <: Entity[ID]]
   this: SyncEntityReader[ID, E] =>
 
   /**
-   * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   * @return Success: `EntitiesChunk`
    *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
   def resolveAsChunk(index: Int, maxEntities: Int)

@@ -20,13 +20,13 @@ import org.junit.Test
 import org.scalatest.junit.AssertionsForJUnit
 
 /**
- * [[org.sisioh.dddbase.spec.Specification]]のテストクラス。
+ * `org.sisioh.dddbase.spec.Specification`のテストクラス。
  */
 class SpecificationTest extends AssertionsForJUnit {
   /**
-   * [[org.sisioh.dddbase.spec.Specification# a n d ( S p e c i f i c a t i o n )]]
-   * [[org.sisioh.dddbase.spec.Specification# o r ( S p e c i f i c a t i o n )]]
-   * [[org.sisioh.dddbase.spec.Specification# n o t]]のテスト。
+   * `org.sisioh.dddbase.spec.Specification# a n d ( S p e c i f i c a t i o n )`
+   * `org.sisioh.dddbase.spec.Specification# o r ( S p e c i f i c a t i o n )`
+   * `org.sisioh.dddbase.spec.Specification# n o t`のテスト。
    *
    * @throws Exception 例外が発生した場合
    */

@@ -21,7 +21,7 @@ package org.sisioh.dddbase.spec
  *
  * <p>2つの `Specification` の論理和をとる `Specification` 実装クラス。</p>
  *
- * @tparam T [[org.sisioh.dddbase.spec.OrSpecification]]の型
+ * @tparam T `OrSpecification`の型
  * @author j5ik2o
  */
 class OrSpecification[T](private[spec] val spec1: Specification[T],

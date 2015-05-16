@@ -19,7 +19,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.language.higherKinds
 
 /**
- * エンティティを`Option`でラップして返すための[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
+ * エンティティを`Option`でラップして返すための`EntityReader`。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
@@ -30,7 +30,7 @@ trait EntityReadableAsOption[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
   /**
    * 識別子に該当するエンティティを解決する。
    *
-   * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]] `resolve`
+   * @see `EntityReader` `resolve`
    *
    * @param identifier 識別子
    * @return Mと`Option`でラップされたエンティティ。エンティティがない場合はNoneとなる。

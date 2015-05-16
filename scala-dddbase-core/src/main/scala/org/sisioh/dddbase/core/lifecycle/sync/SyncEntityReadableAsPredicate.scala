@@ -16,12 +16,13 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableAsPredicate, EntitiesChunk}
+import org.sisioh.dddbase.core.lifecycle.{EntitiesChunk, EntityIOContext, EntityReadableAsPredicate, RepositoryException}
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
+
 import scala.util.Try
 
 /**
- * 同期的に読み込むための[[org.sisioh.dddbase.core.lifecycle.EntityReadableAsPredicate]]。
+ * 同期的に読み込むための`EntityReadableAsPredicate`。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
@@ -31,8 +32,8 @@ trait SyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
   this: SyncEntityReader[ID, E] =>
 
   /**
-   * @return Success: [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
-   *         Faliure: [[org.sisioh.dddbase.core.lifecycle.RepositoryException]]
+   * @return Success: `EntitiesChunk`
+   *         Faliure: `RepositoryException`
    */
   def filterBy
   (predicate: E => Boolean,

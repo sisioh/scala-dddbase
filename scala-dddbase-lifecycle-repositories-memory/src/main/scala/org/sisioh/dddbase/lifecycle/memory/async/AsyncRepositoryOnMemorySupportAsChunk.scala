@@ -21,8 +21,7 @@ import org.sisioh.dddbase.core.model._
 import scala.concurrent._
 
 /**
- * [[org.sisioh.dddbase.lifecycle.memory.async.AsyncRepositoryOnMemorySupport]]に
- * [[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]のための機能を追加するトレイト。
+ * `AsyncRepositoryOnMemorySupport`に`EntitiesChunk`のための機能を追加するトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

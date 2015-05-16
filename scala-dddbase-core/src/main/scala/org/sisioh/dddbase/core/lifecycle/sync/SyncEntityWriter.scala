@@ -21,8 +21,8 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.model.Identifier]]を用いて
- * [[org.sisioh.dddbase.core.model.Entity]]
+ * `Identifier`を用いて
+ * `Entity`
  * を書き込むための責務を表すインターフェイス。
  *
  * @tparam ID 識別子の型

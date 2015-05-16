@@ -18,7 +18,6 @@ package org.sisioh.dddbase.lifecycle.forwarding.sync.wrapped
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIO
-import scala.util.Try
 
 /**
  *
@@ -26,11 +25,12 @@ import scala.util.Try
 trait SyncWrappedAsyncEntityIO extends SyncEntityIO {
 
   /**
-   * [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]から
-   * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]を取得する。
+   * `EntityIOContext`から
+   * `AsyncEntityIOContext`を取得する。
+
    *
-   * @param ctx [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]
-   * @return [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]
+   * @param ctx `EntityIOContext`
+   * @return `AsyncEntityIOContext`
    */
   protected def getAsyncEntityIOContext(ctx: Ctx): AsyncEntityIOContext =
     ctx match {

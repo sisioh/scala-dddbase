@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.util.{Success, Try}
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader]]に
+ * `SyncEntityReader`に
  * `scala.collection.Iterable`を実装するためのトレイト。
  *
  * @tparam ID 識別子の型

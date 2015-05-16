@@ -33,7 +33,7 @@ trait EntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
    * @param predicate 述語関数
    * @param index チャンクのインデックス
    * @param maxEntities 1チャンク内の件数
-   * @return モナドにラップした[[org.sisioh.dddbase.core.lifecycle.EntitiesChunk]]
+   * @return モナドにラップした`org.sisioh.dddbase.core.lifecycle.EntitiesChunk`
    */
   def filterBy(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
               (implicit ctx: Ctx): M[EntitiesChunk[ID, E]]

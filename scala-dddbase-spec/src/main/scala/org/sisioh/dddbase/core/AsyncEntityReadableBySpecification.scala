@@ -7,7 +7,7 @@ import org.sisioh.dddbase.spec.Specification
 import scala.concurrent.Future
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.SyncEntityReadableBySpecification]]。
+ * 非同期版`SyncEntityReadableBySpecification`。
  *
  * @tparam ID 識別子の型
  * @tparam T エンティティの型
@@ -17,9 +17,9 @@ trait AsyncEntityReadableBySpecification[ID <: Identifier[_], T <: Entity[ID]]
   this: AsyncEntityReader[ID, T] =>
 
   /**
-   * [[org.sisioh.dddbase.spec.Specification]]に該当したエンティティを取得する。
+   * `Specification` に該当したエンティティを取得する。
    *
-   * @param specification [[org.sisioh.dddbase.spec.Specification]]
+   * @param specification `Specification`
    * @param index チャンクのインデックス
    * @param maxEntities 1チャンク内の件数
    * @return Success:

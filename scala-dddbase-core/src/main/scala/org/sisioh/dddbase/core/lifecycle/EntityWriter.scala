@@ -16,12 +16,11 @@
 package org.sisioh.dddbase.core.lifecycle
 
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
+
 import scala.language.higherKinds
 
 /**
- * [[org.sisioh.dddbase.core.model.Identifier]]を用いて
- * [[org.sisioh.dddbase.core.model.Entity]]
- * を書き込むための責務を表すトレイト。
+ * `Identifier`を用いて`Entity`を書き込むための責務を表すトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

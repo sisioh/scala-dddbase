@@ -20,9 +20,9 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent.Future
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReader]]。
+ * 非同期版`org.sisioh.dddbase.core.lifecycle.EntityReader`。
  *
- * @see [[org.sisioh.dddbase.core.lifecycle.EntityReader]]
+ * @see `org.sisioh.dddbase.core.lifecycle.EntityReader`
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

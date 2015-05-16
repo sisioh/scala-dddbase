@@ -19,12 +19,12 @@ import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 import scala.concurrent.{Future, ExecutionContext}
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.EntityIOContext]]の非同期版。
+ * `org.sisioh.dddbase.core.lifecycle.EntityIOContext`の非同期版。
  */
 trait AsyncEntityIOContext extends EntityIOContext[Future] {
 
   /**
-   * [[scala.concurrent.ExecutionContext]]
+   * `scala.concurrent.ExecutionContext`
    */
   val executor: ExecutionContext
 
@@ -38,8 +38,8 @@ object AsyncEntityIOContext {
   /**
    * ファクトリメソッド。
    *
-   * @param executor [[scala.concurrent.ExecutionContext]]
-   * @return [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]
+   * @param executor `scala.concurrent.ExecutionContext`
+   * @return `org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext`
    */
   def apply()(implicit executor: ExecutionContext): AsyncEntityIOContext =
     new AsyncEntityIOContextImpl()
@@ -47,7 +47,7 @@ object AsyncEntityIOContext {
   /**
    * エクストラクタメソッド。
    *
-   * @param asyncEntityIOContext [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext]]
+   * @param asyncEntityIOContext `org.sisioh.dddbase.core.lifecycle.async.AsyncEntityIOContext`
    * @return 構成要素
    */
   def unapply(asyncEntityIOContext: AsyncEntityIOContext): Option[(ExecutionContext)] =

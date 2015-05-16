@@ -21,9 +21,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent._
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityWriter]]を
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityWriter]]として
- * ラップするためのデコレータ。
+ * `SyncEntityWriter`を`AsyncEntityWriter`としてラップするためのデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

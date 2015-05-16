@@ -20,7 +20,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
 import scala.concurrent.Future
 
 /**
- * 非同期版[[org.sisioh.dddbase.core.lifecycle.EntityReadableAsChunk]]。
+ * 非同期版`org.sisioh.dddbase.core.lifecycle.EntityReadableAsChunk`。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

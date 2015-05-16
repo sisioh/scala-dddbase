@@ -15,13 +15,13 @@
  */
 package org.sisioh.dddbase.lifecycle.forwarding.async
 
-import org.sisioh.dddbase.core.lifecycle.EntityIOContext
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
+
 import scala.concurrent.Future
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader]]のデコレータ。
+ * `AsyncEntityReader`のデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

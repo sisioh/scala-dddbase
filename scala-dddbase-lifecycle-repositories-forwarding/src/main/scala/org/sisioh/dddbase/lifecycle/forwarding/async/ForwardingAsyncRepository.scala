@@ -19,7 +19,7 @@ import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
 import org.sisioh.dddbase.core.model.{Entity, Identifier}
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.async.AsyncRepository]]のデコレータ。
+ * `AsyncRepository`のデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

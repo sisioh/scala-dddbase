@@ -21,8 +21,7 @@ import org.sisioh.dddbase.core.model._
 import scala.util._
 
 /**
- * [[org.sisioh.dddbase.lifecycle.memory.sync.SyncRepositoryOnMemorySupport]]に
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableAsPredicate]]ための機能を追加するトレイト。
+ * `SyncRepositoryOnMemorySupport`に`SyncEntityReadableAsPredicate`のための機能を追加するトレイト。
  *
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型

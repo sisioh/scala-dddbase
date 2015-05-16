@@ -49,7 +49,7 @@ object GenericSyncRepositoryOnMemory {
    *
    * @tparam ID 識別子の型
    * @tparam E エンティティの型
-   * @return [[org.sisioh.dddbase.lifecycle.memory.mutable.sync.GenericSyncRepositoryOnMemory]]
+   * @return `GenericSyncRepositoryOnMemory`
    */
   def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   (entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty[ID, E]) =
@@ -58,7 +58,7 @@ object GenericSyncRepositoryOnMemory {
   /**
    * エクストラクタメソッド。
    *
-   * @param repository [[org.sisioh.dddbase.lifecycle.memory.sync.GenericSyncRepositoryOnMemory]]
+   * @param repository `GenericSyncRepositoryOnMemory`
    * @tparam ID 識別子の型
    * @tparam E エンティティの型
    * @return 構成要素

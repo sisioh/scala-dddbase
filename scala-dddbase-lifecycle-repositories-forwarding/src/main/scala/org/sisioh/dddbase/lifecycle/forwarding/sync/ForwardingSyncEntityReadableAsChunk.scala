@@ -21,7 +21,7 @@ import org.sisioh.dddbase.core.model.{Identifier, Entity}
 import scala.util.Try
 
 /**
- * [[org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReadableAsChunk]]のデコレータ。
+ * `SyncEntityReadableAsChunk`のデコレータ。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型

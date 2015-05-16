@@ -21,7 +21,7 @@ import org.sisioh.dddbase.core.model._
 import scala.concurrent._
 
 /**
- * [[org.sisioh.dddbase.lifecycle.memory.async.AsyncRepositoryOnMemorySupport]]に全件取得のための機能を追加するトレイト。
+ * `AsyncRepositoryOnMemorySupport`に全件取得のための機能を追加するトレイト。
  *
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
