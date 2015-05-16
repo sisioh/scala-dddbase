@@ -1,3 +1,4 @@
+import xerial.sbt.Sonatype.SonatypeKeys._
 import sbt.Keys._
 import sbt._
 
@@ -8,10 +9,10 @@ object DDDBaseBuild extends Build {
   val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
 
   lazy val commonSettings = Defaults.defaultSettings ++ Seq(
+    sonatypeProfileName := "org.sisioh",
     organization := "org.sisioh",
-    version := "0.2.1-SNAPSHOT",
-    scalaVersion := "2.10.4",
-    crossScalaVersions := Seq("2.10.4", "2.11.4"),
+    scalaVersion := "2.10.5",
+    crossScalaVersions := Seq("2.10.5", "2.11.6"),
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
     shellPrompt := {
       "sbt (%s)> " format projectId(_)
@@ -20,14 +21,6 @@ object DDDBaseBuild extends Build {
     publishArtifact in Test := false,
     pomIncludeRepository := {
       _ => false
-    },
-    publishTo <<= version {
-      (v: String) =>
-        val nexus = "https://oss.sonatype.org/"
-        if (v.trim.endsWith("SNAPSHOT"))
-          Some("snapshots" at nexus + "content/repositories/snapshots")
-        else
-          Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
     pomExtra := (
       <url>https://github.com/sisioh/sisioh-dddbase</url>
