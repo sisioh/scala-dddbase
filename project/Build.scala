@@ -42,7 +42,11 @@ object DDDBaseBuild extends Build {
             <url>http://j5ik2o.me</url>
           </developer>
         </developers>
-      )
+      ),
+    credentials := {
+      val ivyCredentials = (baseDirectory in LocalRootProject).value / ".credentials"
+      Credentials(ivyCredentials) :: Nil
+    }
   )
 
   val root = Project(
