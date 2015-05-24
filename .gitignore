@@ -5,3 +5,5 @@ target/
 .idea*
 .settings
 *.iml
+
+.credentials
