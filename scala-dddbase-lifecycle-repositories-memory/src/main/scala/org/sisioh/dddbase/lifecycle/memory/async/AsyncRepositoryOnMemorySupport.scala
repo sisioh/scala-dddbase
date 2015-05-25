@@ -17,7 +17,7 @@ package org.sisioh.dddbase.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.async.AsyncResultWithEntity
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
 import scala.concurrent._
 
 /**
@@ -30,9 +30,8 @@ import scala.concurrent._
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncRepositoryOnMemorySupport
-[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncRepositoryOnMemory[ID, E] {
+trait AsyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+    extends AsyncRepositoryOnMemory[ID, E] {
 
   protected def createInstance(entities: Map[ID, E]): This
 
@@ -77,6 +76,5 @@ trait AsyncRepositoryOnMemorySupport
         AsyncResultWithEntity[This, ID, E](result.asInstanceOf[This], entity)
     }
   }
-
 
 }

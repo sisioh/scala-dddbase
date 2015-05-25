@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.Repository
-import org.sisioh.dddbase.core.model.{Identifier, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, Entity }
 import scala.util._
 
 /**
@@ -31,14 +31,11 @@ import scala.util._
  * @tparam ID エンティティの識別子の型
  */
 trait SyncRepository[ID <: Identifier[_], E <: Entity[ID]]
-  extends Repository[ID, E, Try]
-  with SyncEntityReader[ID, E]
-  with SyncEntityWriter[ID, E] {
+    extends Repository[ID, E, Try]
+    with SyncEntityReader[ID, E]
+    with SyncEntityWriter[ID, E] {
 
   type This <: SyncRepository[ID, E]
 
 }
-
-
-
 

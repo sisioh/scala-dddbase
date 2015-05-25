@@ -17,7 +17,7 @@ package org.sisioh.dddbase.lifecycle.forwarding.async.wrapped
 
 import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
 import org.sisioh.dddbase.core.lifecycle.sync.SyncRepository
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 
 /**
  * `SyncRepository`を`AsyncRepository`としてラップするためのデコレータ。
@@ -26,9 +26,9 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
  * @tparam E エンティティの型
  */
 trait AsyncWrappedSyncRepository[ID <: Identifier[_], E <: Entity[ID]]
-  extends AsyncWrappedSyncEntityReader[ID, E]
-  with AsyncWrappedSyncEntityWriter[ID, E]
-  with AsyncRepository[ID, E] {
+    extends AsyncWrappedSyncEntityReader[ID, E]
+    with AsyncWrappedSyncEntityWriter[ID, E]
+    with AsyncRepository[ID, E] {
 
   type Delegate <: SyncRepository[ID, E]
 

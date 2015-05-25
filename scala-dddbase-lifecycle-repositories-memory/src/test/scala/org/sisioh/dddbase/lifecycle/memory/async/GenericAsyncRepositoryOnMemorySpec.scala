@@ -2,7 +2,7 @@ package org.sisioh.dddbase.lifecycle.memory.async
 
 import concurrent.duration.Duration
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntities, AsyncResultWithEntity}
+import org.sisioh.dddbase.core.lifecycle.async.{ AsyncResultWithEntities, AsyncResultWithEntity }
 import org.sisioh.dddbase.core.model._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
@@ -14,9 +14,9 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
   sequential
 
   class EntityImpl(val identifier: Identifier[Int])
-    extends Entity[Identifier[Int]]
-    with EntityCloneable[Identifier[Int], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[Int]]
+      with EntityCloneable[Identifier[Int], EntityImpl]
+      with Ordered[EntityImpl] {
 
     def compare(that: GenericAsyncRepositoryOnMemorySpec.this.type#EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)

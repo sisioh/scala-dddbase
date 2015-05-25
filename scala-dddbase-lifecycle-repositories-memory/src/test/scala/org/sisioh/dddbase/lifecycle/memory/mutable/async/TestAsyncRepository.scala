@@ -5,6 +5,6 @@ import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
 import org.sisioh.dddbase.core.model.Identifier
 
 trait TestAsyncRepository
-  extends AsyncRepository[Identifier[UUID], TestEntity] {
+    extends AsyncRepository[Identifier[UUID], TestEntity] {
 
 }

@@ -57,8 +57,6 @@ object SyncWrappedAsyncEntityIOContext {
 
 }
 
-private[wrapped]
-case class SyncWrappedEntityIOContextImpl
-(asyncEntityIOContext: AsyncEntityIOContext)
+private[wrapped] case class SyncWrappedEntityIOContextImpl(asyncEntityIOContext: AsyncEntityIOContext)
   extends SyncWrappedAsyncEntityIOContext
 

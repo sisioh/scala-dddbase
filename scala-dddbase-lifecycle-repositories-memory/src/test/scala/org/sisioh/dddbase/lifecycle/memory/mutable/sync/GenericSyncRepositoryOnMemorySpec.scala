@@ -13,9 +13,9 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
   sequential
 
   class EntityImpl(val identifier: Identifier[UUID])
-    extends Entity[Identifier[UUID]]
-    with EntityCloneable[Identifier[UUID], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[UUID]]
+      with EntityCloneable[Identifier[UUID], EntityImpl]
+      with Ordered[EntityImpl] {
     def compare(that: GenericSyncRepositoryOnMemorySpec.this.type#EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)
     }
@@ -52,8 +52,8 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     }
     "resolveOption a entity by using identifier" in {
       class TestSyncRepository
-        extends AbstractSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]
-        with SyncRepositoryOnMemorySupportAsOption[Identifier[UUID], EntityImpl] {
+          extends AbstractSyncRepositoryOnMemory[Identifier[UUID], EntityImpl]
+          with SyncRepositoryOnMemorySupportAsOption[Identifier[UUID], EntityImpl] {
         type This = TestSyncRepository
 
       }

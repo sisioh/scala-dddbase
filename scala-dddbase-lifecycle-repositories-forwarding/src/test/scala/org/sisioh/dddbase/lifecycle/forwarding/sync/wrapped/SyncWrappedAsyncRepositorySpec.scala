@@ -4,7 +4,7 @@ import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.model._
 import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
-import org.sisioh.dddbase.lifecycle.forwarding.{TestAsyncMutableRepository, TestAsyncRepository}
+import org.sisioh.dddbase.lifecycle.forwarding.{ TestAsyncMutableRepository, TestAsyncRepository }
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import scala.concurrent.ExecutionContext
@@ -14,18 +14,16 @@ import scala.concurrent.duration.Duration
 class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identifier: Identifier[UUID])
-    extends Entity[Identifier[UUID]]
-    with EntityCloneable[Identifier[UUID], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[UUID]]
+      with EntityCloneable[Identifier[UUID], EntityImpl]
+      with Ordered[EntityImpl] {
     def compare(that: EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)
     }
   }
 
-  class ForwardingSyncWrappedRepositoryImpl
-  (protected val delegate: TestAsyncMutableRepository[Identifier[UUID], EntityImpl])
-  (implicit val executor: ExecutionContext)
-    extends SyncWrappedAsyncRepository[Identifier[UUID], EntityImpl] {
+  class ForwardingSyncWrappedRepositoryImpl(protected val delegate: TestAsyncMutableRepository[Identifier[UUID], EntityImpl])(implicit val executor: ExecutionContext)
+      extends SyncWrappedAsyncRepository[Identifier[UUID], EntityImpl] {
 
     type This = ForwardingSyncWrappedRepositoryImpl
 
@@ -90,6 +88,5 @@ class SyncWrappedAsyncRepositorySpec extends Specification with Mockito {
       repository.deleteBy(id).get must throwA[EntityNotFoundException]
     }
   }
-
 
 }

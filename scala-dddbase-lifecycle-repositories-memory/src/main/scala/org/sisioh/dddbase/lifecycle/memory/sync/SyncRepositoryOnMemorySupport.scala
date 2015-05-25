@@ -18,7 +18,7 @@ package org.sisioh.dddbase.lifecycle.memory.sync
 import collection.Iterator
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -29,10 +29,8 @@ import scala.util.Try
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemorySupport
-[ID <: Identifier[_],
-E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemory[ID, E] {
+trait SyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+    extends SyncRepositoryOnMemory[ID, E] {
 
   protected def createInstance(entities: Map[ID, E]): This
 

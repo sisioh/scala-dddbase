@@ -15,8 +15,8 @@
  */
 package org.sisioh.dddbase.lifecycle.forwarding.sync
 
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityWriter, SyncResultWithEntity}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.sync.{ SyncEntityWriter, SyncResultWithEntity }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 
 /**
@@ -26,7 +26,7 @@ import scala.util.Try
  * @tparam E エンティティの型
  */
 trait ForwardingSyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
-  extends SyncEntityWriter[ID, E] {
+    extends SyncEntityWriter[ID, E] {
 
   type This <: ForwardingSyncEntityWriter[ID, E]
 

@@ -16,8 +16,8 @@
  */
 package org.sisioh.dddbase.lifecycle.memory.mutable.async
 
-import org.sisioh.dddbase.lifecycle.memory.async.{AsyncRepositoryOnMemory => AROM}
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.lifecycle.memory.async.{ AsyncRepositoryOnMemory => AROM }
+import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
 
 /**
  * 非同期型オンメモリ可変リポジトリのためのトレイト。
@@ -25,8 +25,6 @@ import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncRepositoryOnMemory
-[ID <: Identifier[_],
-E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+trait AsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
   extends AROM[ID, E]
 

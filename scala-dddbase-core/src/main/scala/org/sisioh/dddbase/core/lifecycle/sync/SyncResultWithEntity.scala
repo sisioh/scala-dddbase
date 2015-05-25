@@ -16,27 +16,20 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.ResultWithEntity
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 
 trait SyncResultWithEntity[+R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]]
   extends ResultWithEntity[R, ID, T, Try]
 
-
 object SyncResultWithEntity {
 
-  def apply[R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]]
-  (result: R, entity: T):
-  SyncResultWithEntity[R, ID, T] =
+  def apply[R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]](result: R, entity: T): SyncResultWithEntity[R, ID, T] =
     SyncResultWithEntityImpl(result, entity)
 
-  def unapply[R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]]
-  (resultWithEntity: SyncResultWithEntity[R, ID, T]):
-  Option[(R, T)] = Some(resultWithEntity.result, resultWithEntity.entity)
+  def unapply[R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]](resultWithEntity: SyncResultWithEntity[R, ID, T]): Option[(R, T)] = Some(resultWithEntity.result, resultWithEntity.entity)
 
 }
 
-private[sync]
-case class SyncResultWithEntityImpl[+R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]]
-(result: R, entity: T)
+private[sync] case class SyncResultWithEntityImpl[+R <: SyncEntityWriter[ID, T], ID <: Identifier[_], T <: Entity[ID]](result: R, entity: T)
   extends SyncResultWithEntity[R, ID, T]

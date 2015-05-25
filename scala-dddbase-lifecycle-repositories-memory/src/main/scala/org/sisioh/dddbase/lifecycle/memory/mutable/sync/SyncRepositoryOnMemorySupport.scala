@@ -17,13 +17,12 @@ package org.sisioh.dddbase.lifecycle.memory.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.sync.SyncResultWithEntity
-import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ EntityCloneable, Entity, Identifier }
 import scala.collection.Map
-import scala.util.{Success, Failure, Try}
+import scala.util.{ Success, Failure, Try }
 
-trait SyncRepositoryOnMemorySupport
-[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncRepositoryOnMemory[ID, E] {
+trait SyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+    extends SyncRepositoryOnMemory[ID, E] {
 
   protected val _entities: collection.mutable.Map[ID, E]
 

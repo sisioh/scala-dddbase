@@ -26,9 +26,8 @@ import scala.concurrent._
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncRepositoryOnMemorySupportAsSeq
-[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
-  extends AsyncEntityReadableAsSeq[ID, E] {
+trait AsyncRepositoryOnMemorySupportAsSeq[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+    extends AsyncEntityReadableAsSeq[ID, E] {
   this: AsyncRepositoryOnMemory[ID, E] =>
 
   def resolveAll(implicit ctx: EntityIOContext[Future]): Future[Seq[E]] = {

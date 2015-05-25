@@ -16,7 +16,7 @@
  */
 package org.sisioh.dddbase.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
 import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 import scala.concurrent.ExecutionContext
 
@@ -27,10 +27,8 @@ import scala.concurrent.ExecutionContext
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-class GenericAsyncRepositoryOnMemory
-[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-(entities: Map[ID, E] = Map.empty[ID, E])
-  extends AbstractAsyncRepositoryOnMemory[ID, E](entities) {
+class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: Map[ID, E] = Map.empty[ID, E])
+    extends AbstractAsyncRepositoryOnMemory[ID, E](entities) {
 
   type This = GenericAsyncRepositoryOnMemory[ID, E]
 
@@ -68,8 +66,7 @@ object GenericAsyncRepositoryOnMemory {
    * @tparam E エンティティの型
    * @return `org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory`
    */
-  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  (entities: Map[ID, E]) =
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: Map[ID, E]) =
     new GenericAsyncRepositoryOnMemory(entities)
 
   /**
@@ -80,10 +77,8 @@ object GenericAsyncRepositoryOnMemory {
    * @tparam E エンティティの型
    * @return 構成要素
    */
-  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  (repository: GenericAsyncRepositoryOnMemory[ID, E]): Option[Map[ID, E]] =
+  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](repository: GenericAsyncRepositoryOnMemory[ID, E]): Option[Map[ID, E]] =
     Some(repository.entities)
 
 }
-
 

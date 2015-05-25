@@ -15,9 +15,9 @@ class GenericAsyncRepositoryOnMemorySpec extends Specification with Mockito {
   sequential
 
   class EntityImpl(val identifier: Identifier[UUID])
-    extends Entity[Identifier[UUID]]
-    with EntityCloneable[Identifier[UUID], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[UUID]]
+      with EntityCloneable[Identifier[UUID], EntityImpl]
+      with Ordered[EntityImpl] {
     def compare(that: GenericAsyncRepositoryOnMemorySpec.this.type#EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)
     }

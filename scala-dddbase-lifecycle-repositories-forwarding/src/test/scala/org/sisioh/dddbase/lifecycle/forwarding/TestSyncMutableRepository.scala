@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.lifecycle.forwarding
 
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntity, SyncRepository}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.sync.{ SyncResultWithEntity, SyncRepository }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 
 case class TestSyncMutableRepository[ID <: Identifier[_], E <: Entity[ID]]() extends SyncRepository[ID, E] {

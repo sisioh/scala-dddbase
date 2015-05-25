@@ -15,8 +15,8 @@
  */
 package org.sisioh.dddbase.lifecycle.forwarding.sync
 
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableAsOption, SyncEntityReader}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.sync.{ SyncEntityReadableAsOption, SyncEntityReader }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 
 /**
  * `SyncEntityReadableAsOption`のデコレータ。
@@ -25,7 +25,7 @@ import org.sisioh.dddbase.core.model.{Entity, Identifier}
  * @tparam E エンティティの型
  */
 trait ForwardingSyncEntityReadableAsOption[ID <: Identifier[_], E <: Entity[ID]]
-  extends SyncEntityReadableAsOption[ID, E] {
+    extends SyncEntityReadableAsOption[ID, E] {
   this: SyncEntityReader[ID, E] =>
 
   type Delegate <: SyncEntityReadableAsOption[ID, E]
@@ -35,7 +35,6 @@ trait ForwardingSyncEntityReadableAsOption[ID <: Identifier[_], E <: Entity[ID]]
    */
   protected val delegate: Delegate
 
-  def resolveAsOptionBy(identifier: ID)
-                       (implicit ctx: Ctx): Option[E] = delegate.resolveAsOptionBy(identifier)
+  def resolveAsOptionBy(identifier: ID)(implicit ctx: Ctx): Option[E] = delegate.resolveAsOptionBy(identifier)
 
 }

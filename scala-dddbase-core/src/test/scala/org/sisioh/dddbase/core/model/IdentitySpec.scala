@@ -28,12 +28,12 @@ case class UserIdImpl(value: Long) extends UserId
 class IdentitySpec extends Specification {
   "Identity" should {
     def getUserId(n: Int): Identifier[Long] = {
-      if (n % 2 ==0)
+      if (n % 2 == 0)
         new UserIdImpl(1)
       else
         EmptyUserId
     }
-    val id: Identifier[Long]  = getUserId(1)
+    val id: Identifier[Long] = getUserId(1)
 
     "throw EmptyIdentityException when get value" in {
       val identifier: Identifier[Long] = Identifier.empty

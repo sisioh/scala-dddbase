@@ -7,7 +7,7 @@ package org.sisioh.dddbase.core.model
  * @tparam E エンティティの型
  */
 trait EntitySerializable[ID <: Identifier[_ <: java.io.Serializable], E <: Entity[ID]]
-  extends Serializable {
+    extends Serializable {
   this: Entity[ID] =>
 
 }

@@ -16,8 +16,8 @@
  */
 package org.sisioh.dddbase.lifecycle.memory.mutable.sync
 
-import org.sisioh.dddbase.lifecycle.memory.sync.{SyncRepositoryOnMemory => SROM}
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.lifecycle.memory.sync.{ SyncRepositoryOnMemory => SROM }
+import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
 
 /**
  * オンメモリで動作する可変リポジトリの実装。
@@ -25,9 +25,7 @@ import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemory
-[ID <: Identifier[_],
-E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SROM[ID, E] {
+trait SyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+    extends SROM[ID, E] {
 
 }

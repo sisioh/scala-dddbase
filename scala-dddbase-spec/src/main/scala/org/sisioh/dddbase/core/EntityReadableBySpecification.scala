@@ -21,8 +21,6 @@ trait EntityReadableBySpecification[ID <: Identifier[_], T <: Entity[ID], M[+A]]
    * @param specification `Specification`
    * @return モナドにラップされた `EntitiesChunk`
    */
-  def filterBySpecification
-  (specification: Specification[T], index: Option[Int] = None, maxEntities: Option[Int] = None)
-  : M[EntitiesChunk[ID, T]]
+  def filterBySpecification(specification: Specification[T], index: Option[Int] = None, maxEntities: Option[Int] = None): M[EntitiesChunk[ID, T]]
 
 }

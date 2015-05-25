@@ -7,7 +7,7 @@ package org.sisioh.dddbase.core.model
  * @tparam E エンティティの型
  */
 trait EntityOrdered[A, ID <: OrderedIdentifier[A, ID], E <: Entity[ID]]
-  extends Ordered[E] {
+    extends Ordered[E] {
   this: Entity[ID] =>
 
   def compare(that: E): Int = {

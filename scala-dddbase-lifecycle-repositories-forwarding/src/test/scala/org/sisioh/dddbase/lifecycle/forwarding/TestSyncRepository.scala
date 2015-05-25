@@ -1,12 +1,11 @@
 package org.sisioh.dddbase.lifecycle.forwarding
 
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncResultWithEntity, SyncRepository}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.sync.{ SyncResultWithEntity, SyncRepository }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 
-case class TestSyncRepository[ID <: Identifier[_], E <: Entity[ID]]
-(entities: Map[ID, E] = Map.empty[ID, E]) extends SyncRepository[ID, E] {
+case class TestSyncRepository[ID <: Identifier[_], E <: Entity[ID]](entities: Map[ID, E] = Map.empty[ID, E]) extends SyncRepository[ID, E] {
 
   override type This = TestSyncRepository[ID, E]
 

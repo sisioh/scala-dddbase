@@ -23,12 +23,11 @@ package org.sisioh.dddbase.spec
  * デコレータではないので注意。</p>
  *
  * @tparam T `NotSpecification`の型
- * @author j5ik2o
  */
 class NotSpecification[T](private[spec] val spec1: Specification[T])
-  extends Specification[T] {
+    extends Specification[T] {
 
   override def isSatisfiedBy(t: T) =
-    spec1.isSatisfiedBy(t) == false
+    !spec1.isSatisfiedBy(t)
 
 }

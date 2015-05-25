@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
 import org.sisioh.dddbase.core.lifecycle.EntityWriter
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.concurrent._
 
 /**
@@ -28,7 +28,7 @@ import scala.concurrent._
  * @tparam E エンティティの型
  */
 trait AsyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
-  extends AsyncEntityIO with EntityWriter[ID, E, Future] {
+    extends AsyncEntityIO with EntityWriter[ID, E, Future] {
 
   type This <: AsyncEntityWriter[ID, E]
   type Result = AsyncResultWithEntity[This, ID, E]

@@ -16,8 +16,8 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.EntityReader
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
-import scala.util.{Failure, Success, Try}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
+import scala.util.{ Failure, Success, Try }
 
 /**
  * 同期的に読み込むための`EntityReader`
@@ -26,17 +26,16 @@ import scala.util.{Failure, Success, Try}
  * @tparam E エンティティの型
  */
 trait SyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
-  extends EntityReader[ID, E, Try] {
+    extends EntityReader[ID, E, Try] {
 
   protected def mapValues[A, R](values: Try[A])(f: (A) => R)(implicit ctx: Ctx): Try[R] = {
     values.map(f)
   }
 
-  protected def traverse[A, R](values: Seq[A], forceSuccess: Boolean)(f: (A) => Try[R])
-                              (implicit ctx: Ctx): Try[Seq[R]] = {
+  protected def traverse[A, R](values: Seq[A], forceSuccess: Boolean)(f: (A) => Try[R])(implicit ctx: Ctx): Try[Seq[R]] = {
     values.map(f).foldLeft(Try(Seq.empty[R])) {
       (resultsTry, resultTry) =>
-        (for {entities <- resultsTry; entity <- resultTry} yield entities :+ entity).recoverWith {
+        (for { entities <- resultsTry; entity <- resultTry } yield entities :+ entity).recoverWith {
           case e => if (forceSuccess) Success(resultsTry.getOrElse(Seq.empty[R])) else Failure(e)
         }
     }

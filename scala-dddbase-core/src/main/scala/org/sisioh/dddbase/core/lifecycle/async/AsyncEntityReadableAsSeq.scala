@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.concurrent.Future
 
 /**

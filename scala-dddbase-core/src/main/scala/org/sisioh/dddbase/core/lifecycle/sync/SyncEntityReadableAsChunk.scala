@@ -15,8 +15,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.sync
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableAsChunk, EntitiesChunk}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.{ EntityIOContext, EntityReadableAsChunk, EntitiesChunk }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 
 /**
@@ -26,14 +26,13 @@ import scala.util.Try
  * @tparam E エンティティの型
  */
 trait SyncEntityReadableAsChunk[ID <: Identifier[_], E <: Entity[ID]]
-  extends EntityReadableAsChunk[ID, E, Try] {
+    extends EntityReadableAsChunk[ID, E, Try] {
   this: SyncEntityReader[ID, E] =>
 
   /**
    * @return Success: `EntitiesChunk`
    *         Failure: RepositoryExceptionはリポジトリにアクセスできなかった場合
    */
-  def resolveAsChunk(index: Int, maxEntities: Int)
-                    (implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
+  def resolveAsChunk(index: Int, maxEntities: Int)(implicit ctx: EntityIOContext[Try]): Try[EntitiesChunk[ID, E]]
 
 }

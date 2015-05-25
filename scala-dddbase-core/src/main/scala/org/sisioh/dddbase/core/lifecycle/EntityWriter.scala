@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 
 import scala.language.higherKinds
 
@@ -26,16 +26,14 @@ import scala.language.higherKinds
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityWriter[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
-  extends EntityIO[M] {
+trait EntityWriter[ID <: Identifier[_], E <: Entity[ID], M[+_]]
+    extends EntityIO[M] {
 
   type This <: EntityWriter[ID, E, M]
   type Result <: ResultWithEntity[This, ID, E, M]
   type Results <: ResultWithEntities[This, ID, E, M]
 
-  protected def traverseWithThis[A](values: Seq[A])
-                                   (processor: (This, A) => M[Result])
-                                   (implicit ctx: Ctx): M[Results]
+  protected def traverseWithThis[A](values: Seq[A])(processor: (This, A) => M[Result])(implicit ctx: Ctx): M[Results]
 
   /**
    * エンティティを保存する。

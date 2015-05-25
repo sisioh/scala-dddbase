@@ -50,7 +50,7 @@ trait OrderedIdentifier[A, ID <: Identifier[A]]
  * @tparam ID 識別子の型
  */
 abstract class AbstractOrderedIdentifier[A <% Ordered[A], ID <: Identifier[A]]
-  extends OrderedIdentifier[A, ID] {
+    extends OrderedIdentifier[A, ID] {
 
   def compare(that: ID): Int = {
     value compare that.value
@@ -67,13 +67,13 @@ case class EmptyIdentifierException() extends Exception
  * 空の識別子を表す値オブジェクト。
  */
 class EmptyIdentifier
-  extends Identifier[Nothing] {
+    extends Identifier[Nothing] {
 
   def value = throw EmptyIdentifierException()
 
   override def equals(obj: Any): Boolean = obj match {
     case that: EmptyIdentifier => this eq that
-    case _ => false
+    case _                     => false
   }
 
   override def hashCode(): Int = 31 * 1
@@ -83,9 +83,8 @@ class EmptyIdentifier
 
 object EmptyIdentifier extends EmptyIdentifier
 
-private[core]
-class IdentifierImpl[A](val value: A)
-  extends Identifier[A] {
+private[core] class IdentifierImpl[A](val value: A)
+    extends Identifier[A] {
 
   override def equals(obj: Any) = obj match {
     case that: EmptyIdentifier => false
@@ -131,6 +130,4 @@ object Identifier {
   def unapply[A](v: Identifier[A]): Option[A] = Some(v.value)
 
 }
-
-
 

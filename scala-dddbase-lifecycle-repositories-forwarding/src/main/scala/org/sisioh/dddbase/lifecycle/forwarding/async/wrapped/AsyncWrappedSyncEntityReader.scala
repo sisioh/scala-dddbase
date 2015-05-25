@@ -17,7 +17,7 @@ package org.sisioh.dddbase.lifecycle.forwarding.async.wrapped
 
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.concurrent._
 import scala.util.Try
 
@@ -28,7 +28,7 @@ import scala.util.Try
  * @tparam E エンティティの型
  */
 trait AsyncWrappedSyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
-  extends AsyncEntityReader[ID, E] with AsyncWrappedSyncEntityIO {
+    extends AsyncEntityReader[ID, E] with AsyncWrappedSyncEntityIO {
 
   type Delegate <: SyncEntityReader[ID, E]
 

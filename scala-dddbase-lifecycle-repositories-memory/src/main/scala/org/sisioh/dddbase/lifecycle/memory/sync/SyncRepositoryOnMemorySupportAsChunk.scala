@@ -26,10 +26,8 @@ import scala.util._
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemorySupportAsChunk
-[ID <: Identifier[_],
-E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncEntityReadableAsChunk[ID, E] {
+trait SyncRepositoryOnMemorySupportAsChunk[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+    extends SyncEntityReadableAsChunk[ID, E] {
   this: SyncRepositoryOnMemory[ID, E] =>
 
   def resolveAsChunk(index: Int, maxEntities: Int)(implicit ctx: Ctx): Try[EntitiesChunk[ID, E]] = {

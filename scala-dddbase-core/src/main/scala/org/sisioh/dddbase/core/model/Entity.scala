@@ -41,12 +41,8 @@ trait Entity[ID <: Identifier[_]] {
    */
   override final def equals(that: Any): Boolean = that match {
     case that: Entity[_] => identifier == that.identifier
-    case _ => false
+    case _               => false
   }
 
 }
-
-
-
-
 

@@ -8,9 +8,9 @@ import org.specs2.mutable.Specification
 class SyncRepositoryOnMemorySupportAsChunkSpec extends Specification with Mockito {
 
   class EntityImpl(val identifier: Identifier[Int])
-    extends Entity[Identifier[Int]]
-    with EntityCloneable[Identifier[Int], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[Int]]
+      with EntityCloneable[Identifier[Int], EntityImpl]
+      with Ordered[EntityImpl] {
 
     def compare(that: SyncRepositoryOnMemorySupportAsChunkSpec.this.type#EntityImpl): Int = {
       this.identifier.value.compareTo(that.identifier.value)
@@ -19,8 +19,8 @@ class SyncRepositoryOnMemorySupportAsChunkSpec extends Specification with Mockit
   }
 
   class TestSyncRepository(entities: Map[Identifier[Int], EntityImpl] = Map.empty)
-    extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
-    with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
+      extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
+      with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
     type This = TestSyncRepository
 
     override protected def createInstance(entities: Map[Identifier[Int], EntityImpl]): TestSyncRepository#This =
@@ -50,6 +50,5 @@ class SyncRepositoryOnMemorySupportAsChunkSpec extends Specification with Mockit
       chunk.entities(4).identifier.value must_== 10
     }
   }
-
 
 }

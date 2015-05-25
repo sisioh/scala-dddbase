@@ -8,9 +8,9 @@ import org.specs2.mutable._
 class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
 
   class EntityImpl(val identifier: Identifier[Int])
-    extends Entity[Identifier[Int]]
-    with EntityCloneable[Identifier[Int], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[Int]]
+      with EntityCloneable[Identifier[Int], EntityImpl]
+      with Ordered[EntityImpl] {
     def compare(that: GenericSyncRepositoryOnMemorySpec.this.type#EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)
     }
@@ -91,8 +91,8 @@ class GenericSyncRepositoryOnMemorySpec extends Specification with Mockito {
     "resolveOption a entity by using identifier" in {
       type ID = Identifier[Int]
       class TestSyncRepository(entities: Map[Identifier[Int], EntityImpl] = Map.empty)
-        extends AbstractSyncRepositoryOnMemory[ID, EntityImpl](entities)
-        with SyncRepositoryOnMemorySupportAsOption[ID, EntityImpl] {
+          extends AbstractSyncRepositoryOnMemory[ID, EntityImpl](entities)
+          with SyncRepositoryOnMemorySupportAsOption[ID, EntityImpl] {
         type This = TestSyncRepository
 
         override protected def createInstance(entities: Map[Identifier[Int], EntityImpl]): This =

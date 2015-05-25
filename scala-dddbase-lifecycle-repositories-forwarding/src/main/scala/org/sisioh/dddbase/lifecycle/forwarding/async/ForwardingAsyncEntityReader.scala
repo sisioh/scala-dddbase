@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.lifecycle.forwarding.async
 
 import org.sisioh.dddbase.core.lifecycle.async.AsyncEntityReader
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 
 import scala.concurrent.Future
 
@@ -27,7 +27,7 @@ import scala.concurrent.Future
  * @tparam E エンティティの型
  */
 trait ForwardingAsyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
-  extends AsyncEntityReader[ID, E] {
+    extends AsyncEntityReader[ID, E] {
 
   type Delegate <: AsyncEntityReader[ID, E]
 

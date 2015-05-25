@@ -17,7 +17,7 @@
 package org.sisioh.dddbase.lifecycle.memory.mutable.async
 
 import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
 import scala.concurrent.ExecutionContext
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection.JavaConverters._
@@ -28,9 +28,8 @@ import scala.collection.JavaConverters._
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-(entities: collection.concurrent.Map[ID, E] = new ConcurrentHashMap[ID, E]().asScala)
-  extends AbstractAsyncRepositoryOnMemory[ID, E](entities) {
+class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: collection.concurrent.Map[ID, E] = new ConcurrentHashMap[ID, E]().asScala)
+    extends AbstractAsyncRepositoryOnMemory[ID, E](entities) {
 
   type This = GenericAsyncRepositoryOnMemory[ID, E]
 
@@ -65,8 +64,7 @@ object GenericAsyncRepositoryOnMemory {
    * @tparam E エンティティの型
    * @return `GenericAsyncRepositoryOnMemory`
    */
-  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  (entities: collection.concurrent.Map[ID, E] = new ConcurrentHashMap[ID, E]().asScala) =
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: collection.concurrent.Map[ID, E] = new ConcurrentHashMap[ID, E]().asScala) =
     new GenericAsyncRepositoryOnMemory(entities)
 
   /**
@@ -77,8 +75,7 @@ object GenericAsyncRepositoryOnMemory {
    * @tparam E エンティティの型
    * @return 構成要素
    */
-  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  (repository: GenericAsyncRepositoryOnMemory[ID, E]): Option[(collection.concurrent.Map[ID, E])] =
+  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](repository: GenericAsyncRepositoryOnMemory[ID, E]): Option[(collection.concurrent.Map[ID, E])] =
     Some(repository._entities)
 
 }

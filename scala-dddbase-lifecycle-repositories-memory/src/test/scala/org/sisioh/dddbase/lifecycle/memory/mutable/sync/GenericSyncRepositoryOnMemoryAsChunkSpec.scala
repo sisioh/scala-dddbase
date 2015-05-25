@@ -1,7 +1,7 @@
 package org.sisioh.dddbase.lifecycle.memory.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
-import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
 import org.sisioh.dddbase.lifecycle.memory.sync.SyncRepositoryOnMemorySupportAsChunk
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
@@ -11,17 +11,17 @@ class GenericSyncRepositoryOnMemoryAsChunkSpec extends Specification with Mockit
   sequential
 
   class EntityImpl(val identifier: Identifier[Int])
-    extends Entity[Identifier[Int]]
-    with EntityCloneable[Identifier[Int], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[Int]]
+      with EntityCloneable[Identifier[Int], EntityImpl]
+      with Ordered[EntityImpl] {
     def compare(that: EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)
     }
   }
 
   class TestSyncRepository
-    extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl]
-    with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
+      extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl]
+      with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
 
     type This = TestSyncRepository
 

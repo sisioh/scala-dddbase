@@ -1,8 +1,8 @@
 package org.sisioh.dddbase.lifecycle.forwarding
 
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
-import org.sisioh.dddbase.core.lifecycle.async.{AsyncResultWithEntity, AsyncRepository}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.async.{ AsyncResultWithEntity, AsyncRepository }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

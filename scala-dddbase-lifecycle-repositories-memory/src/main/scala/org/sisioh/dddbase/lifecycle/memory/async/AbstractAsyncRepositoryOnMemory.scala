@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ EntityCloneable, Entity, Identifier }
 import scala.collection
 
 /**
@@ -25,10 +25,8 @@ import scala.collection
  * @tparam ID id type
  * @tparam E entity type
  */
-abstract class AbstractAsyncRepositoryOnMemory
-[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-(entities: Map[ID, E] = Map.empty[ID, E])
-  extends AsyncRepositoryOnMemorySupport[ID, E] {
+abstract class AbstractAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: Map[ID, E] = Map.empty[ID, E])
+    extends AsyncRepositoryOnMemorySupport[ID, E] {
 
   override protected def getEntities: collection.Map[ID, E] = entities
 

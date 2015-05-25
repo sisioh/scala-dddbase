@@ -8,9 +8,9 @@ import org.specs2.mutable.Specification
 class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mockito {
 
   class EntityImpl(val identifier: Identifier[Int])
-    extends Entity[Identifier[Int]]
-    with EntityCloneable[Identifier[Int], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[Int]]
+      with EntityCloneable[Identifier[Int], EntityImpl]
+      with Ordered[EntityImpl] {
 
     def compare(that: EntityImpl): Int = {
       this.identifier.value.compareTo(that.identifier.value)
@@ -19,8 +19,8 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
   }
 
   class TestSyncRepository(entities: Map[Identifier[Int], EntityImpl] = Map.empty)
-    extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
-    with SyncRepositoryOnMemorySupportAsPredicate[Identifier[Int], EntityImpl] {
+      extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
+      with SyncRepositoryOnMemorySupportAsPredicate[Identifier[Int], EntityImpl] {
     type This = TestSyncRepository
 
     override protected def createInstance(entities: Map[Identifier[Int], EntityImpl]): TestSyncRepository#This =
@@ -40,9 +40,9 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
       }
 
       val chunk = repository.filterBy(
-      {
-        e => e.identifier.value % 2 == 0
-      }, Some(0), Some(5)).get
+        {
+          e => e.identifier.value % 2 == 0
+        }, Some(0), Some(5)).get
 
       chunk.index must_== 0
       chunk.entities.size must_== 5
@@ -53,6 +53,5 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
       chunk.entities(4).identifier.value must_== 10
     }
   }
-
 
 }

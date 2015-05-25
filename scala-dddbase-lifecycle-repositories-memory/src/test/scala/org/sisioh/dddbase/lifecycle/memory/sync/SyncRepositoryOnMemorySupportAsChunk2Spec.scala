@@ -16,8 +16,8 @@ class SyncRepositoryOnMemorySupportAsChunk2Spec extends Specification with Mocki
     with EntityOrdered[Int, IntIdentifier, EntityImpl]
 
   class TestSyncRepository(entities: Map[IntIdentifier, EntityImpl] = Map.empty)
-    extends AbstractSyncRepositoryOnMemory[IntIdentifier, EntityImpl](entities)
-    with SyncRepositoryOnMemorySupportAsChunk[IntIdentifier, EntityImpl] {
+      extends AbstractSyncRepositoryOnMemory[IntIdentifier, EntityImpl](entities)
+      with SyncRepositoryOnMemorySupportAsChunk[IntIdentifier, EntityImpl] {
     type This = TestSyncRepository
 
     override protected def createInstance(entities: Map[IntIdentifier, EntityImpl]): This =
@@ -47,6 +47,5 @@ class SyncRepositoryOnMemorySupportAsChunk2Spec extends Specification with Mocki
       chunk.entities(4) must_== new EntityImpl(IntIdentifier(5))
     }
   }
-
 
 }

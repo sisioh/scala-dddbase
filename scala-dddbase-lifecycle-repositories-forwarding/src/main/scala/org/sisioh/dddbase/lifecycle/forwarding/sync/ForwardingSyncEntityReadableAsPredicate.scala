@@ -15,9 +15,9 @@
  */
 package org.sisioh.dddbase.lifecycle.forwarding.sync
 
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityReadableAsPredicate, SyncEntityReader}
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntitiesChunk}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.sync.{ SyncEntityReadableAsPredicate, SyncEntityReader }
+import org.sisioh.dddbase.core.lifecycle.{ EntityIOContext, EntitiesChunk }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 
 /**
@@ -27,7 +27,7 @@ import scala.util.Try
  * @tparam E エンティティの型
  */
 trait ForwardingSyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
-  extends SyncEntityReadableAsPredicate[ID, E] {
+    extends SyncEntityReadableAsPredicate[ID, E] {
   this: SyncEntityReader[ID, E] =>
 
   type Delegate <: SyncEntityReadableAsPredicate[ID, E]
@@ -37,10 +37,8 @@ trait ForwardingSyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[I
    */
   protected val delegate: Delegate
 
-  def filterBy
-  (predicate: (E) => Boolean,
-   index: Option[Int], maxEntities: Option[Int])
-  (implicit ctx: Ctx): Try[EntitiesChunk[ID, E]] =
+  def filterBy(predicate: (E) => Boolean,
+               index: Option[Int], maxEntities: Option[Int])(implicit ctx: Ctx): Try[EntitiesChunk[ID, E]] =
     delegate.filterBy(predicate, index, maxEntities)
 
 }

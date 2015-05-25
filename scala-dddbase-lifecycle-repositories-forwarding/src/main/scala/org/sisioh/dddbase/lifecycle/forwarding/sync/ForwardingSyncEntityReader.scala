@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.lifecycle.forwarding.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityReader
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 
 /**
@@ -26,7 +26,7 @@ import scala.util.Try
  * @tparam E エンティティの型
  */
 trait ForwardingSyncEntityReader[ID <: Identifier[_], E <: Entity[ID]]
-  extends SyncEntityReader[ID, E] {
+    extends SyncEntityReader[ID, E] {
 
   type Delegate <: SyncEntityReader[ID, E]
 

@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Identifier, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, Entity }
 
 /**
  * 複数のエンティティをまとめたIO単位。

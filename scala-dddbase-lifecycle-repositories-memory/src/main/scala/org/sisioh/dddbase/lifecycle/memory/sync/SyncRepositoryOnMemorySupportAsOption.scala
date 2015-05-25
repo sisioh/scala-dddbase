@@ -27,10 +27,8 @@ import scala.util._
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemorySupportAsOption
-[ID <: Identifier[_],
-E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
-  extends SyncEntityReadableAsOption[ID, E] {
+trait SyncRepositoryOnMemorySupportAsOption[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+    extends SyncEntityReadableAsOption[ID, E] {
   this: SyncRepositoryOnMemory[ID, E] =>
 
   override def resolveAsOptionBy(identifier: ID)(implicit ctx: Ctx) = synchronized {

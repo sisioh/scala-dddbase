@@ -20,4 +20,3 @@ import scala.util.Try
 
 trait SyncEntityIO extends EntityIO[Try]
 
-

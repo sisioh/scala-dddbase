@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Identifier, Entity}
+import org.sisioh.dddbase.core.model.{ Identifier, Entity }
 import scala.language.higherKinds
 
 /**
@@ -39,8 +39,4 @@ trait ResultWithEntity[+EW <: EntityWriter[ID, E, M], ID <: Identifier[_], E <: 
   val entity: E
 
 }
-
-
-
-
 

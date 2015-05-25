@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.language.higherKinds
 import scala.language.implicitConversions
 import scala.language.reflectiveCalls
@@ -27,15 +27,14 @@ import scala.language.reflectiveCalls
  * @tparam E エンティティの型
  * @tparam M モナド
  */
-trait EntityReader[ID <: Identifier[_], E <: Entity[ID], M[+ _]]
-  extends EntityIO[M] {
+trait EntityReader[ID <: Identifier[_], E <: Entity[ID], M[+_]]
+    extends EntityIO[M] {
   self =>
 
   protected def traverseWithoutFailures[A, R](values: Seq[A])(f: (A) => M[R])(implicit ctx: Ctx): M[Seq[R]] =
     traverse[A, R](values, forceSuccess = true)(f)
 
-  protected def traverse[A, R](values: Seq[A], forceSuccess: Boolean = false)
-                              (f: (A) => M[R])(implicit ctx: Ctx): M[Seq[R]]
+  protected def traverse[A, R](values: Seq[A], forceSuccess: Boolean = false)(f: (A) => M[R])(implicit ctx: Ctx): M[Seq[R]]
 
   protected def mapValues[A, R](values: M[A])(f: (A) => R)(implicit ctx: Ctx): M[R]
 

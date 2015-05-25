@@ -49,5 +49,4 @@ class ValueObjectBuilderSpec extends Specification {
     }
   }
 
-
 }

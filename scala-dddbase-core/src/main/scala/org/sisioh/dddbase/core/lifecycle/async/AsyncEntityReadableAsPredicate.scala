@@ -15,8 +15,8 @@
  */
 package org.sisioh.dddbase.core.lifecycle.async
 
-import org.sisioh.dddbase.core.lifecycle.{EntityIOContext, EntityReadableAsPredicate, EntitiesChunk}
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.{ EntityIOContext, EntityReadableAsPredicate, EntitiesChunk }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.concurrent.Future
 
 /**
@@ -26,7 +26,7 @@ import scala.concurrent.Future
  * @tparam E エンティティの型
  */
 trait AsyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
-  extends EntityReadableAsPredicate[ID, E, Future] {
+    extends EntityReadableAsPredicate[ID, E, Future] {
   this: AsyncEntityReader[ID, E] =>
 
   /**
@@ -36,8 +36,6 @@ trait AsyncEntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID]]
    *         EntityNotFoundExceptionは、エンティティが見つからなかった場合
    *         RepositoryExceptionは、リポジトリにアクセスできなかった場合。
    */
-  def filterBy
-  (predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
-  (implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]]
+  def filterBy(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)(implicit ctx: EntityIOContext[Future]): Future[EntitiesChunk[ID, E]]
 
 }

@@ -2,8 +2,8 @@ package org.sisioh.dddbase.lifecycle.forwarding.sync
 
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle._
-import org.sisioh.dddbase.core.lifecycle.sync.{SyncEntityIOContext, SyncRepository}
-import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
+import org.sisioh.dddbase.core.lifecycle.sync.{ SyncEntityIOContext, SyncRepository }
+import org.sisioh.dddbase.core.model.{ EntityCloneable, Entity, Identifier }
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import scala.util.Try
@@ -12,9 +12,9 @@ import org.sisioh.dddbase.lifecycle.forwarding.TestSyncRepository
 class ForwardingSyncRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identifier: Identifier[UUID])
-    extends Entity[Identifier[UUID]]
-    with EntityCloneable[Identifier[UUID], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[UUID]]
+      with EntityCloneable[Identifier[UUID], EntityImpl]
+      with Ordered[EntityImpl] {
 
     def compare(that: ForwardingSyncRepositorySpec.this.type#EntityImpl): Int = {
       identifier.value.compareTo(that.identifier.value)
@@ -24,9 +24,8 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
 
   val id = Identifier(UUID.randomUUID())
 
-  class TestRepForwardingSyncRepositoryImpl
-  (protected val delegate: TestSyncRepository[Identifier[UUID], EntityImpl])
-    extends ForwardingSyncRepository[Identifier[UUID], EntityImpl] {
+  class TestRepForwardingSyncRepositoryImpl(protected val delegate: TestSyncRepository[Identifier[UUID], EntityImpl])
+      extends ForwardingSyncRepository[Identifier[UUID], EntityImpl] {
 
     type This = TestRepForwardingSyncRepositoryImpl
 
@@ -43,7 +42,6 @@ class ForwardingSyncRepositorySpec extends Specification with Mockito {
   }
 
   implicit val ctx = SyncEntityIOContext
-
 
   "The repository" should {
     "have stored entity" in {

@@ -32,7 +32,7 @@ trait AsyncWrappedSyncEntityIO extends AsyncEntityIO {
   protected def getAsyncWrappedEntityIOContext(ctx: Ctx): AsyncWrappedSyncEntityIOContext =
     ctx match {
       case result: AsyncWrappedSyncEntityIOContext => result
-      case _ => throw new IllegalArgumentException(s"$ctx is type miss match. please set to AsyncWrappedSyncEntityIOContext.")
+      case _                                       => throw new IllegalArgumentException(s"$ctx is type miss match. please set to AsyncWrappedSyncEntityIOContext.")
     }
 
 }

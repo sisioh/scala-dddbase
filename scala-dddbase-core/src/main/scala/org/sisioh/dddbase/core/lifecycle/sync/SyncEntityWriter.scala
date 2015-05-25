@@ -17,7 +17,7 @@
 package org.sisioh.dddbase.core.lifecycle.sync
 
 import org.sisioh.dddbase.core.lifecycle.EntityWriter
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.util.Try
 
 /**
@@ -29,7 +29,7 @@ import scala.util.Try
  * @tparam E エンティティの型
  */
 trait SyncEntityWriter[ID <: Identifier[_], E <: Entity[ID]]
-  extends EntityWriter[ID, E, Try] {
+    extends EntityWriter[ID, E, Try] {
 
   type This <: SyncEntityWriter[ID, E]
   type Result = SyncResultWithEntity[This, ID, E]

@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
 import org.sisioh.dddbase.core.lifecycle.EntityIO
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 /**
  * `org.sisioh.dddbase.core.lifecycle.EntityIO`の非同期版。
@@ -33,7 +33,7 @@ trait AsyncEntityIO extends EntityIO[Future] {
   protected def getExecutionContext(ctx: Ctx): ExecutionContext = {
     ctx match {
       case actx: AsyncEntityIOContext => actx.executor
-      case _ => throw new IllegalArgumentException(s"$ctx is type miss match. please set to AsyncEntityIOContext.")
+      case _                          => throw new IllegalArgumentException(s"$ctx is type miss match. please set to AsyncEntityIOContext.")
     }
   }
 

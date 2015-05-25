@@ -43,8 +43,7 @@ object AsyncWrappedSyncEntityIOContext {
    * @param executor `ExecutionContext`
    * @return `AsyncWrappedSyncEntityIOContext`
    */
-  def apply(syncEntityIOContext: SyncEntityIOContext = SyncEntityIOContext)
-           (implicit executor: ExecutionContext): AsyncWrappedSyncEntityIOContext =
+  def apply(syncEntityIOContext: SyncEntityIOContext = SyncEntityIOContext)(implicit executor: ExecutionContext): AsyncWrappedSyncEntityIOContext =
     new AsyncWrappedSyncEntityIOContextImpl(syncEntityIOContext)
 
   /**
@@ -58,9 +57,6 @@ object AsyncWrappedSyncEntityIOContext {
 
 }
 
-private[wrapped]
-case class AsyncWrappedSyncEntityIOContextImpl
-(syncEntityIOContext: SyncEntityIOContext = SyncEntityIOContext)
-(implicit val executor: ExecutionContext)
+private[wrapped] case class AsyncWrappedSyncEntityIOContextImpl(syncEntityIOContext: SyncEntityIOContext = SyncEntityIOContext)(implicit val executor: ExecutionContext)
   extends AsyncWrappedSyncEntityIOContext
 

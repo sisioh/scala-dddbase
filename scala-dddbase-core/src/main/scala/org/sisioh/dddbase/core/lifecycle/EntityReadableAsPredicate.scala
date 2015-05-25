@@ -15,7 +15,7 @@
  */
 package org.sisioh.dddbase.core.lifecycle
 
-import org.sisioh.dddbase.core.model.{Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 import scala.language.higherKinds
 
 /**
@@ -35,7 +35,6 @@ trait EntityReadableAsPredicate[ID <: Identifier[_], E <: Entity[ID], M[+A]] {
    * @param maxEntities 1チャンク内の件数
    * @return モナドにラップした`org.sisioh.dddbase.core.lifecycle.EntitiesChunk`
    */
-  def filterBy(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)
-              (implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
+  def filterBy(predicate: E => Boolean, index: Option[Int] = None, maxEntities: Option[Int] = None)(implicit ctx: Ctx): M[EntitiesChunk[ID, E]]
 
 }

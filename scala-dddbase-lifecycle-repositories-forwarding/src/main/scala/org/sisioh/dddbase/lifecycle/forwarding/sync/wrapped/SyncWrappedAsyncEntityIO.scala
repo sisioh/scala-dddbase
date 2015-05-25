@@ -27,7 +27,7 @@ trait SyncWrappedAsyncEntityIO extends SyncEntityIO {
   /**
    * `EntityIOContext`から
    * `AsyncEntityIOContext`を取得する。
-
+   *
    *
    * @param ctx `EntityIOContext`
    * @return `AsyncEntityIOContext`
@@ -35,7 +35,7 @@ trait SyncWrappedAsyncEntityIO extends SyncEntityIO {
   protected def getAsyncEntityIOContext(ctx: Ctx): AsyncEntityIOContext =
     ctx match {
       case SyncWrappedAsyncEntityIOContext(async) => async
-      case _ => throw new IllegalArgumentException(s"$ctx is type miss match. please set to SyncWrappedAsyncEntityIOContext.")
+      case _                                      => throw new IllegalArgumentException(s"$ctx is type miss match. please set to SyncWrappedAsyncEntityIOContext.")
     }
 
 }

@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.core.lifecycle.async
 
 import org.sisioh.dddbase.core.lifecycle.EntityIOContext
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ Future, ExecutionContext }
 
 /**
  * `org.sisioh.dddbase.core.lifecycle.EntityIOContext`の非同期版。
@@ -55,6 +55,5 @@ object AsyncEntityIOContext {
 
 }
 
-private[async]
-case class AsyncEntityIOContextImpl(implicit val executor: ExecutionContext)
+private[async] case class AsyncEntityIOContextImpl(implicit val executor: ExecutionContext)
   extends AsyncEntityIOContext

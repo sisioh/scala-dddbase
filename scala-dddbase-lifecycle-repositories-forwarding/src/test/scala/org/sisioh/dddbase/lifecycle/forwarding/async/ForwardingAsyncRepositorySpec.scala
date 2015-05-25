@@ -3,21 +3,21 @@ package org.sisioh.dddbase.lifecycle.forwarding.async
 import java.util.UUID
 import org.sisioh.dddbase.core.lifecycle.EntityNotFoundException
 import org.sisioh.dddbase.core.lifecycle.async.AsyncRepository
-import org.sisioh.dddbase.core.model.{EntityCloneable, Entity, Identifier}
+import org.sisioh.dddbase.core.model.{ EntityCloneable, Entity, Identifier }
 import org.sisioh.dddbase.lifecycle.forwarding.TestAsyncRepository
 import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Future, Await}
+import scala.concurrent.{ ExecutionContext, Future, Await }
 
 class ForwardingAsyncRepositorySpec extends Specification with Mockito {
 
   class EntityImpl(val identifier: Identifier[UUID])
-    extends Entity[Identifier[UUID]]
-    with EntityCloneable[Identifier[UUID], EntityImpl]
-    with Ordered[EntityImpl] {
+      extends Entity[Identifier[UUID]]
+      with EntityCloneable[Identifier[UUID], EntityImpl]
+      with Ordered[EntityImpl] {
 
     def compare(that: EntityImpl): Int = {
       this.identifier.value.compareTo(that.identifier.value)
@@ -27,10 +27,8 @@ class ForwardingAsyncRepositorySpec extends Specification with Mockito {
 
   val id = Identifier(UUID.randomUUID)
 
-  class TestRepForwardingRepositoryImpl
-  (protected val delegate: AsyncRepository[Identifier[UUID], EntityImpl])
-  (implicit val executor: ExecutionContext)
-    extends ForwardingAsyncRepository[Identifier[UUID], EntityImpl] {
+  class TestRepForwardingRepositoryImpl(protected val delegate: AsyncRepository[Identifier[UUID], EntityImpl])(implicit val executor: ExecutionContext)
+      extends ForwardingAsyncRepository[Identifier[UUID], EntityImpl] {
 
     type This = TestRepForwardingRepositoryImpl
 
