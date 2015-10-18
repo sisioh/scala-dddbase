@@ -25,7 +25,7 @@ lazy val commonSettings = scalariformSettings ++ Seq(
   sonatypeProfileName := "org.sisioh",
   organization := "org.sisioh",
   scalaVersion := "2.10.5",
-  crossScalaVersions := Seq("2.10.5", "2.11.6"),
+  crossScalaVersions := Seq("2.10.5", "2.11.7"),
   scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
   shellPrompt := {
     "sbt (%s)> " format projectId(_)
@@ -85,6 +85,13 @@ lazy val memory: Project = Project(
 lazy val spec = Project(
   id = "scala-dddbase-spec",
   base = file("scala-dddbase-spec")
+).settings(commonSettings: _*)
+  .settings(libraryDependencies ++= Seq(junit, scalaTest, mockito, specs2))
+  .dependsOn(core)
+
+lazy val event = Project(
+  id = "scala-dddbase-event",
+  base = file("scala-dddbase-event")
 ).settings(commonSettings: _*)
   .settings(libraryDependencies ++= Seq(junit, scalaTest, mockito, specs2))
   .dependsOn(core)
