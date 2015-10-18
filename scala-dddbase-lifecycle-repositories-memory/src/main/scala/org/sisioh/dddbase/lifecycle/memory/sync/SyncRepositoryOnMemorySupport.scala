@@ -29,7 +29,7 @@ import scala.util.Try
  * @tparam ID エンティティの識別子の型
  * @tparam E エンティティの型
  */
-trait SyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]]
+trait SyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with Ordered[E]]
     extends SyncRepositoryOnMemory[ID, E] {
 
   protected def createInstance(entities: Map[ID, E]): This
@@ -46,7 +46,7 @@ trait SyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with En
     existBy(identifier).flatMap {
       _ =>
         Try {
-          entities(identifier).clone
+          entities(identifier)
         }.recoverWith {
           case ex: NoSuchElementException =>
             Failure(new EntityNotFoundException(Some(s"identifier = $identifier")))
@@ -68,6 +68,6 @@ trait SyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with En
   }
 
   def iterator: Iterator[E] =
-    entities.map(_._2.clone).toSeq.sorted.iterator
+    entities.values.toSeq.sorted.iterator
 
 }

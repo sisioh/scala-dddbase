@@ -30,7 +30,7 @@ import scala.concurrent._
  * @tparam ID 識別子の型
  * @tparam E エンティティの型
  */
-trait AsyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+trait AsyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID]]
     extends AsyncRepositoryOnMemory[ID, E] {
 
   protected def createInstance(entities: Map[ID, E]): This
@@ -46,7 +46,7 @@ trait AsyncRepositoryOnMemorySupport[ID <: Identifier[_], E <: Entity[ID] with E
   override def resolveBy(identifier: ID)(implicit ctx: Ctx) = {
     implicit val executor = getExecutionContext(ctx)
     Future {
-      entities(identifier).clone
+      entities(identifier)
     }.recoverWith {
       case ex: NoSuchElementException =>
         Future.failed(new EntityNotFoundException(Some(s"identifier = $identifier")))

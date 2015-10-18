@@ -16,7 +16,7 @@
 package org.sisioh.dddbase.lifecycle.memory.async
 
 import org.sisioh.dddbase.core.lifecycle.async._
-import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
+import org.sisioh.dddbase.core.model.{ Entity, Identifier }
 
 /**
  * Represents async repository that have entities on memories.
@@ -24,7 +24,7 @@ import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
  * @tparam ID id type
  * @tparam E entity type
  */
-trait AsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E]]
+trait AsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID]]
     extends AsyncRepository[ID, E] {
 
   protected def getEntities: collection.Map[ID, E]
