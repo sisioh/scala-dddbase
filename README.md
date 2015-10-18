@@ -5,7 +5,7 @@
 If you use this library, you can develop applications based on Domain Driven Design advocated by Eric Evans.
 
 [![Build Status](https://travis-ci.org/sisioh/scala-dddbase.png?branch=master)](https://travis-ci.org/sisioh/scala-dddbase)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.sisioh/scala-dddbase_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.sisioh/scala-dddbase_2.11)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.sisioh/scala-dddbase/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.sisioh/scala-dddbase)
 [![Scaladoc](http://javadoc-badge.appspot.com/org.sisioh/scala-dddbase.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.sisioh/scala-dddbase_2.11)
 [![Reference Status](https://www.versioneye.com/java/org.sisioh:scala-dddbase_2.11/reference_badge.svg?style=flat)](https://www.versioneye.com/java/org.sisioh:scala-dddbase_2.11/references)
 
