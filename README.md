@@ -27,7 +27,7 @@ libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.8"
 ```scala
 resolvers += "Sonatype OSS Snapshot Repository" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.8-SNAPSHOT"
+libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.9-SNAPSHOT"
 ```
 
 ## Short url
