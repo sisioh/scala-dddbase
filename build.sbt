@@ -36,7 +36,7 @@ lazy val commonSettings = scalariformSettings ++ Seq(
     _ => false
   },
   pomExtra := (
-    <url>https://github.com/sisioh/sisioh-dddbase</url>
+    <url>https://github.com/sisioh/scala-dddbase</url>
       <licenses>
         <license>
           <name>Apache License Version 2.0</name>
