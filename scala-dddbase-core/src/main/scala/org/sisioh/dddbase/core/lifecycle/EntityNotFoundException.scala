@@ -23,6 +23,6 @@ import org.sisioh.dddbase.core.BaseException
  *
  * @author j5ik2o
  */
-case class EntityNotFoundException(message: Option[String] = None, cause: Option[Throwable] = None)
+case class EntityNotFoundException(override val message: Option[String] = None, override val cause: Option[Throwable] = None)
   extends BaseException(message, cause)
 

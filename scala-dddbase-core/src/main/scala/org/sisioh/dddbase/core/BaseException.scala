@@ -21,5 +21,5 @@ package org.sisioh.dddbase.core
  *
  * @author j5ik2o
  */
-abstract class BaseException(message: Option[String] = None, cause: Option[Throwable] = None)
+abstract class BaseException(val message: Option[String] = None, val cause: Option[Throwable] = None)
   extends Exception(message.orNull, cause.orNull)
