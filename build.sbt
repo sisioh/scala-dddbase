@@ -2,7 +2,6 @@ import com.typesafe.sbt.SbtScalariform
 
 import scalariform.formatter.preferences._
 
-
 val specs2 = "org.specs2" %% "specs2" % "2.3.12" % "test"
 
 val scalaTest = "org.scalatest" %% "scalatest" % "2.2.0" % "test"
@@ -10,6 +9,15 @@ val scalaTest = "org.scalatest" %% "scalatest" % "2.2.0" % "test"
 val junit = "junit" % "junit" % "4.8.1" % "test"
 
 val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
+
+def projectId(state: State) = extracted(state).currentProject.id
+
+def extracted(state: State) = Project extract state
+
+lazy val root = project.in(file("."))
+  .settings(name := "scala-dddbase")
+  .settings(commonSettings: _*)
+  .aggregate(coreJS, coreJVM, forwardingJS, forwardingJVM, memoryJVM, memoryJS, specJVM, specJS)
 
 lazy val scalariformSettings = SbtScalariform.scalariformSettings ++ Seq(
   ScalariformKeys.preferences :=
@@ -24,7 +32,7 @@ lazy val scalariformSettings = SbtScalariform.scalariformSettings ++ Seq(
 lazy val commonSettings = scalariformSettings ++ Seq(
   sonatypeProfileName := "org.sisioh",
   organization := "org.sisioh",
-  scalaVersion := "2.10.5",
+  scalaVersion := "2.11.7",
   crossScalaVersions := Seq("2.10.5", "2.11.7"),
   scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
   shellPrompt := {
@@ -62,46 +70,66 @@ lazy val commonSettings = scalariformSettings ++ Seq(
   }
 )
 
-lazy val core = Project(
-  id = "scala-dddbase-core",
-  base = file("scala-dddbase-core")
-).settings(commonSettings: _*)
-  .settings(libraryDependencies ++= Seq(mockito, specs2))
+lazy val jvmCommonSettings = Seq(
+  libraryDependencies ++= Seq(
+    "org.scala-js" %% "scalajs-stubs" % scalaJSVersion % "provided",
+    mockito,
+    specs2,
+    scalaTest
+  )
+)
 
-lazy val forwarding: Project = Project(
-  id = "scala-dddbase-lifecycle-repositories-forwarding",
-  base = file("scala-dddbase-lifecycle-repositories-forwarding")
-).settings(commonSettings: _*)
-  .settings(libraryDependencies ++= Seq(mockito, specs2))
+lazy val jsCommonSettings = Seq(
+  scalaJSOutputMode := org.scalajs.core.tools.javascript.OutputMode.ECMAScript6StrongMode
+)
+
+lazy val core = crossProject.in(file("scala-dddbase-core")).
+  settings(
+    name := "scala-dddbase-core"
+  )
+  .settings(commonSettings: _*)
+  .jvmSettings(jvmCommonSettings: _*)
+  .jsSettings(jsCommonSettings: _*)
+
+lazy val coreJVM = core.jvm
+
+lazy val coreJS = core.js
+
+lazy val forwarding = crossProject.in(file("scala-dddbase-lifecycle-repositories-forwarding"))
+  .settings(
+    name := "scala-dddbase-lifecycle-repositories-forwarding"
+  )
+  .settings(commonSettings: _*)
+  .jvmSettings(jvmCommonSettings: _*)
+  .jsSettings(jsCommonSettings: _*)
   .dependsOn(core)
 
-lazy val memory: Project = Project(
-  id = "scala-dddbase-lifecycle-repositories-memory",
-  base = file("scala-dddbase-lifecycle-repositories-memory")
-).settings(commonSettings: _*)
-  .settings(libraryDependencies ++= Seq(mockito, specs2))
+lazy val forwardingJVM = forwarding.jvm
+
+lazy val forwardingJS = forwarding.js
+
+lazy val memory = crossProject.in(file("scala-dddbase-lifecycle-repositories-memory"))
+  .settings(
+    name := "scala-dddbase-lifecycle-repositories-memory"
+  )
+  .settings(commonSettings: _*)
+  .jvmSettings(jvmCommonSettings: _*)
+  .jsSettings(jsCommonSettings: _*)
   .dependsOn(core, forwarding)
 
-lazy val spec = Project(
-  id = "scala-dddbase-spec",
-  base = file("scala-dddbase-spec")
-).settings(commonSettings: _*)
-  .settings(libraryDependencies ++= Seq(junit, scalaTest, mockito, specs2))
-  .dependsOn(core)
+lazy val memoryJVM = memory.jvm
 
-lazy val event = Project(
-  id = "scala-dddbase-event",
-  base = file("scala-dddbase-event")
-).settings(commonSettings: _*)
-  .settings(libraryDependencies ++= Seq(junit, scalaTest, mockito, specs2))
-  .dependsOn(core)
+lazy val memoryJS = memory.js
 
-lazy val root = Project(
-  id = "scala-dddbase",
-  base = file(".")
-).settings(commonSettings: _*)
-  .aggregate(core, forwarding, memory, spec)
+lazy val spec = crossProject.in(file("scala-dddbase-spec"))
+  .settings(
+    name := "scala-dddbase-spec"
+  )
+  .settings(commonSettings: _*)
+  .jvmSettings(jvmCommonSettings: _*)
+  .jsSettings(jsCommonSettings: _*)
+  .dependsOn(core, forwarding)
 
-def projectId(state: State) = extracted(state).currentProject.id
+lazy val specJVM = spec.jvm
 
-def extracted(state: State) = Project extract state
+lazy val specJS = spec.js
