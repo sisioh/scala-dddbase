@@ -16,19 +16,40 @@ Add the following to your sbt build (Scala 2.10.x, and Scala 2.11.x):
 
 ### Release Version
 
+for scala
+
 ```scala
 resolvers += "Sonatype OSS Release Repository" at "https://oss.sonatype.org/content/repositories/releases/"
 
-libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.9"
+libraryDependencies += "org.sisioh" %% "scala-dddbase-core" % "0.2.9"
+```
+
+for scala.js
+
+```scala
+resolvers += "Sonatype OSS Release Repository" at "https://oss.sonatype.org/content/repositories/releases/"
+
+libraryDependencies += "org.sisioh" %%% "scala-dddbase-core" % "0.2.9"
 ```
 
 ### Snapshot Version
 
+for scala
+
 ```scala
 resolvers += "Sonatype OSS Snapshot Repository" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.10-SNAPSHOT"
+libraryDependencies += "org.sisioh" %% "scala-dddbase-core" % "0.2.10-SNAPSHOT"
 ```
+
+for scala.js
+
+```scala
+resolvers += "Sonatype OSS Release Repository" at "https://oss.sonatype.org/content/repositories/releases/"
+
+libraryDependencies += "org.sisioh" %%% "scala-dddbase-core" % "0.2.10-SNAPSHOT"
+```
+
 
 ## Short url
 
