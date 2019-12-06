@@ -1,12 +1,11 @@
 package org.sisioh.dddbase.lifecycle.memory.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
-import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import org.sisioh.dddbase.lifecycle.memory.sync.SyncRepositoryOnMemorySupportAsPredicate
-import org.specs2.mock.Mockito
 import org.specs2.mutable._
 
-class GenericSyncRepositoryOnMemoryAsPredicateSpec extends Specification with Mockito {
+class GenericSyncRepositoryOnMemoryAsPredicateSpec extends Specification {
 
   sequential
 
@@ -39,9 +38,11 @@ class GenericSyncRepositoryOnMemoryAsPredicateSpec extends Specification with Mo
         repository.store(entity).get.result
       }
 
-      val chunk = repository.filterBy({
-        e => e.identifier.value % 2 == 0
-      }, Some(0), Some(5)).get
+      val chunk = repository
+        .filterBy({ e =>
+          e.identifier.value % 2 == 0
+        }, Some(0), Some(5))
+        .get
 
       chunk.index must_== 0
       chunk.entities.size must_== 5

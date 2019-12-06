@@ -1,47 +1,51 @@
-import com.typesafe.sbt.SbtScalariform
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-import scalariform.formatter.preferences._
+val specs2 = "org.specs2" %% "specs2-core" % "4.8.1" % Test
 
-val specs2 = "org.specs2" %% "specs2" % "2.3.12" % "test"
+val scalaTest = "org.scalatest" %% "scalatest" % "3.1.0" % Test
 
-val scalaTest = "org.scalatest" %% "scalatest" % "2.2.0" % "test"
+val scalaTestPlus = "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % Test
 
-val junit = "junit" % "junit" % "4.8.1" % "test"
+val scalaTestJunit = "org.scalatestplus" %% "scalatestplus-junit" % "1.0.0-M2"
 
-val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
+val scalaTestMockito = "org.scalatestplus" %% "scalatestplus-mockito" % "1.0.0-M2"
+
+val junit = "junit" % "junit" % "4.12" % Test
+
+val mockito = "org.mockito" % "mockito-core" % "3.1.0" % "test"
 
 def projectId(state: State) = extracted(state).currentProject.id
 
 def extracted(state: State) = Project extract state
 
-lazy val root = project.in(file("."))
+lazy val root = project
+  .in(file("."))
   .settings(name := "scala-dddbase")
   .settings(commonSettings: _*)
-  .aggregate(coreJS, coreJVM, forwardingJS, forwardingJVM, memoryJVM, memoryJS, specJVM, specJS)
+  .aggregate(
+    coreJS,
+    coreJVM,
+    forwardingJS,
+    forwardingJVM,
+    memoryJVM,
+    memoryJS,
+    specJVM,
+    specJS
+  )
 
-lazy val scalariformSettings = SbtScalariform.scalariformSettings ++ Seq(
-  ScalariformKeys.preferences :=
-    ScalariformKeys.preferences.value
-      .setPreference(AlignParameters, true)
-      .setPreference(AlignSingleLineCaseStatements, true)
-      .setPreference(DoubleIndentClassDeclaration, true)
-      .setPreference(PreserveDanglingCloseParenthesis, true)
-      .setPreference(MultilineScaladocCommentsStartOnFirstLine, false)
-)
-
-lazy val commonSettings = scalariformSettings ++ Seq(
+lazy val commonSettings = Seq(
   sonatypeProfileName := "org.sisioh",
   organization := "org.sisioh",
-  scalaVersion := "2.11.7",
-  crossScalaVersions := Seq("2.10.5", "2.11.7"),
+  scalaVersion := "2.13.1",
+  crossScalaVersions := Seq("2.11.7", "2.12.8", "2.13.1"),
   scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
   shellPrompt := {
     "sbt (%s)> " format projectId(_)
   },
   publishMavenStyle := true,
   publishArtifact in Test := false,
-  pomIncludeRepository := {
-    _ => false
+  pomIncludeRepository := { _ =>
+    false
   },
   pomExtra := (
     <url>https://github.com/sisioh/scala-dddbase</url>
@@ -63,7 +67,7 @@ lazy val commonSettings = scalariformSettings ++ Seq(
           <url>http://j5ik2o.me</url>
         </developer>
       </developers>
-    ),
+  ),
   credentials := {
     val ivyCredentials = (baseDirectory in LocalRootProject).value / ".credentials"
     Credentials(ivyCredentials) :: Nil
@@ -75,18 +79,21 @@ lazy val jvmCommonSettings = Seq(
     "org.scala-js" %% "scalajs-stubs" % scalaJSVersion % "provided",
     mockito,
     specs2,
-    scalaTest
+    scalaTest,
+    junit,
+    scalaTestPlus,
+    scalaTestJunit,
+    scalaTestMockito
   )
 )
 
 lazy val jsCommonSettings = Seq(
-  scalaJSOutputMode := org.scalajs.core.tools.javascript.OutputMode.ECMAScript6StrongMode
+  scalaJSOutputMode := org.scalajs.core.tools.linker.backend.OutputMode.ECMAScript6
 )
 
-lazy val core = crossProject.in(file("scala-dddbase-core")).
-  settings(
-    name := "scala-dddbase-core"
-  )
+lazy val core = crossProject(JSPlatform, JVMPlatform)
+  .in(file("scala-dddbase-core"))
+  .settings(name := "scala-dddbase-core")
   .settings(commonSettings: _*)
   .jvmSettings(jvmCommonSettings: _*)
   .jsSettings(jsCommonSettings: _*)
@@ -95,10 +102,9 @@ lazy val coreJVM = core.jvm
 
 lazy val coreJS = core.js
 
-lazy val forwarding = crossProject.in(file("scala-dddbase-lifecycle-repositories-forwarding"))
-  .settings(
-    name := "scala-dddbase-lifecycle-repositories-forwarding"
-  )
+lazy val forwarding = crossProject(JSPlatform, JVMPlatform)
+  .in(file("scala-dddbase-lifecycle-repositories-forwarding"))
+  .settings(name := "scala-dddbase-lifecycle-repositories-forwarding")
   .settings(commonSettings: _*)
   .jvmSettings(jvmCommonSettings: _*)
   .jsSettings(jsCommonSettings: _*)
@@ -108,10 +114,9 @@ lazy val forwardingJVM = forwarding.jvm
 
 lazy val forwardingJS = forwarding.js
 
-lazy val memory = crossProject.in(file("scala-dddbase-lifecycle-repositories-memory"))
-  .settings(
-    name := "scala-dddbase-lifecycle-repositories-memory"
-  )
+lazy val memory = crossProject(JSPlatform, JVMPlatform)
+  .in(file("scala-dddbase-lifecycle-repositories-memory"))
+  .settings(name := "scala-dddbase-lifecycle-repositories-memory")
   .settings(commonSettings: _*)
   .jvmSettings(jvmCommonSettings: _*)
   .jsSettings(jsCommonSettings: _*)
@@ -121,10 +126,9 @@ lazy val memoryJVM = memory.jvm
 
 lazy val memoryJS = memory.js
 
-lazy val spec = crossProject.in(file("scala-dddbase-spec"))
-  .settings(
-    name := "scala-dddbase-spec"
-  )
+lazy val spec = crossProject(JSPlatform, JVMPlatform)
+  .in(file("scala-dddbase-spec"))
+  .settings(name := "scala-dddbase-spec")
   .settings(commonSettings: _*)
   .jvmSettings(jvmCommonSettings: _*)
   .jsSettings(jsCommonSettings: _*)

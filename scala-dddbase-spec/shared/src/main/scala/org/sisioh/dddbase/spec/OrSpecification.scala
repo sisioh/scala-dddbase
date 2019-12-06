@@ -16,16 +16,17 @@
  */
 package org.sisioh.dddbase.spec
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
- * 論理和の仕様を表すモデル。
- *
- * <p>2つの `Specification` の論理和をとる `Specification` 実装クラス。</p>
- *
- * @tparam T `OrSpecification`の型
- */
-@JSExport
+  * 論理和の仕様を表すモデル。
+  *
+  * <p>2つの `Specification` の論理和をとる `Specification` 実装クラス。</p>
+  *
+  * @tparam T `OrSpecification`の型
+  */
+
+@JSExportTopLevel("OrSpecification")
 class OrSpecification[T](private[spec] val spec1: Specification[T],
                          private[spec] val spec2: Specification[T])
     extends Specification[T] {

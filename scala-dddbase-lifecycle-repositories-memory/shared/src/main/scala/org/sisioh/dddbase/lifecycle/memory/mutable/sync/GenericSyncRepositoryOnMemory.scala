@@ -17,28 +17,32 @@
 package org.sisioh.dddbase.lifecycle.memory.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
-import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
+import org.sisioh.dddbase.core.model.{Entity, EntityCloneable, Identifier}
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
- * 汎用的な同期型オンメモリ可変リポジトリ。
- *
- * @tparam ID 識別子の型
- * @tparam E エンティティの型
- */
-@JSExport
-class GenericSyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty[ID, E])
-    extends AbstractSyncRepositoryOnMemory[ID, E](entities) {
+  * 汎用的な同期型オンメモリ可変リポジトリ。
+  *
+  * @tparam ID 識別子の型
+  * @tparam E エンティティの型
+  */
+@JSExportTopLevel("MutableSyncGenericSyncRepositoryOnMemoryClass")
+class GenericSyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[
+  ID,
+  E
+] with Ordered[E]](
+  entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty[ID, E]
+) extends AbstractSyncRepositoryOnMemory[ID, E](entities) {
 
   type This = GenericSyncRepositoryOnMemory[ID, E]
 
 }
 
 /**
- * コンパニオンオブジェクト。
- */
-@JSExport
+  * コンパニオンオブジェクト。
+  */
+@JSExportTopLevel("MutableSyncGenericSyncRepositoryOnMemoryObject")
 object GenericSyncRepositoryOnMemory {
 
   object Implicits {
@@ -48,24 +52,33 @@ object GenericSyncRepositoryOnMemory {
   }
 
   /**
-   * ファクトリメソッド。
-   *
-   * @tparam ID 識別子の型
-   * @tparam E エンティティの型
-   * @return `GenericSyncRepositoryOnMemory`
-   */
-  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: collection.mutable.Map[ID, E] = collection.mutable.Map.empty[ID, E]) =
+    * ファクトリメソッド。
+    *
+    * @tparam ID 識別子の型
+    * @tparam E エンティティの型
+    * @return `GenericSyncRepositoryOnMemory`
+    */
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[
+    E
+  ]](
+    entities: collection.mutable.Map[ID, E] =
+      collection.mutable.Map.empty[ID, E]
+  ) =
     new GenericSyncRepositoryOnMemory[ID, E](entities)
 
   /**
-   * エクストラクタメソッド。
-   *
-   * @param repository `GenericSyncRepositoryOnMemory`
-   * @tparam ID 識別子の型
-   * @tparam E エンティティの型
-   * @return 構成要素
-   */
-  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](repository: GenericSyncRepositoryOnMemory[ID, E]): Option[(collection.mutable.Map[ID, E])] =
+    * エクストラクタメソッド。
+    *
+    * @param repository `GenericSyncRepositoryOnMemory`
+    * @tparam ID 識別子の型
+    * @tparam E エンティティの型
+    * @return 構成要素
+    */
+  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[
+    E
+  ]](
+    repository: GenericSyncRepositoryOnMemory[ID, E]
+  ): Option[(collection.mutable.Map[ID, E])] =
     Some(repository._entities)
 
 }

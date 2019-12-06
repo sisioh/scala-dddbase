@@ -17,21 +17,22 @@
 package org.sisioh.dddbase.spec
 
 import org.junit.Test
-import org.scalatest.junit.AssertionsForJUnit
+import org.scalatestplus.junit.AssertionsForJUnit
 
 /**
- * `org.sisioh.dddbase.spec.Specification`のテストクラス。
- */
+  * `org.sisioh.dddbase.spec.Specification`のテストクラス。
+  */
 class SpecificationTest extends AssertionsForJUnit {
+
   /**
-   * `org.sisioh.dddbase.spec.Specification# a n d ( S p e c i f i c a t i o n )`
-   * `org.sisioh.dddbase.spec.Specification# o r ( S p e c i f i c a t i o n )`
-   * `org.sisioh.dddbase.spec.Specification# n o t`のテスト。
-   *
-   * @throws Exception 例外が発生した場合
-   */
+    * `org.sisioh.dddbase.spec.Specification# a n d ( S p e c i f i c a t i o n )`
+    * `org.sisioh.dddbase.spec.Specification# o r ( S p e c i f i c a t i o n )`
+    * `org.sisioh.dddbase.spec.Specification# n o t`のテスト。
+    *
+    * @throws Exception 例外が発生した場合
+    */
   @Test
-  def test01_and_or_not() {
+  def test01_and_or_not(): Unit = {
     val spec = new Specification[Unit] {
       def isSatisfiedBy(t: Unit): Boolean = false
     }

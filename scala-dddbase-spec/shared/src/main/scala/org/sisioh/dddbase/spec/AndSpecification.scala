@@ -16,14 +16,14 @@
  */
 package org.sisioh.dddbase.spec
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
- * ANDを表す仕様。
- *
- * @tparam T モデルの型
- */
-@JSExport
+  * ANDを表す仕様。
+  *
+  * @tparam T モデルの型
+  */
+@JSExportTopLevel("AndSpecification")
 class AndSpecification[T](private[spec] val spec1: Specification[T],
                           private[spec] val spec2: Specification[T])
     extends Specification[T] {

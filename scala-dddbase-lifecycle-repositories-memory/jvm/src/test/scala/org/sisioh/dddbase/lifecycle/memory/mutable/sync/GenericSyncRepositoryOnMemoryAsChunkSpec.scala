@@ -1,12 +1,11 @@
 package org.sisioh.dddbase.lifecycle.memory.mutable.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
-import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
+import org.sisioh.dddbase.core.model.{Identifier, EntityCloneable, Entity}
 import org.sisioh.dddbase.lifecycle.memory.sync.SyncRepositoryOnMemorySupportAsChunk
-import org.specs2.mock.Mockito
 import org.specs2.mutable._
 
-class GenericSyncRepositoryOnMemoryAsChunkSpec extends Specification with Mockito {
+class GenericSyncRepositoryOnMemoryAsChunkSpec extends Specification {
 
   sequential
 

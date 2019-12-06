@@ -16,17 +16,17 @@
  */
 package org.sisioh.dddbase.spec
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
- * 否定の仕様を表すモデル。
- *
- * <p>ある `Specification` の否定をとる `Specification` 実装クラス。
- * デコレータではないので注意。</p>
- *
- * @tparam T `NotSpecification`の型
- */
-@JSExport
+  * 否定の仕様を表すモデル。
+  *
+  * <p>ある `Specification` の否定をとる `Specification` 実装クラス。
+  * デコレータではないので注意。</p>
+  *
+  * @tparam T `NotSpecification`の型
+  */
+@JSExportTopLevel("NotSpecification")
 class NotSpecification[T](private[spec] val spec1: Specification[T])
     extends Specification[T] {
 

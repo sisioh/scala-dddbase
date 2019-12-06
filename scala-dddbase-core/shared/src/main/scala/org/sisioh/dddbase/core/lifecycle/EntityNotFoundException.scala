@@ -18,14 +18,14 @@ package org.sisioh.dddbase.core.lifecycle
 
 import org.sisioh.dddbase.core.BaseException
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
- * リポジトリにアクセスできなかった場合の例外。
- *
- * @author j5ik2o
- */
-@JSExport
-case class EntityNotFoundException(override val message: Option[String] = None, override val cause: Option[Throwable] = None)
-  extends BaseException(message, cause)
-
+  * リポジトリにアクセスできなかった場合の例外。
+  *
+  * @author j5ik2o
+  */
+@JSExportTopLevel("EntityNotFoundException")
+case class EntityNotFoundException(override val message: Option[String] = None,
+                                   override val cause: Option[Throwable] = None)
+    extends BaseException(message, cause)

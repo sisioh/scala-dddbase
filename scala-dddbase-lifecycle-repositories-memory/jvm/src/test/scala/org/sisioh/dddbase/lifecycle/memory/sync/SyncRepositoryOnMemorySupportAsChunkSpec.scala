@@ -2,28 +2,34 @@ package org.sisioh.dddbase.lifecycle.memory.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 import org.sisioh.dddbase.core.model._
-import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 
-class SyncRepositoryOnMemorySupportAsChunkSpec extends Specification with Mockito {
+class SyncRepositoryOnMemorySupportAsChunkSpec extends Specification {
 
   class EntityImpl(val identifier: Identifier[Int])
       extends Entity[Identifier[Int]]
       with EntityCloneable[Identifier[Int], EntityImpl]
       with Ordered[EntityImpl] {
 
-    def compare(that: SyncRepositoryOnMemorySupportAsChunkSpec.this.type#EntityImpl): Int = {
+    def compare(
+      that: SyncRepositoryOnMemorySupportAsChunkSpec.this.type#EntityImpl
+    ): Int = {
       this.identifier.value.compareTo(that.identifier.value)
     }
 
   }
 
-  class TestSyncRepository(entities: Map[Identifier[Int], EntityImpl] = Map.empty)
-      extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
+  class TestSyncRepository(
+    entities: Map[Identifier[Int], EntityImpl] = Map.empty
+  ) extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](
+        entities
+      )
       with SyncRepositoryOnMemorySupportAsChunk[Identifier[Int], EntityImpl] {
     type This = TestSyncRepository
 
-    override protected def createInstance(entities: Map[Identifier[Int], EntityImpl]): TestSyncRepository#This =
+    override protected def createInstance(
+      entities: Map[Identifier[Int], EntityImpl]
+    ): TestSyncRepository#This =
       new TestSyncRepository(entities)
   }
 
