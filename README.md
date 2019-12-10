@@ -21,7 +21,7 @@ for scala
 ```scala
 resolvers += "Sonatype OSS Release Repository" at "https://oss.sonatype.org/content/repositories/releases/"
 
-libraryDependencies += "org.sisioh" %% "scala-dddbase-core" % "0.2.9"
+libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.10"
 ```
 
 for scala.js
@@ -29,7 +29,7 @@ for scala.js
 ```scala
 resolvers += "Sonatype OSS Release Repository" at "https://oss.sonatype.org/content/repositories/releases/"
 
-libraryDependencies += "org.sisioh" %%% "scala-dddbase-core" % "0.2.9"
+libraryDependencies += "org.sisioh" %% "scala-dddbase" % "0.2.10"
 ```
 
 ### Snapshot Version
