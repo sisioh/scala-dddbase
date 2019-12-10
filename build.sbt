@@ -69,6 +69,7 @@ lazy val commonSettings = Seq(
       </developers>
   ),
   publishTo in ThisBuild := sonatypePublishTo.value,
+  Global / useGpg := false,
   credentials := {
     val ivyCredentials = (baseDirectory in LocalRootProject).value / ".credentials"
     Credentials(ivyCredentials) :: Nil
