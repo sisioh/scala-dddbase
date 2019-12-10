@@ -2,10 +2,9 @@ package org.sisioh.dddbase.lifecycle.memory.sync
 
 import org.sisioh.dddbase.core.lifecycle.sync.SyncEntityIOContext
 import org.sisioh.dddbase.core.model._
-import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 
-class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mockito {
+class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification {
 
   class EntityImpl(val identifier: Identifier[Int])
       extends Entity[Identifier[Int]]
@@ -18,12 +17,17 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
 
   }
 
-  class TestSyncRepository(entities: Map[Identifier[Int], EntityImpl] = Map.empty)
-      extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](entities)
+  class TestSyncRepository(
+    entities: Map[Identifier[Int], EntityImpl] = Map.empty
+  ) extends AbstractSyncRepositoryOnMemory[Identifier[Int], EntityImpl](
+        entities
+      )
       with SyncRepositoryOnMemorySupportAsPredicate[Identifier[Int], EntityImpl] {
     type This = TestSyncRepository
 
-    override protected def createInstance(entities: Map[Identifier[Int], EntityImpl]): TestSyncRepository#This =
+    override protected def createInstance(
+      entities: Map[Identifier[Int], EntityImpl]
+    ): TestSyncRepository#This =
       new TestSyncRepository(entities)
   }
 
@@ -39,10 +43,11 @@ class SyncRepositoryOnMemorySupportByPredicateSpec extends Specification with Mo
         repository = repository.store(entity).get.result
       }
 
-      val chunk = repository.filterBy(
-        {
-          e => e.identifier.value % 2 == 0
-        }, Some(0), Some(5)).get
+      val chunk = repository
+        .filterBy({ e =>
+          e.identifier.value % 2 == 0
+        }, Some(0), Some(5))
+        .get
 
       chunk.index must_== 0
       chunk.entities.size must_== 5

@@ -17,19 +17,20 @@
 package org.sisioh.dddbase.spec
 
 import org.junit.Test
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import org.scalatest.junit.AssertionsForJUnit
-import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.junit.AssertionsForJUnit
+import org.scalatestplus.mockito.MockitoSugar
 
 class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
+
   /**
-   * `false` OR `false`が `false`となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
+    * `false` OR `false`が `false`となること。
+    *
+    * @throws Exception 例外が発生した場合
+    */
   @Test
-  def test01_false_false_To_false() {
+  def test01_false_false_To_false(): Unit = {
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
 
@@ -44,12 +45,12 @@ class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
   }
 
   /**
-   * `false` OR `true` が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
+    * `false` OR `true` が `true` となること。
+    *
+    * @throws Exception 例外が発生した場合
+    */
   @Test
-  def test02_false_true_To_true() {
+  def test02_false_true_To_true(): Unit = {
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
 
@@ -64,12 +65,12 @@ class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
   }
 
   /**
-   * `true` OR `false`が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
+    * `true` OR `false`が `true` となること。
+    *
+    * @throws Exception 例外が発生した場合
+    */
   @Test
-  def test03_true_false_To_true() {
+  def test03_true_false_To_true(): Unit = {
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
 
@@ -84,12 +85,12 @@ class OrSpecificationTest extends AssertionsForJUnit with MockitoSugar {
   }
 
   /**
-   * `true` OR `true` が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
+    * `true` OR `true` が `true` となること。
+    *
+    * @throws Exception 例外が発生した場合
+    */
   @Test
-  def test04_true_true_To_true() {
+  def test04_true_true_To_true(): Unit = {
     val mock1 = mock[Specification[Unit]]
     val mock2 = mock[Specification[Unit]]
 

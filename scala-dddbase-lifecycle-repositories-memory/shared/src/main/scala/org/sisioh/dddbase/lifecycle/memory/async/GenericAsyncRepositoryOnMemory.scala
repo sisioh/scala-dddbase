@@ -16,20 +16,24 @@
  */
 package org.sisioh.dddbase.lifecycle.memory.async
 
-import org.sisioh.dddbase.core.model.{ Identifier, EntityCloneable, Entity }
+import org.sisioh.dddbase.core.model.{Entity, EntityCloneable, Identifier}
 import org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext
+
 import scala.concurrent.ExecutionContext
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
- * 汎用的な非同期型オンメモリ不変リポジトリ。
- *
- * @param entities マップ
- * @tparam ID 識別子の型
- * @tparam E エンティティの型
- */
-@JSExport
-class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: Map[ID, E] = Map.empty[ID, E])
+  * 汎用的な非同期型オンメモリ不変リポジトリ。
+  *
+  * @param entities マップ
+  * @tparam ID 識別子の型
+  * @tparam E エンティティの型
+  */
+@JSExportTopLevel("AsyncGenericAsyncRepositoryOnMemoryClass")
+class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[
+  ID,
+  E
+] with Ordered[E]](entities: Map[ID, E] = Map.empty[ID, E])
     extends AbstractAsyncRepositoryOnMemory[ID, E](entities) {
 
   type This = GenericAsyncRepositoryOnMemory[ID, E]
@@ -40,9 +44,9 @@ class GenericAsyncRepositoryOnMemory[ID <: Identifier[_], E <: Entity[ID] with E
 }
 
 /**
- * コンパニオンオブジェクト。
- */
-@JSExport
+  * コンパニオンオブジェクト。
+  */
+@JSExportTopLevel("AsyncGenericAsyncRepositoryOnMemoryObject")
 object GenericAsyncRepositoryOnMemory {
 
   object Implicits {
@@ -54,34 +58,38 @@ object GenericAsyncRepositoryOnMemory {
   }
 
   /**
-   * `org.sisioh.dddbase.core.lifecycle.EntityIOContext`を生成する。
-   *
-   * @param executor `ExecutionContext`
-   * @return `org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext`
-   */
-  def createEntityIOContext(implicit executor: ExecutionContext) = AsyncWrappedSyncEntityIOContext()
+    * `org.sisioh.dddbase.core.lifecycle.EntityIOContext`を生成する。
+    *
+    * @param executor `ExecutionContext`
+    * @return `org.sisioh.dddbase.lifecycle.forwarding.async.wrapped.AsyncWrappedSyncEntityIOContext`
+    */
+  def createEntityIOContext(implicit executor: ExecutionContext) =
+    AsyncWrappedSyncEntityIOContext()
 
   /**
-   * ファクトリメソッド。
-   *
-   * @param entities マップ
-   * @tparam ID 識別子の型
-   * @tparam E エンティティの型
-   * @return `org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory`
-   */
-  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](entities: Map[ID, E]) =
+    * ファクトリメソッド。
+    *
+    * @param entities マップ
+    * @tparam ID 識別子の型
+    * @tparam E エンティティの型
+    * @return `org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory`
+    */
+  def apply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[
+    E
+  ]](entities: Map[ID, E]) =
     new GenericAsyncRepositoryOnMemory(entities)
 
   /**
-   * エクストラクタメソッド。
-   *
-   * @param repository `org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory`
-   * @tparam ID 識別子の型
-   * @tparam E エンティティの型
-   * @return 構成要素
-   */
-  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[E]](repository: GenericAsyncRepositoryOnMemory[ID, E]): Option[Map[ID, E]] =
+    * エクストラクタメソッド。
+    *
+    * @param repository `org.sisioh.dddbase.lifecycle.memory.async.GenericAsyncRepositoryOnMemory`
+    * @tparam ID 識別子の型
+    * @tparam E エンティティの型
+    * @return 構成要素
+    */
+  def unapply[ID <: Identifier[_], E <: Entity[ID] with EntityCloneable[ID, E] with Ordered[
+    E
+  ]](repository: GenericAsyncRepositoryOnMemory[ID, E]): Option[Map[ID, E]] =
     Some(repository.entities)
 
 }
-

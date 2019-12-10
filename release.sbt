@@ -7,22 +7,30 @@ val updateReadme = { state: State =>
   val extracted = Project.extract(state)
   val scalaV = extracted get scalaBinaryVersion
   val v = extracted get version
-  val org =  extracted get organization
+  val org = extracted get organization
   val n = extracted get name
-  val snapshotOrRelease = if(extracted get isSnapshot) "snapshots" else "releases"
+  val snapshotOrRelease =
+    if (extracted get isSnapshot) "snapshots" else "releases"
   val readme = "README.md"
   val readmeFile = file(readme)
-  val newReadme = Predef.augmentString(IO.read(readmeFile)).lines.map{ line =>
-    val matchReleaseOrSnapshot = line.contains("SNAPSHOT") == v.contains("SNAPSHOT")
-    if(line.startsWith("libraryDependencies") && matchReleaseOrSnapshot){
-      s"""libraryDependencies += "${org}" %% "${n}" % "$v""""
-    }else line
-  }.mkString("", "\n", "\n")
+  val newReadme = Predef
+    .augmentString(IO.read(readmeFile))
+    .lines
+    .map { line =>
+      val matchReleaseOrSnapshot = line.contains("SNAPSHOT") == v.contains(
+        "SNAPSHOT"
+      )
+      if (line.startsWith("libraryDependencies") && matchReleaseOrSnapshot) {
+        s"""libraryDependencies += "${org}" %% "${n}" % "$v""""
+      } else line
+    }
+    .mkString("", "\n", "\n")
   IO.write(readmeFile, newReadme)
   val git = new Git(extracted get baseDirectory)
   git.add(readme) ! state.log
-  git.commit("update " + readme) ! state.log
-  "git diff HEAD^" ! state.log
+  //FIXME 署名を入れるかどうか確認
+  git.commit("update " + readme, sign = false, signOff = false) ! state.log
+  //  "git diff HEAD^" ! state.log
   state
 }
 
@@ -44,7 +52,10 @@ releaseProcess := Seq[ReleaseStep](
   ReleaseStep(
     action = { state =>
       val extracted = Project extract state
-      extracted.runAggregated(PgpKeys.publishSigned in Global in extracted.get(thisProjectRef), state)
+      extracted.runAggregated(
+        PgpKeys.publishSigned in Global in extracted.get(thisProjectRef),
+        state
+      )
     },
     enableCrossBuild = true
   ),

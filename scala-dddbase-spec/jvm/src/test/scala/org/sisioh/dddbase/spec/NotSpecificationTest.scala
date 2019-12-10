@@ -17,19 +17,20 @@
 package org.sisioh.dddbase.spec
 
 import org.junit.Test
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import org.scalatest.junit.AssertionsForJUnit
-import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.junit.AssertionsForJUnit
+import org.scalatestplus.mockito.MockitoSugar
 
 class NotSpecificationTest extends AssertionsForJUnit with MockitoSugar {
+
   /**
-   * NOT `false` が `true` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
+    * NOT `false` が `true` となること。
+    *
+    * @throws Exception 例外が発生した場合
+    */
   @Test
-  def test01_false_To_true() {
+  def test01_false_To_true(): Unit = {
     val mock1 = mock[Specification[Unit]]
 
     when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(false)
@@ -41,12 +42,12 @@ class NotSpecificationTest extends AssertionsForJUnit with MockitoSugar {
   }
 
   /**
-   * NOT `true` が `false` となること。
-   *
-   * @throws Exception 例外が発生した場合
-   */
+    * NOT `true` が `false` となること。
+    *
+    * @throws Exception 例外が発生した場合
+    */
   @Test
-  def test01_true_To_false() {
+  def test01_true_To_false(): Unit = {
     val mock1 = mock[Specification[Unit]]
 
     when(mock1.isSatisfiedBy(any(classOf[Unit]))).thenReturn(true)

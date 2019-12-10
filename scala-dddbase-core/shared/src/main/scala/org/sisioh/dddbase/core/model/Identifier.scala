@@ -16,43 +16,45 @@
  */
 package org.sisioh.dddbase.core.model
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
- * エンティティの識別子を表すトレイト。
- *
- * エンティティで用いられる識別子を型として表現することを目的としている。
- *
- * @tparam A 識別子の値を表す型
- */
+  * エンティティの識別子を表すトレイト。
+  *
+  * エンティティで用いられる識別子を型として表現することを目的としている。
+  *
+  * @tparam A 識別子の値を表す型
+  */
 trait Identifier[+A] extends Serializable {
 
   /**
-   * 識別子の値を取得する。
-   *
-   * @return 識別子の値
-   */
+    * 識別子の値を取得する。
+    *
+    * @return 識別子の値
+    */
   def value: A
 
 }
 
 /**
- * 順序をサポートした`Identifier`。
- *
- * @tparam A 識別子の値を表す型
- * @tparam ID 識別子の型
- */
+  * 順序をサポートした`Identifier`。
+  *
+  * @tparam A 識別子の値を表す型
+  * @tparam ID 識別子の型
+  */
 trait OrderedIdentifier[A, ID <: Identifier[A]]
-  extends Identifier[A] with Ordered[ID]
+    extends Identifier[A]
+    with Ordered[ID]
 
 /**
- * `OrderedIdentifier`の骨格実装。
- *
- * @tparam A 識別子の値を表す型
- * @tparam ID 識別子の型
- */
-abstract class AbstractOrderedIdentifier[A <% Ordered[A], ID <: Identifier[A]]
-    extends OrderedIdentifier[A, ID] {
+  * `OrderedIdentifier`の骨格実装。
+  *
+  * @tparam A 識別子の値を表す型
+  * @tparam ID 識別子の型
+  */
+abstract class AbstractOrderedIdentifier[A, ID <: Identifier[A]](
+  implicit ev: A => Ordered[A]
+) extends OrderedIdentifier[A, ID] {
 
   def compare(that: ID): Int = {
     value compare that.value
@@ -61,17 +63,16 @@ abstract class AbstractOrderedIdentifier[A <% Ordered[A], ID <: Identifier[A]]
 }
 
 /**
- * 識別子の値が空だった場合の例外。
- */
-@JSExport
+  * 識別子の値が空だった場合の例外。
+  */
+@JSExportTopLevel("EmptyIdentifierException")
 case class EmptyIdentifierException() extends Exception
 
 /**
- * 空の識別子を表す値オブジェクト。
- */
-@JSExport
-class EmptyIdentifier
-    extends Identifier[Nothing] {
+  * 空の識別子を表す値オブジェクト。
+  */
+@JSExportTopLevel("EmptyIdentifier")
+class EmptyIdentifier extends Identifier[Nothing] {
 
   def value = throw EmptyIdentifierException()
 
@@ -85,11 +86,9 @@ class EmptyIdentifier
   override def toString = "EmptyIdentifier"
 }
 
-@JSExport
 object EmptyIdentifier extends EmptyIdentifier
 
-private[core] class IdentifierImpl[A](val value: A)
-    extends Identifier[A] {
+private[core] class IdentifierImpl[A](val value: A) extends Identifier[A] {
 
   override def equals(obj: Any) = obj match {
     case that: EmptyIdentifier => false
@@ -105,35 +104,34 @@ private[core] class IdentifierImpl[A](val value: A)
 }
 
 /**
- * コンパニオンオブジェクト。
- */
-@JSExport
+  * コンパニオンオブジェクト。
+  */
+@JSExportTopLevel("Identifier")
 object Identifier {
 
   /**
-   * `Identifier`を生成する。
-   *
-   * @param value 識別子の値
-   * @tparam A 識別子の値の型
-   * @return `Identifier`
-   */
+    * `Identifier`を生成する。
+    *
+    * @param value 識別子の値
+    * @tparam A 識別子の値の型
+    * @return `Identifier`
+    */
   def apply[A](value: A): Identifier[A] = new IdentifierImpl(value)
 
   /**
-   * 空の`Identifier`を返す。
-   *
-   * @return `Identifier`
-   */
+    * 空の`Identifier`を返す。
+    *
+    * @return `Identifier`
+    */
   def empty[A]: Identifier[A] = EmptyIdentifier
 
   /**
-   * 抽出子メソッド。
-   *
-   * @param v `Identifier`
-   * @tparam A 識別子の値の型
-   * @return 識別子の値
-   */
+    * 抽出子メソッド。
+    *
+    * @param v `Identifier`
+    * @tparam A 識別子の値の型
+    * @return 識別子の値
+    */
   def unapply[A](v: Identifier[A]): Option[A] = Some(v.value)
 
 }
-
